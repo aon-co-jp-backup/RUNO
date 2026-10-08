@@ -49,6 +49,16 @@ https://github.com/aon-co-jp
 
 ## HANDOFF
 
+- **2026-10-08 公開ミラー自動バックアップ `aon-co-jp-backup/backup-system` 新設(シャットダウン時点の引き継ぎ)**: `aon-co-jp`の**公開**リポジトリのみを、
+  GitHub Actions(3時間おき+手動)で検査・匿名化して`aon-co-jp-backup`へ同名ミラーする。検査=gitleaks全履歴・危険ファイル名・個人情報ルール
+  (`scripts/pii_scan.py`)。コミットのメールはミラー側のみ匿名化。20MB超・モデル・`install/*/*.exe`はミラーに含めない。止めたものは`STATUS.md`に記録。
+  個人情報の疑いは`aruaru-db-archive/quarantine/`(非公開)へ退避(`ARCHIVE_PAT`登録済み)。トークンは`F:ackup-token.txt`/`F:rchive-token.txt`(値は出さない)。
+  **二次判定は見送り(ユーザー判断A)**: aruaru-llmの`POST /v1/classify-pii`は実装・push済み(5d65774)だがVPS未反映・非公開のまま、ルール検出のみで運用。
+  **未了/再開ポイント**: (1)最後の変更(OnlineTimeRecorder系`db.sqlite3`の例外=架空データ、ユーザー確認済み)がGitHubへ未pushの可能性。ネットワーク不調(TLS timeout)で確認できず。
+  `F:ackup-system-unpushed.bundle`に全コミットを退避済み(`git clone`して`aon-co-jp-backup/backup-system`へpush、`gh workflow run mirror.yml`)。
+  (2)新規リポジトリ作成は二次レート制限のため1回5件・3時間おきで追いつく運用、全99件の完了確認。(3)止まったもの: old.aon.tokyo/open-bar/pinax(gitleaks検出、誤検知か要確認)。
+  (4)open-english.sqlite3は空DBで例外登録済み。(5)既存RS-Sync(非公開、フィルター無し)との役割整理。
+
 - **2026-09-30 音声・音質の研究を横断反映**: maid-cafe-seでの研究(音程と声の太さの独立制御、AI帯域拡張+声向けのロールオフ検出、
   日本語ニューラルTTSのライセンス調査、Rust化と音質の実測)を、ユーザー指示でaruaru-llm/open-english/maidcafe-programming-school/
   make-disk/maid-cafe-seへ反映した。コード変更が入ったのはmake-disk(声向けの帯域拡張モード`AudioBwe.speech`)とmaid-cafe-se(Rust
