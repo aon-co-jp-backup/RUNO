@@ -55,6 +55,9 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
+- **2026-10-11 aruaru-IME新設・v0.1.0アルファ公開**: [`aruaru-IME`](https://github.com/aon-co-jp/aruaru-IME)(Windows)。`pdf-r2l-rs`のOCR(`aruaru-llm`の`/v1/ocr`)とUIの試験ルールを応用した、画面の文脈から入力モードを予測してライブ変換するIME。
+  Mozc OSS辞書+Viterbi、JMdictによる日英の相互翻訳、利用者辞書/ファイル取り込み/用語辞書、Googleドライブへの自動バックアップ、常駐エンジン+薄いTSF DLL(更新でアプリの再起動不要)、Inno Setupのインストーラー。
+  **未了**: インストーラーの実機の通し試験、右クリックメニュー/2列候補窓の目視確認、多言語の切替入力・中国語・世界130言語、GitHubバックアップ、macOS/Linux/Android。再開は`aruaru-IME/CLAUDE.md`のHANDOFFから。VPSへのアップロードは不要(クライアントのアプリ)。
 - **2026-10-10 pdf-r2l-rs(v1.0.2〜v1.2.0公開、以降は`main`に未リリースの開発中)**: `pdf-r2l-win`/`pdf-r2l-script-win`等8リポジトリを統合した、PDF仕様書だけを根拠にした独自実装の
   [`pdf-r2l-rs`](https://github.com/aon-co-jp/pdf-r2l-rs)(MIT OR Apache-2.0、Windows/macOS/Linux/Android)。旧8リポジトリは後継案内済み、`pdf-r2l-win`/`script-win`は完成版(v1.2.0)に置換済み。
   v1.2.0までの機能: 綴じ方向(右/左/元と同じ)、OCRの書体文字化(`aruaru-llm`の`/v1/ocr`、非公開`tessdata-jpn`)、画像の高解像度化(FHD〜16K、Real-ESRGAN CPU、ArmはNEON、実機で確認)、AI文脈補完の初版。
