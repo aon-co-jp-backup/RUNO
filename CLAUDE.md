@@ -55,13 +55,13 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
-- **2026-10-10 pdf-r2l-rs 新設(v1.0.2〜v1.0.3公開、次版でAI文脈補正)**: `pdf-r2l-win`/`pdf-r2l-script-win`等8リポジトリ(ottijp/pdf-r2l・INORIA/pdf-r2l-script の
-  再実装)を、PDF仕様書(ISO 32000-1)だけを根拠にした**独自実装の統合リポジトリ[`pdf-r2l-rs`](https://github.com/aon-co-jp/pdf-r2l-rs)**(MIT OR Apache-2.0、
-  Windows/macOS/Linux/Android、綴じ方向=右/左/元と同じ、見開き、OCR・書体に合わせた検索できる文字化)へ統合した。OCRは`aruaru-llm`の新設`POST /v1/ocr`
-  (Tesseract、言語は1〜12個を選択して取得・キャッシュ、複数ページをまとめて処理)、描画・書体判定・フォント埋め込みはRPoemの新設共有クレート
-  `open-runo-pdf-ocr`。OCRデータ・Notoフォントは非公開リポジトリ`tessdata-jpn`。**未完了**: (1)AI文脈補正(`POST /v1/ocr/correct`、実装済み・Qwen2.5導入後に検証)、
-  (2)写真・画像の高解像度化(make-diskのReal-ESRGAN/CPU超解像を流用)、(3)旧8リポジトリへ「後継はpdf-r2l-rs」の案内、(4)VPS本番の`aruaru-llm`に`/v1/ocr`は未反映
-  (試験は`/tmp`の隔離インスタンスのみ)。詳細は`pdf-r2l-rs/README.md`。
+- **2026-10-10 pdf-r2l-rs(v1.0.2〜v1.2.0公開)**: `pdf-r2l-win`/`pdf-r2l-script-win`等8リポジトリ(ottijp/pdf-r2l・INORIA/pdf-r2l-script の再実装)を、PDF仕様書(ISO 32000-1)だけを根拠にした
+  **独自実装の統合リポジトリ[`pdf-r2l-rs`](https://github.com/aon-co-jp/pdf-r2l-rs)**(MIT OR Apache-2.0、Windows/macOS/Linux/Android)へ統合。旧8リポジトリには後継案内を英日で追記済みで、
+  `pdf-r2l-win`/`pdf-r2l-script-win`は完成版(v1.2.0)の内容に置き換え済み。機能: 綴じ方向(右/左/元と同じ)、見開き、OCRの書体文字化(`aruaru-llm`の`POST /v1/ocr`、言語1〜12個、データは非公開`tessdata-jpn`)、
+  **画像の高解像度化**(FHD〜16K、Real-ESRGAN CPU、RPoem `open-runo-sr`、ArmはNEON)、**AI文脈補完**(v1.2.0・実験的・既定オフ: かすれた1〜2文字を前後の文脈でQwenが候補採点して穴埋め。
+  `aruaru-llm`の`POST /v1/ocr/fill`、`open-cuda`のQwenにバッチprefill+`score_continuations`/`top_next_tokens`を追加、クライアントはRPoem `open-runo-pdf-ocr::complete`)。
+  **VPS本番の`aruaru-llm`に`/v1/ocr`・`/v1/ocr/fill`を反映済み**(`/root/aruaru-llm/.env.ocr`に`tessdata-jpn`読取トークン、systemdドロップイン`ocr.conf`。VPSにはQwen未導入のため`/v1/ocr/fill`は503=想定動作。
+  VPSはCPU4コア・RAM3.6GBなので、補完を使うなら手元PCの`aruaru-llm`を`fill_server_url`で指定)。**未了**: 補完の精度向上(完全に消えた字は文脈の推測止まり)、日本語向けのより大きいモデル、Mac/Linux実機確認。詳細は`pdf-r2l-rs/README.md`。
 
 - **2026-10-08 公開ミラー自動バックアップ `aon-co-jp-backup/backup-system` 新設(シャットダウン時点の引き継ぎ)**: `aon-co-jp`の**公開**リポジトリのみを、
   GitHub Actions(3時間おき+手動)で検査・匿名化して`aon-co-jp-backup`へ同名ミラーする。検査=gitleaks全履歴・危険ファイル名・個人情報ルール
