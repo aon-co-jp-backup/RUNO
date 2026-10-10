@@ -55,13 +55,13 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
-- **2026-10-10 pdf-r2l-rs(v1.0.2〜v1.2.0公開)**: `pdf-r2l-win`/`pdf-r2l-script-win`等8リポジトリ(ottijp/pdf-r2l・INORIA/pdf-r2l-script の再実装)を、PDF仕様書(ISO 32000-1)だけを根拠にした
-  **独自実装の統合リポジトリ[`pdf-r2l-rs`](https://github.com/aon-co-jp/pdf-r2l-rs)**(MIT OR Apache-2.0、Windows/macOS/Linux/Android)へ統合。旧8リポジトリには後継案内を英日で追記済みで、
-  `pdf-r2l-win`/`pdf-r2l-script-win`は完成版(v1.2.0)の内容に置き換え済み。機能: 綴じ方向(右/左/元と同じ)、見開き、OCRの書体文字化(`aruaru-llm`の`POST /v1/ocr`、言語1〜12個、データは非公開`tessdata-jpn`)、
-  **画像の高解像度化**(FHD〜16K、Real-ESRGAN CPU、RPoem `open-runo-sr`、ArmはNEON)、**AI文脈補完**(v1.2.0・実験的・既定オフ: かすれた1〜2文字を前後の文脈でQwenが候補採点して穴埋め。
-  `aruaru-llm`の`POST /v1/ocr/fill`、`open-cuda`のQwenにバッチprefill+`score_continuations`/`top_next_tokens`を追加、クライアントはRPoem `open-runo-pdf-ocr::complete`)。
-  **VPS本番の`aruaru-llm`に`/v1/ocr`・`/v1/ocr/fill`を反映済み**(`/root/aruaru-llm/.env.ocr`に`tessdata-jpn`読取トークン、systemdドロップイン`ocr.conf`。VPSにはQwen未導入のため`/v1/ocr/fill`は503=想定動作。
-  VPSはCPU4コア・RAM3.6GBなので、補完を使うなら手元PCの`aruaru-llm`を`fill_server_url`で指定)。**未了**: 補完の精度向上(完全に消えた字は文脈の推測止まり)、日本語向けのより大きいモデル、Mac/Linux実機確認。詳細は`pdf-r2l-rs/README.md`。
+- **2026-10-10 pdf-r2l-rs(v1.0.2〜v1.2.0公開、以降は`main`に未リリースの開発中)**: `pdf-r2l-win`/`pdf-r2l-script-win`等8リポジトリを統合した、PDF仕様書だけを根拠にした独自実装の
+  [`pdf-r2l-rs`](https://github.com/aon-co-jp/pdf-r2l-rs)(MIT OR Apache-2.0、Windows/macOS/Linux/Android)。旧8リポジトリは後継案内済み、`pdf-r2l-win`/`script-win`は完成版(v1.2.0)に置換済み。
+  v1.2.0までの機能: 綴じ方向(右/左/元と同じ)、OCRの書体文字化(`aruaru-llm`の`/v1/ocr`、非公開`tessdata-jpn`)、画像の高解像度化(FHD〜16K、Real-ESRGAN CPU、ArmはNEON、実機で確認)、AI文脈補完の初版。
+  **開発停止時点(未リリース)**: コントラスト自動補正(薄い文書が「白紙」判定されていたのを修正)、かすれ補正(超解像+再OCR、設定`reocr`)、AI文脈補完の拡張(Qwenが走査して不自然な1〜4文字を検出→候補採点→置換、検索`aruaru-search`で実文の裏付け、
+  字形の照合=新設の共有クレート`RPoem/open-runo-glyph`をサーバーの`open-cuda` sgemmで実行、1升約14ms)。**測定の正直な結果**: 合成のかすれ文書で、補正のみ48%→+かすれ補正89%→補完は初版86〜90%、連続文字+検索を加えた版は87%(880秒)で**逆効果**。
+  精度優先に作り直したが**作り直し後の通し測定は未了**。AI文脈補完は**実験的・既定オフ**。詳細・試験手順・次の手は`pdf-r2l-rs/PORTING.md`(日英)。
+  **VPS本番の`aruaru-llm`**: `/v1/ocr`・`/v1/ocr/fill`は反映済み。停止時点の追加分(`/scan`・`/propose`・`/glyph-rank`・`/charset`)は2026-10-10にビルド・反映(VPSにQwen未導入のため補完系は503が正常。VPSは4コア・RAM3.6GBなので補完は手元PCのaruaru-llmを使う運用)。
 
 - **2026-10-08 公開ミラー自動バックアップ `aon-co-jp-backup/backup-system` 新設(シャットダウン時点の引き継ぎ)**: `aon-co-jp`の**公開**リポジトリのみを、
   GitHub Actions(3時間おき+手動)で検査・匿名化して`aon-co-jp-backup`へ同名ミラーする。検査=gitleaks全履歴・危険ファイル名・個人情報ルール
