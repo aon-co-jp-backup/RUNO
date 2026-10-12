@@ -55,7 +55,7 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
-- **2026-10-11 aruaru-IME新設・v0.1.0アルファ公開**: [`aruaru-IME`](https://github.com/aon-co-jp/aruaru-IME)(Windows)。`pdf-r2l-rs`のOCR(`aruaru-llm`の`/v1/ocr`)とUIの試験ルールを応用した、画面の文脈から入力モードを予測してライブ変換するIME。
+- **2026-10-11 aruaru-IME新設・v0.1.0アルファ公開(2026-10-12 v0.2.0公開: 中国語・季節用語・優先順位・全言語一覧・オンライン画面 easy-web.tokyo/ime、VPSにサーバー運転エンジン)**: [`aruaru-IME`](https://github.com/aon-co-jp/aruaru-IME)(Windows)。`pdf-r2l-rs`のOCR(`aruaru-llm`の`/v1/ocr`)とUIの試験ルールを応用した、画面の文脈から入力モードを予測してライブ変換するIME。
   Mozc OSS辞書+Viterbi、JMdictによる日英の相互翻訳、利用者辞書/ファイル取り込み/用語辞書、Googleドライブへの自動バックアップ、常駐エンジン+薄いTSF DLL(更新でアプリの再起動不要)、Inno Setupのインストーラー。
   **未了**: インストーラーの実機の通し試験、右クリックメニュー/2列候補窓の目視確認、多言語の切替入力・中国語・世界130言語、GitHubバックアップ、macOS/Linux/Android。再開は`aruaru-IME/CLAUDE.md`のHANDOFFから。VPSへのアップロードは不要(クライアントのアプリ)。
 - **2026-10-10 pdf-r2l-rs(v1.0.2〜v1.2.0公開、以降は`main`に未リリースの開発中)**: `pdf-r2l-win`/`pdf-r2l-script-win`等8リポジトリを統合した、PDF仕様書だけを根拠にした独自実装の
