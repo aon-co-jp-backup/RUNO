@@ -55,6 +55,10 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
+- **2026-10-12 open-media新設(make-disk + open-bar)・v0.1.4リリース中(シャットダウン時点)**: [`open-media`](https://github.com/aon-co-jp/open-media)(公開、MIT)。make-disk最終版(v0.1.32)は無変更で残し(`ai_upmix.rs`の以前からの未コミット変更のみ残存)、以降の開発はopen-mediaで継続。open-barに`loopback.rs`(OS出力音を受け取り→sinc→32bit/384kHzで別DACへ排他出力)・32bit出力・高音補正のCD/ハイレゾ適用スイッチを追加(`f6163cb`)。
+  機能: ディスクプレーヤー(音声=open-barエンジン、映像=WebView、映像+別音声combo、DVD/BDタイトル列挙、映像はFull HD/4Kへlanczos引き上げ)、システム音声の橋渡し(Windows)、LinuxのPipeWire設定(`linux/pipewire/`、未検証)。
+  **確認済み**: Windowsインストーラー(v0.1.2)のインストール/起動/アンインストール、実機の音楽CD(D:)を排他+アップサンプル352.8kHz+32bitで再生(音切れ0)、橋渡し(PHL→Loxjie DAC 48→384kHz/32bit)、Linux .debの起動(WSL)、Android実機(moto g53y, Android 14)でMP4/FLAC再生。
+  **未了**: (1)CI `v0.1.4`(run 38230406307)の完了確認とAPK(表示名open-media修正版)の実機インストール(CI版APKは署名が違うため、いま入っているローカル版を一度アンインストールが必要)、(2)DVD/Blu-rayの実ディスク再生、(3)macOS実機、(4)自動アップデート(署名鍵未設定)、(5)YouTube/Netflix等への割り込みはループバック方式の音楽向けのみ・DRM音声は対象外、(6)TV(Android TV)対応は未着手。作業用の`F:\open-media-test`は不要になり次第削除可。
 - **2026-10-11 aruaru-IME新設・v0.1.0アルファ公開(2026-10-12 v0.2.0公開: 中国語・季節用語・優先順位・全言語一覧・オンライン画面 easy-web.tokyo/ime、VPSにサーバー運転エンジン)**: [`aruaru-IME`](https://github.com/aon-co-jp/aruaru-IME)(Windows)。`pdf-r2l-rs`のOCR(`aruaru-llm`の`/v1/ocr`)とUIの試験ルールを応用した、画面の文脈から入力モードを予測してライブ変換するIME。
   Mozc OSS辞書+Viterbi、JMdictによる日英の相互翻訳、利用者辞書/ファイル取り込み/用語辞書、Googleドライブへの自動バックアップ、常駐エンジン+薄いTSF DLL(更新でアプリの再起動不要)、Inno Setupのインストーラー。
   **未了**: インストーラーの実機の通し試験、右クリックメニュー/2列候補窓の目視確認、多言語の切替入力・中国語・世界130言語、GitHubバックアップ、macOS/Linux/Android。再開は`aruaru-IME/CLAUDE.md`のHANDOFFから。VPSへのアップロードは不要(クライアントのアプリ)。
