@@ -55,6 +55,12 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
+- **2026-10-14 audiocafe.tokyoのVPSお引越し準備(日英)**: 2026-10-08にVPS上だけで直したPHP(毎朝クロールの`--cron-tech`、AIの価格訂正、`aruaru-llm`連携、中間証明書)を、
+  [`audiocafe-tokyo`](https://github.com/aon-co-jp/audiocafe-tokyo)の最新版へ3方向マージして保存(衝突0)。systemd・nginxの設定を`deploy/vps/`へ、手順を同リポジトリの`PORTING.md`
+  「VPS お引越し手順」(日英)へ。`aruaru-llm`の知識はGitHubへ自動バックアップ・起動時に自動復元(実測済み)。**新品VPSでの通し試験は未実施**。
+  同日、`aruaru-llm`(日本語検索)・`RS-JSON`(`parse_secure`、実測+14%・SIMD版は約5.8倍速い)・`open-easy-web`(ロリポップ向けオートクロール)・`aruaru-tokyo`・`audiocafe-tokyo-rust`の
+  README/CLAUDE/PORTINGを日英で更新。**未了**: AI学習リンクのRust版表示、「無料」表記の検証、`RS-JSON`の入口への適用。
+  **注意**: `audiocafe-tokyo`のPHPは本番より新しい部分がある(`rakuten-mobile`の言語切替ほか)。本番のファイルをそのままコピーしない。
 - **2026-10-14 open-github-backup新設(GitHub Actionsで`aon-co-jp`→`runo-aruaru`自動バックアップ) / new**: 詳細は本リポジトリ`PORTING.md`末尾と`open-github-backup/CLAUDE.md`。10/8に全件成功したが、以降はGitHubの課金/利用上限でジョブ未開始(要Billing確認)。VPSデータの暗号化バックアップは未配置。/ Full mirror OK on 10/8; jobs not starting since (billing); encrypted VPS data backup not yet deployed.
 - **2026-10-14 お引越し対応 / Migration readiness**: aruaru-llm・open-englishのREADME/CLAUDE/PORTINGに日英の「お引越し」節を追記し、知識のGitHub退避(6時間ごと)とWEB/GitHubからの自動復元をVPSへ反映。詳細は`PORTING.md`末尾。 / Added bilingual Migration sections to aruaru-llm and open-english docs; knowledge is backed up to GitHub every 6 h and restores itself from the web/GitHub (deployed to the VPS). Details at the end of `PORTING.md`.
 - **2026-10-14 open-mediaの文書を整備・VPSへ配置(引っ越し可能に)**: `open-media`の`README`/`CLAUDE`/`PORTING`を日英で整備(`CLAUDE.md`/`CLAUDE.en.md`/`PORTING.md`/`PORTING.en.md`)。**引っ越し手順は`open-media/PORTING.md`**(道具・鍵の運び方・確認・OS別状況)、環境診断は`scripts/doctor.ps1`、Androidローカルビルドは`scripts/android-local-build.ps1`。make-disk時代の記録は`docs/make-disk-legacy/`。VPSは`/root/repository/open-media`(`git pull`で追従)。公開は`v0.1.10`(自動更新・1つだけ起動・日本語フォント同梱で解決したUbuntuの文字化け・関連付け・自動再生)。**更新の署名鍵は`F:\open-media-updater.key`(別の場所にも保管。無くすと更新を配れない)**。未了: PowerDVDが先に開く件の入れ直し結果、DVD/Blu-ray実ディスク、macOS・Android TV実機。
