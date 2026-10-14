@@ -2078,3 +2078,10 @@ check Billing and plans of `aon-co-jp` (the workflow was rewritten to a single-j
 `F:\runo-aruaru-github-token.txt` initially held an `aon-co-jp` token so the destination was itself, bulk creation hits the secondary rate limit.
 The GPG-encrypted backup of the VPS data (PostgreSQL, aruaru-db, configuration; private key `F:\vps-data-backup-gpg-PRIVATE.asc`) has its script written but is **not yet deployed to the VPS**.
 Old VPS cron commented out, `rs-sync` job disabled (backups `/root/*.bak-20261008`). Details, resume steps and PC-migration steps: `open-github-backup/PORTING.md` and `CLAUDE.md`.
+
+**追記 2026-10-14(完了) / Update (done)**: **日本語**: `runo-aruaru`の146件でActionsを全て無効化、空の`aon-co-jp/vps-data-backup`を削除、宛先だけにある15件(`RCosmo`・`RGit`・`RS-Git`等)は旧名のバックアップなので残し、
+10/8以降の新規3件(`cnf-diamond-fiber-battery`・`open-backup`・`open-media`)は課金で自動実行が止まっていたため手動ミラーした。VPSデータの暗号化バックアップ(`vps-data-backup.timer`、毎日03:30)は稼働中・復号確認済み。
+**残る課題は`aon-co-jp`のBilling確認のみ**(解消後に`gh workflow run backup.yml`で差分方式を検証)。
+**English**: Actions disabled on all 146 `runo-aruaru` repos, the empty `aon-co-jp/vps-data-backup` deleted, the 15 destination-only repos (`RCosmo`, `RGit`, `RS-Git`, …) kept as old-name backups,
+and the 3 repos created after 10/8 (`cnf-diamond-fiber-battery`, `open-backup`, `open-media`) mirrored by hand because scheduled runs were blocked by billing. The encrypted VPS data backup (`vps-data-backup.timer`, daily 03:30) is running and restore-verified.
+**The only open item is checking Billing of `aon-co-jp`** (then verify the differential design with `gh workflow run backup.yml`).
