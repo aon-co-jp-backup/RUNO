@@ -2148,7 +2148,7 @@ Reading into `serde_json::Value` gives almost no speed-up even with SIMD (188 ms
 
 ### 未完了・要判断(優先順)
 1. **`open-web-server`がVPSに未pushの独自コミット2件(certbot webroot修正・ストリーミング対応)+未コミット16件を持つ**。GitHubに無い本物の作業。**早めにpush**(履歴を触らない、`git pull --rebase`などは慎重に)。
-2. **JSON処理の実コード切り替えは未実施**(方針は16リポジトリに記載済み)。効果が見込めるのは`audiocafe-tokyo-rust`の`fetch_cache`(ページ表示のたびに約200KBのJSONを読み直す)。`serde_json::Value`を`sonic_rs::Value`に直す書き換えが必要。小さなJSONでは差が出ない。
+2. **JSON処理の実コード切り替えは未実施**(`sonic-rs`は2026-10-15に新設した`RS-JSON`の姉妹リポジトリ=評価記録と方針、コードは`RS-JSON`)(方針は16リポジトリに記載済み)。効果が見込めるのは`audiocafe-tokyo-rust`の`fetch_cache`(ページ表示のたびに約200KBのJSONを読み直す)。`serde_json::Value`を`sonic_rs::Value`に直す書き換えが必要。小さなJSONでは差が出ない。
 3. **`maid-cafe-se`は上流(push先)未設定**のためpushしていない。
 4. **新品VPSでの引越し通し試験は未実施**(手順書・`install-units.sh`は未検証)。
 5. 本番`audiocafe.tokyo`のPHPは、`audiocafe-tokyo`リポジトリより古い部分がある(例: `rakuten-mobile`の言語切替)。リポジトリを本番に入れる前に差分を確認。
@@ -2179,7 +2179,7 @@ The next Claude should first read the top of each repository's `CLAUDE.md` and t
 
 ### Not done / needs a decision (in priority order)
 1. **`open-web-server` has two un-pushed commits on the VPS (certbot webroot fix, streaming support) plus 16 uncommitted files.** Real work that is not on GitHub. **Push it soon** (do not touch the history; be careful with `git pull --rebase` etc.).
-2. **The actual JSON code switch-over has not been done** (the policy is written in 16 repositories). The best candidate is `fetch_cache` in `audiocafe-tokyo-rust` (re-parses ~200 KB of JSON on every page view). It needs `serde_json::Value` rewritten to `sonic_rs::Value`. Small JSON shows no difference.
+2. **The actual JSON code switch-over has not been done** (`sonic-rs`, created 2026-10-15, is the sister repository of `RS-JSON`: evaluation notes and policy; the code is in `RS-JSON`) (the policy is written in 16 repositories). The best candidate is `fetch_cache` in `audiocafe-tokyo-rust` (re-parses ~200 KB of JSON on every page view). It needs `serde_json::Value` rewritten to `sonic_rs::Value`. Small JSON shows no difference.
 3. **`maid-cafe-se` has no upstream (push target)**, so it was not pushed.
 4. **No end-to-end migration test on a fresh VPS yet** (the runbook and `install-units.sh` are untested).
 5. The PHP on production `audiocafe.tokyo` is older than the `audiocafe-tokyo` repository in places (e.g. the `rakuten-mobile` language switcher). Review the diff before deploying the repo to production.
