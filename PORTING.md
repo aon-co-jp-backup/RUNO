@@ -2060,3 +2060,21 @@ open-audio-sr(拡散モデル)の選択自体は妥当だった。
 **日本語**: 女性キャラ=メイドの先生・男性キャラ=執事の先生、モデル非依存の知識ストア、WEB/GitHubからの自動復元、6時間ごとのGitHub退避を実装しVPSへ反映済み(open-english v0.8.14)。お引越し手順は各リポジトリのPORTING.md「お引越し」節(`aruaru-llm`・`open-english`)。未了: Android実機確認、VPS丸ごとの再構成の通し試験、国別ニュース見出しが応対に入らない原因調査。
 
 **English**: Female character = maid teacher, male = butler teacher; a model-independent knowledge store with automatic restore from the web/GitHub and a 6-hourly GitHub backup are implemented and deployed (open-english v0.8.14). Migration runbooks: "Migration" in each repo's PORTING.md (`aruaru-llm`, `open-english`). Open items: real Android device check, a full from-scratch VPS rebuild rehearsal, and why today's news headline is not reaching replies.
+
+## 2026-10-14 open-github-backup(GitHub Actionsによる自動バックアップ) / GitHub Actions backup
+
+**日本語**: `aon-co-jp`の全リポジトリを`runo-aruaru`(非公開)へミラーする[`open-github-backup`](https://github.com/aon-co-jp/open-github-backup)(非公開、`F:\open-github-backup`)を新設し、
+RS-Syncの同期ジョブとVPSのcron(`/root/sync-repos.sh`)を停止して置き換えた。2026-10-08に全件ミラー成功(宛先135件、全て非公開)。
+**ただし10/8以降の定期実行はGitHubの課金/利用上限(「recent account payments have failed or your spending limit needs to be increased」)でジョブが開始されず失敗**しており、
+`aon-co-jp`のBilling and plansの確認が必要(1ジョブ・差分方式へ書き換え済みだが、課金が解消するまで検証不能)。教訓: `aon-co-jp`はUser(`user/repos`)、Fine-grained tokenは個人アカウントのリポジトリを作れない(Classicの`repo`+`workflow`)、
+`F:\runo-aruaru-github-token.txt`は当初`aon-co-jp`のトークンで宛先が自分自身になっていた、大量作成は二次レート制限。
+VPSデータ(PostgreSQL・aruaru-db・設定)のGPG暗号化バックアップ(秘密鍵`F:\vps-data-backup-gpg-PRIVATE.asc`)はスクリプト作成済みで**VPS未配置**。
+VPSの旧cronはコメントアウト、`rs-sync`のジョブは無効化(退避`/root/*.bak-20261008`)。詳細・再開手順・別PCへの移行手順は`open-github-backup/PORTING.md`と`CLAUDE.md`。
+
+**English**: Created [`open-github-backup`](https://github.com/aon-co-jp/open-github-backup) (private, `F:\open-github-backup`), which mirrors all `aon-co-jp` repositories to `runo-aruaru` (private),
+replacing the RS-Sync job and the VPS cron (`/root/sync-repos.sh`). A full mirror succeeded on 2026-10-08 (135 destination repos, all private).
+**Scheduled runs since 10/8 fail because GitHub does not start the jobs (billing / spending limit: "recent account payments have failed or your spending limit needs to be increased")**;
+check Billing and plans of `aon-co-jp` (the workflow was rewritten to a single-job differential design but cannot be verified until billing is resolved). Lessons: `aon-co-jp` is a User (`user/repos`), fine-grained tokens cannot create repos in a personal account (use classic `repo` + `workflow`),
+`F:\runo-aruaru-github-token.txt` initially held an `aon-co-jp` token so the destination was itself, bulk creation hits the secondary rate limit.
+The GPG-encrypted backup of the VPS data (PostgreSQL, aruaru-db, configuration; private key `F:\vps-data-backup-gpg-PRIVATE.asc`) has its script written but is **not yet deployed to the VPS**.
+Old VPS cron commented out, `rs-sync` job disabled (backups `/root/*.bak-20261008`). Details, resume steps and PC-migration steps: `open-github-backup/PORTING.md` and `CLAUDE.md`.
