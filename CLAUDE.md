@@ -55,6 +55,12 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
+- **2026-10-14 アカウント引っ越しの引き継ぎ**: 完了/未完了/注意点を[`PORTING.md`](PORTING.md)「アカウント引っ越しのための引き継ぎ」(日英)にまとめた。最優先の未完了は
+  **`open-web-server`のVPS上の未push作業(certbot webroot修正ほか)をGitHubへpushすること**。次いでJSONの実コード切り替え(`audiocafe-tokyo-rust`の`fetch_cache`)、`maid-cafe-se`の上流設定。
+  `aruaru-llm`・`audiocafe-tokyo-rust`のGitHub履歴は書き直されている(強制pushしない)。
+- **2026-10-14 Hand-off for the account move**: done / not done / pitfalls are summarised in "Hand-off for moving to another account" in [`PORTING.md`](PORTING.md) (Japanese and English). The top unfinished item is
+  **pushing the un-pushed work on the VPS in `open-web-server` (certbot webroot fix etc.) to GitHub**, then the real JSON code switch-over (`fetch_cache` in `audiocafe-tokyo-rust`) and setting an upstream for `maid-cafe-se`.
+  The GitHub history of `aruaru-llm` and `audiocafe-tokyo-rust` was rewritten (do not force-push).
 - **2026-10-14 audiocafe.tokyoのVPSお引越し準備(日英)**: 2026-10-08にVPS上だけで直したPHP(毎朝クロールの`--cron-tech`、AIの価格訂正、`aruaru-llm`連携、中間証明書)を、
   [`audiocafe-tokyo`](https://github.com/aon-co-jp/audiocafe-tokyo)の最新版へ3方向マージして保存(衝突0)。systemd・nginxの設定を`deploy/vps/`へ、手順を同リポジトリの`PORTING.md`
   「VPS お引越し手順」(日英)へ。`aruaru-llm`の知識はGitHubへ自動バックアップ・起動時に自動復元(実測済み)。**新品VPSでの通し試験は未実施**。

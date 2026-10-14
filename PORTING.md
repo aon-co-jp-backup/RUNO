@@ -2127,3 +2127,65 @@ Reading into `serde_json::Value` gives almost no speed-up even with SIMD (188 ms
 **Adoption**: in `Cargo.toml`, `rust-json = { path = "../RS-JSON", features = ["fast"] }`. Example in `RS-JSON/README.md`.
 
 **Status in this repository**: Not yet applied (policy only). Code will be switched over place by place, starting where measurements show large or frequent JSON reads.
+
+## アカウント引っ越しのための引き継ぎ(2026-10-14)
+
+別のアカウントのClaudeで作業を続けるための、事実だけの引き継ぎ。**秘密(APIキー・パスワード・トークン)の値はここに書かない**(場所だけ)。
+別アカウントのClaudeは、まず各リポジトリの`CLAUDE.md`冒頭と、このPORTINGの本節を読むこと。
+
+### 環境(推測せず確認する)
+- 作業ドライブは`F:\`(Windows)。本番は **ConoHa VPS**(`ssh conoha`、AlmaLinux、4コア・RAM 3.6GB・GPUなし)。リポジトリはVPSの`/root/repository/`と`/root/url/`にもある。
+- 秘密は`F:\`直下のtxt(`github-token.txt`、`ARUARU_LLM_*`、`lolipop*.txt`等)とVPSの`.env.*`(`/root/aruaru-llm/`)。**値を画面・コミット・チャットに出さない**。`lolipop*.txt`にはパスワードがある(2026-10-08に誤って一部を表示したので、パスワード変更を推奨済み)。
+- 別アカウントではClaudeの記憶(`~/.claude/projects/F--runo/memory/`)が引き継がれない可能性がある。この節と各リポジトリの`CLAUDE.md`が正。
+- ネットワーク/SSHが間欠的に詰まる。重い操作は1つずつ、バックグラウンド+監視で。VPSの負荷自体は低い(load 0.00)。
+
+### 2026-10-08〜14に完了したこと(いずれもpush済み・本番確認済み)
+- **audiocafe.tokyoの毎朝クロール**: ロリポップのcronは削除済み、VPSのsystemdタイマー2本(`audiocafe-cron-rust`・`audiocafe-cron-php`、毎朝05:00)。止まっていた技術ランキング等を修正(`--cron-tech`)。
+- **AI学習コメント**: OpenAIは使わず`aruaru-llm`経由(Gemini/Groq/Mistral等の無料枠)。AIが書いた価格欄は24件中23件が誤りだったため、実取得価格に訂正し、`aruaru-llm`の知識ストアに学習→GitHub(`open-english/data/knowledge`)へ自動バックアップ(復元テスト合格)。「無料」表記474件も検証。
+- **サイトへの掲載**: `audiocafe.tokyo/aruaru`・`aruaru.tokyo`にオンライン学習サイト5件、AI駆動開発の研究記事、AI学習リンク(120技術・612件)。
+- **PHPコードのGit化**: `aon-co-jp/audiocafe-tokyo`(ハイフン)へ3方向マージで保存、`deploy/vps/`にsystemd・nginx、引越し手順は同リポジトリのPORTING「VPS お引越し手順」。
+- **`aruaru-llm`**: 知識検索の日本語対応、外部取り込みを`parse_secure`で。**`RS-JSON`**: `parse_secure`/`parse_secure_sonic`(実測: `serde_json`200ms・安全版217ms・**`parse_secure_sonic`83ms**)。**`open-easy-web`**: ロリポップ向け時間指定オートクロール+設定画面+後追い実行。
+
+### 未完了・要判断(優先順)
+1. **`open-web-server`がVPSに未pushの独自コミット2件(certbot webroot修正・ストリーミング対応)+未コミット16件を持つ**。GitHubに無い本物の作業。**早めにpush**(履歴を触らない、`git pull --rebase`などは慎重に)。
+2. **JSON処理の実コード切り替えは未実施**(方針は16リポジトリに記載済み)。効果が見込めるのは`audiocafe-tokyo-rust`の`fetch_cache`(ページ表示のたびに約200KBのJSONを読み直す)。`serde_json::Value`を`sonic_rs::Value`に直す書き換えが必要。小さなJSONでは差が出ない。
+3. **`maid-cafe-se`は上流(push先)未設定**のためpushしていない。
+4. **新品VPSでの引越し通し試験は未実施**(手順書・`install-units.sh`は未検証)。
+5. 本番`audiocafe.tokyo`のPHPは、`audiocafe-tokyo`リポジトリより古い部分がある(例: `rakuten-mobile`の言語切替)。リポジトリを本番に入れる前に差分を確認。
+
+### 注意(過去の事故・落とし穴)
+- GitHub上の`aruaru-llm`・`audiocafe-tokyo-rust`は**履歴が書き直されている**(内容は同じでハッシュが違う)。手元とVPSは揃え済み、旧履歴は`backup-before-rewrite-20261014`/`vps-before-rewrite-20261014`ブランチ。誰が書き直したかは不明。強制pushしない。
+- `aruaru-llm`は`../RS-JSON`を相対パスで参照する。VPSでビルドする前に`RS-JSON`を最新にする。
+- 知識検索(`aruaru-llm`)は日本語バイグラム対応済みだが、知識は公開リポジトリに保存されるため、公開してよい内容だけを入れる。
+- 禁止事項に注意: パスワードでのログイン、秘密の値の表示、強制push、確認なしの削除。
+
+## Hand-off for moving to another account (2026-10-14)
+
+Facts-only hand-off so work can continue with Claude on another account. **No secret values (API keys, passwords, tokens) are written here** — only where they live.
+The next Claude should first read the top of each repository's `CLAUDE.md` and this section of PORTING.
+
+### Environment (verify, do not assume)
+- Work drive is `F:\` (Windows). Production is a **ConoHa VPS** (`ssh conoha`, AlmaLinux, 4 cores, 3.6 GB RAM, no GPU). The repositories also live on the VPS under `/root/repository/` and `/root/url/`.
+- Secrets live in txt files at the root of `F:\` (`github-token.txt`, `ARUARU_LLM_*`, `lolipop*.txt`, ...) and in the VPS `.env.*` files (`/root/aruaru-llm/`). **Never print values on screen, in commits or in chat.** `lolipop*.txt` contains a password (part of a file was displayed by mistake on 2026-10-08; changing the password was recommended).
+- Claude's memory (`~/.claude/projects/F--runo/memory/`) may not carry over to another account. This section and each repository's `CLAUDE.md` are the source of truth.
+- Network/SSH sometimes stalls intermittently. Do heavy operations one at a time, in the background with monitoring. The VPS itself is lightly loaded (load 0.00).
+
+### Done 2026-10-08 to 14 (all pushed and verified on production)
+- **Daily crawl of audiocafe.tokyo**: the Lolipop cron was removed; two systemd timers on the VPS (`audiocafe-cron-rust`, `audiocafe-cron-php`, daily 05:00). Fixed the stalled tech ranking etc. (`--cron-tech`).
+- **AI learning comments**: OpenAI is not used; they go through `aruaru-llm` (Gemini/Groq/Mistral free tiers). 23 of 24 AI-written prices were wrong, so they are corrected to the crawled prices, taught to the `aruaru-llm` knowledge store and automatically backed up to GitHub (`open-english/data/knowledge`; restore test passed). 474 "free" claims were also verified.
+- **On the sites**: `audiocafe.tokyo/aruaru` and `aruaru.tokyo` show five online-learning sites, the AI-driven-development research article and the AI learning links (120 technologies, 612 links).
+- **PHP code under Git**: saved to `aon-co-jp/audiocafe-tokyo` (hyphen) by a three-way merge; systemd and nginx files in `deploy/vps/`; the migration procedure is in that repository's PORTING ("VPS migration guide").
+- **`aruaru-llm`**: Japanese knowledge search, outside imports read with `parse_secure`. **`RS-JSON`**: `parse_secure` / `parse_secure_sonic` (measured: `serde_json` 200 ms, secure 217 ms, **`parse_secure_sonic` 83 ms**). **`open-easy-web`**: timed auto-crawl for Lolipop + settings screen + catch-up runs.
+
+### Not done / needs a decision (in priority order)
+1. **`open-web-server` has two un-pushed commits on the VPS (certbot webroot fix, streaming support) plus 16 uncommitted files.** Real work that is not on GitHub. **Push it soon** (do not touch the history; be careful with `git pull --rebase` etc.).
+2. **The actual JSON code switch-over has not been done** (the policy is written in 16 repositories). The best candidate is `fetch_cache` in `audiocafe-tokyo-rust` (re-parses ~200 KB of JSON on every page view). It needs `serde_json::Value` rewritten to `sonic_rs::Value`. Small JSON shows no difference.
+3. **`maid-cafe-se` has no upstream (push target)**, so it was not pushed.
+4. **No end-to-end migration test on a fresh VPS yet** (the runbook and `install-units.sh` are untested).
+5. The PHP on production `audiocafe.tokyo` is older than the `audiocafe-tokyo` repository in places (e.g. the `rakuten-mobile` language switcher). Review the diff before deploying the repo to production.
+
+### Pitfalls (past incidents)
+- On GitHub, `aruaru-llm` and `audiocafe-tokyo-rust` have **rewritten history** (same content, different hashes). Local copies and the VPS are aligned; the old history is kept in the `backup-before-rewrite-20261014` / `vps-before-rewrite-20261014` branches. Who rewrote it is unknown. Do not force-push.
+- `aruaru-llm` references `../RS-JSON` by relative path. Update `RS-JSON` before building on the VPS.
+- Knowledge search in `aruaru-llm` handles Japanese (bigrams), but knowledge is stored in a public repository, so only put publishable content in it.
+- Mind the prohibitions: logging in with passwords, printing secret values, force-pushing, deleting without confirmation.

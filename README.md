@@ -83,3 +83,9 @@ live GitHub API lookups from
 ## GitHub organization
 
 🏢 https://github.com/aon-co-jp
+
+## 引き継ぎ(2026-10-14)
+別アカウントで作業を続けるための引き継ぎは [`PORTING.md`](PORTING.md) の「アカウント引っ越しのための引き継ぎ」を参照(秘密の値は書いていない)。
+
+## Hand-off (2026-10-14)
+For continuing the work on another account, see "Hand-off for moving to another account" in [`PORTING.md`](PORTING.md) (no secret values are written there).
