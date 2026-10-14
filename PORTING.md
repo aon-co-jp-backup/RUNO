@@ -2054,3 +2054,9 @@ open-audio-sr(拡散モデル)の選択自体は妥当だった。
      `MAKE_DISK_DEMUCS_MODEL_DIR`での手動配置のみ、未設定時はpanフィルタへ自動
      フォールバック)、オーバーラップ加算によるチャンク境界のクロスフェード。
    - `cargo test`: 153 passed, 0 failed。
+
+## 2026-10-14 お引越し対応(aruaru-llm/open-english) / Migration readiness
+
+**日本語**: 女性キャラ=メイドの先生・男性キャラ=執事の先生、モデル非依存の知識ストア、WEB/GitHubからの自動復元、6時間ごとのGitHub退避を実装しVPSへ反映済み(open-english v0.8.14)。お引越し手順は各リポジトリのPORTING.md「お引越し」節(`aruaru-llm`・`open-english`)。未了: Android実機確認、VPS丸ごとの再構成の通し試験、国別ニュース見出しが応対に入らない原因調査。
+
+**English**: Female character = maid teacher, male = butler teacher; a model-independent knowledge store with automatic restore from the web/GitHub and a 6-hourly GitHub backup are implemented and deployed (open-english v0.8.14). Migration runbooks: "Migration" in each repo's PORTING.md (`aruaru-llm`, `open-english`). Open items: real Android device check, a full from-scratch VPS rebuild rehearsal, and why today's news headline is not reaching replies.

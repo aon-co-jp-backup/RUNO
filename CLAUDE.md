@@ -55,6 +55,7 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
+- **2026-10-14 お引越し対応 / Migration readiness**: aruaru-llm・open-englishのREADME/CLAUDE/PORTINGに日英の「お引越し」節を追記し、知識のGitHub退避(6時間ごと)とWEB/GitHubからの自動復元をVPSへ反映。詳細は`PORTING.md`末尾。 / Added bilingual Migration sections to aruaru-llm and open-english docs; knowledge is backed up to GitHub every 6 h and restores itself from the web/GitHub (deployed to the VPS). Details at the end of `PORTING.md`.
 - **2026-10-12 open-media新設(make-disk + open-bar)・v0.1.4リリース完了(2026-10-13追記)**: [`open-media`](https://github.com/aon-co-jp/open-media)(公開、MIT)。make-disk最終版(v0.1.32)は無変更で残し(`ai_upmix.rs`の以前からの未コミット変更のみ残存)、以降の開発はopen-mediaで継続。open-barに`loopback.rs`(OS出力音を受け取り→sinc→32bit/384kHzで別DACへ排他出力)・32bit出力・高音補正のCD/ハイレゾ適用スイッチを追加(`f6163cb`)。
   機能: ディスクプレーヤー(音声=open-barエンジン、映像=WebView、映像+別音声combo、DVD/BDタイトル列挙、映像はFull HD/4Kへlanczos引き上げ)、システム音声の橋渡し(Windows)、LinuxのPipeWire設定(`linux/pipewire/`、未検証)。
   **確認済み**: Windowsインストーラー(v0.1.2)のインストール/起動/アンインストール、実機の音楽CD(D:)を排他+アップサンプル352.8kHz+32bitで再生(音切れ0)、橋渡し(PHL→Loxjie DAC 48→384kHz/32bit)、Linux .debの起動(WSL)、Android実機(moto g53y, Android 14)でMP4/FLAC再生。
