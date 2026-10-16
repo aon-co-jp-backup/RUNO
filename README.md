@@ -100,4 +100,4 @@ Commit authors in the public repositories are anonymous (`aon-co-jp`). Other dev
 
 ---
 
-作者 / Author: 石塚正浩（MASAHIRO ISHIZUKA） (https://github.com/aon-co-jp)
+作者 / Author: 石 塚 正 浩（MASAHIRO ISHIZUKA） (https://github.com/aon-co-jp)
