@@ -2192,6 +2192,8 @@ The next Claude should first read the top of each repository's `CLAUDE.md` and t
 
 ## 公開リポジトリの個人情報の取り除き(2026-10-16) — アカウント引っ越しの引き継ぎ(続き)
 
+> **【決定 2026-10-16】ユーザーが「作者名は本名に統一」と決定した。以下の「未決」(匿名方針と本名コミットの食い違い)は解決済みで、匿名化の方針は取り下げ。本名のコミットは取り消さない。`scrub-history.sh`による内容の名前除去も不要。`git pull`禁止(古い履歴が戻る)の注意だけは有効。** / *Decision (2026-10-16): the user chose the real name as the author for everything; the open conflict below is resolved and the anonymous policy is withdrawn. Do not revert real-name commits; the content scrub is not needed. Only the "never git pull in a rewritten repo" warning still applies.*
+
 **Claudeの記憶はアカウントを消すと失われる前提で、ここに全部書く。** 秘密の値・個人の名前やメールの文字列は、この公開リポジトリには書かない(場所と手順だけ)。
 
 ### ユーザーの方針(会話での指示、時系列の最終形)
