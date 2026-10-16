@@ -2251,3 +2251,19 @@ The next Claude should first read the top of each repository's `CLAUDE.md` and t
 - **Never `git pull` in a repository whose history was rewritten.** The old history would be merged back and re-publish the personal information. Align with `git fetch origin && git reset --mixed origin/<branch>` (first check there are no un-pushed commits, e.g. `git cherry -v origin/<branch> HEAD`).
 - Rewrite with git inside WSL (Linux): Windows git takes ~1.3 s per commit, WSL is tens of times faster. Git Bash silently converts `/mnt/...` arguments to Windows paths for `wsl` (set `MSYS_NO_PATHCONV=1`). Nested quoting loses variables → pass a script file.
 - Authenticate from inside WSL with `"/mnt/c/Program Files/GitHub CLI/gh.exe" auth token` into an environment variable (do not leave it in a file).
+
+## 2026-10-16 easy-web.tokyoへの紹介ページ追加の調査結果 / Survey for adding intro pages to easy-web.tokyo
+
+**日本語**: `easy-web.tokyo`はnginx→`open-easy-web`サーバー(ポート8080)で、**各リポジトリの`webpage/index.html`を`/<リポジトリ名>/`として配信**する(例: `/root/easy-web.tokyo/open-backup/webpage/index.html`)。
+VPSの`/root/easy-web.tokyo/<名前>`に`git clone`し、`webpage/index.html`があれば紹介される。`/ime`は専用の配信で、ダウンロードはGitHubリリースのURLへ誘導する。
+2026-10-16時点の紹介済み: `open-english`・`open-backup`・`rs-sync`・`open-web-server`・`/ime`(aruaru-IME)。VPSにフォルダはあるが`webpage/`が無く404: `open-cuda`・`open-directx`・`open-raid-z`・`open-kagaku`・`open-cg-cad`・`open-cpu`・`RPoem`・`RS-Guard`・`RS-JSON`・`RS-SmartTCP`・`aruaru-jobs`。
+**配布物(GitHubリリース)を持つ公開リポジトリのうち未紹介**: `open-media`(v0.1.10)・`open-bar`(v0.1.0)・`make-disk`(v0.1.32)・`open-cuda`(v0.4.1)・`open-raid-z`(v0.1.0)・`open-cpu`(v0.1.0)・`RPoem`(v0.1.0)・`pdf-r2l-rs`(v1.3.0)・`maid-cafe-se`(v0.5.3)。`RS-Guard`(v0.1.0)は`runo.tokyo/RS-Guard`で別途紹介済み。
+公開ページはOTP不要(ダウンロードはGitHubのリリースURL)。管理画面だけを本人限定にする場合は`open-easy-web`の既存のメールOTP(`auth.rs`/`totp.rs`)を使う。`/demo`は実際に動かせるもの(`open-english`など)だけに付ける。
+`open-github-backup`(非公開、インフラ用)は紹介ページを作らない。
+
+**English**: `easy-web.tokyo` is nginx → the `open-easy-web` server (port 8080), which **serves each repository's `webpage/index.html` at `/<repository name>/`** (e.g. `/root/easy-web.tokyo/open-backup/webpage/index.html`).
+Clone the repo to `/root/easy-web.tokyo/<name>` on the VPS and it is introduced if `webpage/index.html` exists. `/ime` has its own handler and points downloads at GitHub release URLs.
+Already introduced as of 2026-10-16: `open-english`, `open-backup`, `rs-sync`, `open-web-server`, `/ime` (aruaru-IME). Folders exist on the VPS but return 404 for lack of `webpage/`: `open-cuda`, `open-directx`, `open-raid-z`, `open-kagaku`, `open-cg-cad`, `open-cpu`, `RPoem`, `RS-Guard`, `RS-JSON`, `RS-SmartTCP`, `aruaru-jobs`.
+**Public repos with GitHub releases that are not yet introduced**: `open-media` (v0.1.10), `open-bar` (v0.1.0), `make-disk` (v0.1.32), `open-cuda` (v0.4.1), `open-raid-z` (v0.1.0), `open-cpu` (v0.1.0), `RPoem` (v0.1.0), `pdf-r2l-rs` (v1.3.0), `maid-cafe-se` (v0.5.3). `RS-Guard` (v0.1.0) is already introduced separately at `runo.tokyo/RS-Guard`.
+Public pages need no OTP (downloads go to GitHub release URLs). To restrict only an admin console to the owner, use the existing email OTP of `open-easy-web` (`auth.rs` / `totp.rs`). Add `/demo` only for things that can really run (e.g. `open-english`).
+`open-github-backup` (private, infrastructure) gets no intro page.
