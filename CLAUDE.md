@@ -55,6 +55,10 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
+- **2026-10-16 公開リポジトリの個人情報の取り除き(アカウント引っ越しの引き継ぎの続き) / Removing personal information from public repositories**: 詳細は[`PORTING.md`](PORTING.md)「公開リポジトリの個人情報の取り除き」(日英)。**Claudeの記憶は失われる前提**で、全部そこに書いた。
+  要点: 112個の公開リポジトリの、**全ブランチ・タグのコミットの作者・コミッターを匿名**(`aon-co-jp` / GitHubの匿名メール)に書き換え済み(内容は同一であることを確認、`--force-with-lease`で強制push)。今後のコミットも匿名(PC・VPSのgit設定済み)。第三者の作者表示は残す。書き換え前の完全なコピーは`F:\_anon\backup\`(約800MB。個人情報入りなので公開しない)。
+  **未決(最優先)**: 別のセッションが「作者名を本人の名前に統一(`Cargo.toml`の`authors`)」というコミットを複数リポジトリへ push しており、匿名の方針と食い違う→ユーザーに確認。確認前に取り消さない。その後、ファイルの内容の名前・メールの取り除き(`F:\_anon\scrub-history.sh`)、`open-english`の作者の答えを名前だけに、VPSの写しの整列、の順。**書き換えたリポジトリで`git pull`しない**(古い履歴が戻る)。
+  *Done: author/committer of all branches and tags of the 112 public repositories rewritten to an anonymous identity (contents verified identical; pushed with `--force-with-lease`); future commits are anonymous (PC and VPS git config set); third parties' attribution stays; complete pre-rewrite mirrors in `F:\_anon\backup\` (~800 MB, contain personal info, never publish). **Open (top priority)**: another session pushed "unify the author name to the real name (`authors` in `Cargo.toml`)" commits to several repositories, which conflicts with the anonymous policy → ask the user; do not revert before asking. Then: remove the name/e-mail from file contents (`F:\_anon\scrub-history.sh`), reduce `open-english`'s author answer to the name only, align the VPS clones. **Never `git pull` in a rewritten repository** (the old history would come back).*
 - **2026-10-14 アカウント引っ越しの引き継ぎ**: 完了/未完了/注意点を[`PORTING.md`](PORTING.md)「アカウント引っ越しのための引き継ぎ」(日英)にまとめた。最優先の未完了は
   **`open-web-server`のVPS上の未push作業(certbot webroot修正ほか)をGitHubへpushすること**。次いでJSONの実コード切り替え(`audiocafe-tokyo-rust`の`fetch_cache`)、`maid-cafe-se`の上流設定。
   `aruaru-llm`・`audiocafe-tokyo-rust`のGitHub履歴は書き直されている(強制pushしない)。

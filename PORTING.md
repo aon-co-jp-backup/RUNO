@@ -2189,3 +2189,65 @@ The next Claude should first read the top of each repository's `CLAUDE.md` and t
 - `aruaru-llm` references `../RS-JSON` by relative path. Update `RS-JSON` before building on the VPS.
 - Knowledge search in `aruaru-llm` handles Japanese (bigrams), but knowledge is stored in a public repository, so only put publishable content in it.
 - Mind the prohibitions: logging in with passwords, printing secret values, force-pushing, deleting without confirmation.
+
+## 公開リポジトリの個人情報の取り除き(2026-10-16) — アカウント引っ越しの引き継ぎ(続き)
+
+**Claudeの記憶はアカウントを消すと失われる前提で、ここに全部書く。** 秘密の値・個人の名前やメールの文字列は、この公開リポジトリには書かない(場所と手順だけ)。
+
+### ユーザーの方針(会話での指示、時系列の最終形)
+1. **公開リポジトリのコミットの作者・コミッターは匿名**にする: 名前 `aon-co-jp`、メール `18116749+aon-co-jp@users.noreply.github.com`(GitHubの匿名用)。**今後のコミットも匿名**(PCのグローバル設定・`open-english-pc`のローカル設定・VPSのグローバル設定を変更済み)。
+2. **第三者(他の開発者)の作者表示は残す**: 元のOSSの作者や、取り込んだ変更の作者(`pdf-r2l-win` など)は、その人自身が公開した情報で、ライセンス上の著作者表示でもある。書き換えない。
+3. **ファイルの内容にある、ユーザー本人の名前・メールは削除**する。例外は、`open-english`の「作者を聞かれたときの答え」の中の**名前だけ**(表記は日本語の姓名を、1文字ずつ空白で区切った形)。住所・趣味・職業・夢の話・第三者の事情は残さない。
+4. **検索や収集で集めた第三者の個人名**は削除(履歴の作者は収集ではないので該当しない)。実在の私人(名前が不確か)を、家族の事情と結びつけて載せない(`open-english`の自己紹介にあった記述は、この理由で取り除く)。
+5. **強制pushはユーザーが明示して許可した範囲だけ**(この作業)。他の用途では強制pushしない。
+
+### やったこと(完了・確認済み)
+- **112個の公開リポジトリ**(`gh repo list aon-co-jp`のうちPUBLIC)の、**全ブランチ・タグのコミットの作者・コミッター**を匿名に書き換え。89個を書き換え、17個は対象のコミットが無い(空や第三者のみ)。書き換え前後で**全ブランチ・タグのファイルの内容(ツリー)が同一**であることを確かめてから、`--force-with-lease`で強制push(取得後にGitHubが変わっていたら拒否=他のセッションの新しいコミットを上書きしない)。全件で、既定ブランチの先頭が一致することを確認。
+- `open-backup`は、加えて、誤って履歴に入っていたビルドの生成物(ユーザー名入りのパス)を履歴から除去し、配布物(Windows/Linux/Android)は`--remap-path-prefix`で作り直した(`open-backup/scripts/build-release.ps1`)。
+- **書き換え前の完全なコピー**(ミラー、全ブランチ・タグ)を、`F:\_anon\backup\<リポジトリ>.git`(112個、約800MB)と、WSL `~/anon/backup/`に保存。**これらは旧い個人情報入りの履歴なので、公開リポジトリやクラウドに上げない**。復元は、そのミラーから`git push --force`(慎重に)。
+- 作業スクリプトは`F:\_anon\`(`anonymize-repo.sh` 1リポジトリの書き換え、`scrub-history.sh` 履歴の中身からの文字列の除去、`run-wsl.sh` WSLで8並列、`get-token.sh`、`vps-sync.sh` VPSの写しの整列、`wsl-setup.sh`)。**取り除く文字列そのものを含むので、公開リポジトリにコミットしない**(非公開リポジトリか、手元だけで保管)。実行の記録は`F:\_anon\wsl-summary.log`と`F:\_anon\wsl-logs\`。
+- 手元の写し(`F:\`の公開リポジトリ46個)を新しい履歴に揃えた(`git reset --mixed origin/<ブランチ>`。作業中のファイルは残る)。
+
+### 未了・未決(優先順)
+1. **【要判断】別のセッションが、同時期に「作者名を、本人の名前に統一(`Cargo.toml`の`authors`)」というコミットを複数のリポジトリへ push している**(`aruaru-IME`・`open-media`・`open-directx`・`rs-FFmpeg`・`rs-xorriso`・`runo`・`open-raid-z`…)。しかもそのセッションのコミットの作者名が本人の名前になっている。**上の方針1・3と食い違う**。どちらにするか、ユーザーに確認する(確認前に、その変更を取り消したり、書き換えたりしない)。
+2. **ファイルの内容(`CLAUDE.md`・README・ソース)にある本人の名前・メールの取り除き**(現在のファイルと履歴の両方): 未実施(1の判断待ち)。`scrub-history.sh`が、履歴の全コミットの内容を文字列置換する(第三者の私人の名前、本人のメール、本人の名前)。実施前に、`open-english`だけは、作者の答えのコードを書き戻す最後のコミットが要る。
+3. **`open-english`の作者の答え**(`web/app.js`と`mobile/android/app/src/main/assets/webroot/app.js`の同一コピー、`creatorIntroductionText`): 名前だけにする(未実施)。パズルの紹介文・運営者の説明の名前は削除。
+4. **VPSの写しの整列**(`/root/repository/*`・`/root/easy-web.tokyo/*`): 未実施。2の後に1回でまとめて行う(`F:\_anon\vps-sync.sh report`で状況を見て、`apply`は内容が同一のものだけ)。VPSには、GitHubに無い本物の作業がある(`open-web-server`など)。**`git pull`はしない**(古い履歴が戻る)。
+5. 手元に、他のセッションの未push作業があり、触っていない: `RS-JSON`(7コミット)、`open-raid-z`。
+6. **GitHub上の旧コミットは、コミットIDを知っていれば閲覧できる場合がある**(キャッシュ・フォーク)。完全に消すには、GitHubサポートに、キャッシュされたビューとフォークの削除を依頼する。
+
+### 注意(落とし穴)
+- **履歴を書き換えたリポジトリで`git pull`しない**。古い履歴がマージで戻り、個人情報を再公開する。揃え方は`git fetch origin && git reset --mixed origin/<ブランチ>`(未pushのコミットが無いことを、`git cherry -v origin/<ブランチ> HEAD`などで先に確認)。
+- 書き換えは、WSL(Linux)のgitで行う(Windowsのgitは1コミット約1.3秒で、WSLは数十倍速い)。`wsl`へのコマンドは、Git Bashだと`/mnt/...`が勝手にWindowsのパスに変換される(`MSYS_NO_PATHCONV=1`を付ける)。入れ子の引用符で変数が消える→スクリプトをファイルにして渡す。
+- 認証は、WSLの中から`"/mnt/c/Program Files/GitHub CLI/gh.exe" auth token`で環境変数に入れる(ファイルに残さない)。
+
+## Removing personal information from public repositories (2026-10-16) — account-move hand-off (continued)
+
+**Written on the assumption that Claude's memory is lost when the account is deleted.** No secret values and no personal name/e-mail strings are written in this public repository (only locations and procedures).
+
+### The user's policy (given in conversation; final form, in time order)
+1. **Commit authors and committers of public repositories are anonymous**: name `aon-co-jp`, e-mail `18116749+aon-co-jp@users.noreply.github.com` (GitHub's anonymous address). **Future commits are anonymous too** (global git settings on the PC and on the VPS, and the local setting of `open-english-pc`, were changed).
+2. **Third parties' (other developers') author attribution stays**: original OSS authors and authors of merged changes (e.g. in `pdf-r2l-win`) published it themselves, and it is also licence attribution. It is not rewritten.
+3. **The user's own name/e-mail inside file contents is removed**. The only exception is the **name alone** in `open-english`'s answer to "who is the author?" (the Japanese full name written with a space between every character). No address, hobbies, occupation, dream story or third parties' circumstances.
+4. **Third parties' personal names gathered by search/crawling are removed** (commit authors are not gathered, so they do not apply). A real private individual (with an uncertain name) must not be tied to family circumstances (the passage in `open-english`'s self-introduction is removed for this reason).
+5. **Force-pushing only within what the user explicitly allowed** (this operation). No force-pushing for anything else.
+
+### Done (complete, verified)
+- Rewrote the author/committer of **all branches and tags** of the **112 public repositories** (`gh repo list aon-co-jp`, PUBLIC) to the anonymous identity: 89 rewritten, 17 had nothing to rewrite (empty or third-party only). Before pushing, verified that the **file contents (trees) of every branch/tag are identical** before and after; pushed with `--force-with-lease` (refused if GitHub changed after the clone, so another session's new commits are never overwritten). For all of them the default-branch tip was verified to match.
+- For `open-backup`, additionally removed build artifacts (paths containing the user name) that had slipped into its history, and rebuilt the release assets (Windows/Linux/Android) with `--remap-path-prefix` (`open-backup/scripts/build-release.ps1`).
+- **Complete pre-rewrite mirrors** (all branches and tags) are kept in `F:\_anon\backup\<repo>.git` (112 repositories, ~800 MB) and in WSL `~/anon/backup/`. **They hold the old history with personal information, so never upload them to a public repository or cloud.** Restore by `git push --force` from the mirror (carefully).
+- Working scripts live in `F:\_anon\` (`anonymize-repo.sh` rewrite one repository, `scrub-history.sh` remove strings from the content of history, `run-wsl.sh` 8-way parallel in WSL, `get-token.sh`, `vps-sync.sh` align the VPS clones, `wsl-setup.sh`). **They contain the very strings to remove, so never commit them to a public repository** (keep them in a private repository or locally only). Run records: `F:\_anon\wsl-summary.log` and `F:\_anon\wsl-logs\`.
+- Aligned the local clones (46 public repositories on `F:\`) with the new history (`git reset --mixed origin/<branch>`; working files are kept).
+
+### Not done / needs a decision (priority order)
+1. **[Decision needed] Another session pushed commits at about the same time that "unify the author name to the real name (`authors` in `Cargo.toml`)" to several repositories** (`aruaru-IME`, `open-media`, `open-directx`, `rs-FFmpeg`, `rs-xorriso`, `runo`, `open-raid-z`, ...), and that session's commit author name is the real name. **This conflicts with policy 1 and 3 above.** Ask the user which one applies (do not revert or rewrite those changes before asking).
+2. **Removing the user's name/e-mail from file contents (`CLAUDE.md`, READMEs, sources)** (current files and history): not done (waiting for decision 1). `scrub-history.sh` string-replaces the content of every commit (private third-party names, the user's e-mail, the user's name). Before running it, `open-english` needs a final commit that restores the author-answer code.
+3. **`open-english`'s author answer** (`web/app.js` and its identical copy `mobile/android/app/src/main/assets/webroot/app.js`, `creatorIntroductionText`): reduce to the name only (not done). Remove the name from puzzle intros and the operator statement.
+4. **Aligning the VPS clones** (`/root/repository/*`, `/root/easy-web.tokyo/*`): not done. Do it once after step 2 (`F:\_anon\vps-sync.sh report` to look, `apply` only resets clones whose content is identical). The VPS holds real work that is not on GitHub (e.g. `open-web-server`). **Do not `git pull`** (the old history would come back).
+5. Other sessions' un-pushed local work was left untouched: `RS-JSON` (7 commits), `open-raid-z`.
+6. **Old commits on GitHub may still be viewable by commit ID** (caches, forks). To remove them completely, ask GitHub Support to purge cached views and forks.
+
+### Pitfalls
+- **Never `git pull` in a repository whose history was rewritten.** The old history would be merged back and re-publish the personal information. Align with `git fetch origin && git reset --mixed origin/<branch>` (first check there are no un-pushed commits, e.g. `git cherry -v origin/<branch> HEAD`).
+- Rewrite with git inside WSL (Linux): Windows git takes ~1.3 s per commit, WSL is tens of times faster. Git Bash silently converts `/mnt/...` arguments to Windows paths for `wsl` (set `MSYS_NO_PATHCONV=1`). Nested quoting loses variables → pass a script file.
+- Authenticate from inside WSL with `"/mnt/c/Program Files/GitHub CLI/gh.exe" auth token` into an environment variable (do not leave it in a file).

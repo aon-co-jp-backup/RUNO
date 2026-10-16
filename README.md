@@ -91,3 +91,9 @@ live GitHub API lookups from
 
 ## Hand-off (2026-10-14)
 For continuing the work on another account, see "Hand-off for moving to another account" in [`PORTING.md`](PORTING.md) (no secret values are written there).
+
+## 個人情報の扱い(2026-10-16)
+公開リポジトリのコミットの作者は匿名(`aon-co-jp`)です。第三者(他の開発者)の作者表示は、本人が公開したものとして残しています。詳細・引き継ぎは [`PORTING.md`](PORTING.md) の「公開リポジトリの個人情報の取り除き」を参照してください。
+
+## Privacy (2026-10-16)
+Commit authors in the public repositories are anonymous (`aon-co-jp`). Other developers' attribution is kept because they published it themselves. For details and the hand-off, see "Removing personal information from public repositories" in [`PORTING.md`](PORTING.md).
