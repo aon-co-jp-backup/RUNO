@@ -55,6 +55,13 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
+- **2026-10-18 Windows再起動前のお引越し・再開メッセージ / Resume message before the Windows restart**: 
+  **日本語**: (1) `open-vsc-claude`(VS Code拡張、`F:\open-vsc-claude`、v0.1.2公開済み、デモ`https://easy-web.tokyo/open-vps-claude/`)の再開は同リポジトリの`PORTING.md`末尾「お引越し・再開用メッセージ」から。未了はMarketplace/Open VSX公開(所有者のアカウントとトークンが必要)・Cosmo Router実起動・実機iOS/Android。
+  (2) `dream-os/vsc`(DreamOS Code=Code-OSS 1.142.0のビルド手順)は**WSLで`npm ci`まで完了、パッケージ化(gulp)以降が未完了・未検証**。再開は`F:\dream-os\vsc\BUILD-REPORT.md`の再開コマンド(PowerShellで`wsl -d Ubuntu -- bash /mnt/f/dream-os/vsc/build.sh`)。Git Bashは`/mnt/...`を書き換えるのでPowerShellを使う。
+  (3) RPoemの外部サブグラフ中継(`babc658`)は反映済み。トークン類はリポジトリに入れず`F:\`直下のtxtに置く。
+  **English**: (1) Resume `open-vsc-claude` (VS Code extension, v0.1.2 released, demo `https://easy-web.tokyo/open-vps-claude/`) from the "Resume message" at the end of its `PORTING.md`; open: Marketplace/Open VSX publication (owner account + token), running the Cosmo Router, real iOS/Android devices.
+  (2) `dream-os/vsc` (build recipe for DreamOS Code = Code-OSS 1.142.0): in WSL it is **done through `npm ci`; packaging (gulp) onward is not done and unverified**. Resume with the commands in `F:\dream-os\vsc\BUILD-REPORT.md` (from PowerShell: `wsl -d Ubuntu -- bash /mnt/f/dream-os/vsc/build.sh`); Git Bash rewrites `/mnt/...` paths.
+  (3) RPoem's external-subgraph forwarding (`babc658`) is in. Keep tokens out of repositories (txt files at the root of `F:\`).
 - **2026-10-16 【決定】作者名は本名に統一(ユーザー指示) / DECISION: use the real name as the author (user decision)**: 直下の「公開リポジトリの個人情報の取り除き」の**未決だった食い違いは、ユーザーが「本名に統一」と決定して解決した**。以後、コミットの作者はgitのグローバル名**石 塚 正 浩（MASAHIRO ISHIZUKA）**(メールはGitHubの匿名メール`18116749+aon-co-jp@users.noreply.github.com`のまま)でよい。PC・VPSのgit名を本名に揃えた。別セッションが本名で出した「READMEに作者を追記」「Cargo.tomlのauthors」等のコミットは**そのまま正**(取り消さない)。「匿名にする」方針は取り下げ。既に匿名化した112リポジトリの過去コミットはそのまま(混在してよい)、`scrub-history.sh`による内容の名前除去と「open-englishの作者の答えを名前だけに」は、本名に統一するため**不要**。*The earlier open conflict was resolved by the user: the real name is canonical from now on; the anonymous-author policy is withdrawn (past anonymised commits stay as they are; the content scrub is no longer needed).* **注意は変わらず**: 書き換えたリポジトリで`git pull`しない(古い履歴が戻る)→`git fetch`+`git reset --mixed origin/<branch>`。
 - **2026-10-16 公開リポジトリの個人情報の取り除き(アカウント引っ越しの引き継ぎの続き) / Removing personal information from public repositories**: 詳細は[`PORTING.md`](PORTING.md)「公開リポジトリの個人情報の取り除き」(日英)。**Claudeの記憶は失われる前提**で、全部そこに書いた。
   要点: 112個の公開リポジトリの、**全ブランチ・タグのコミットの作者・コミッターを匿名**(`aon-co-jp` / GitHubの匿名メール)に書き換え済み(内容は同一であることを確認、`--force-with-lease`で強制push)。今後のコミットも匿名(PC・VPSのgit設定済み)。第三者の作者表示は残す。書き換え前の完全なコピーは`F:\_anon\backup\`(約800MB。個人情報入りなので公開しない)。
