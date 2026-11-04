@@ -1,6 +1,6 @@
 # API方針 全リポジトリ反映記録 (2026-11-04)
 
-正本: [API-POLICY.md](../API-POLICY.md)。aon-co-jp の各リポジトリの README/CLAUDE/PORTING(あるものだけ)末尾へ日英独露で追記。
+正本: [API-POLICY.md](API-POLICY.md)。aon-co-jp の各リポジトリの README/CLAUDE/PORTING(あるものだけ)末尾へ日英独露で追記。
 
 - 反映: **129件** / 飛ばし: **19件** / 全148件
 
