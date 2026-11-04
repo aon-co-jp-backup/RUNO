@@ -334,40 +334,40 @@ Reading into `serde_json::Value` gives almost no speed-up even with SIMD (188 ms
 - Interfaces whose shape an outside standard dictates (ACME, OAuth callbacks, third-party webhooks, health checks, static files, OTLP) stay plain HTTP.
 - **When in doubt, use Connect.**
 
-### Deutsch (KI-Übersetzung, redaktionell überarbeitet; noch nicht von Muttersprachlern geprüft)
-**Das sind keine Alternativen, die man vereinheitlichen müsste, sondern verschiedene Schichten.** REST ersetzen können nur Connect, gRPC und GraphQL; WASM ist eine Technik zum Bauen der Oberfläche.
+### Deutsch (KI-Übersetzung, sprachlich überarbeitet; noch nicht von Muttersprachlern geprüft)
+**Es geht nicht darum, eine einzige Technik auszuwählen – die Begriffe liegen auf unterschiedlichen Ebenen.** Als Ersatz für REST kommen nur Connect, gRPC und GraphQL in Frage; WASM dagegen ist eine Technik, mit der die Benutzeroberfläche gebaut wird.
 
-| Begriff | Was es ist | Ersetzt REST? |
+| Begriff | Was ist das? | Ersatz für REST? |
 |---|---|---|
-| REST | API-Stil, der Operationen über URLs und HTTP-Methoden ausdrückt | wird abgeschafft |
-| **Connect** | `POST /Service/Methode` mit JSON-Body; per `curl` und per `fetch` im Browser aufrufbar | ja (**gewählt**) |
-| **gRPC** | Dasselbe Service/Methode-Prinzip über binäres protobuf und HTTP/2; schnell, gut für Streaming | ja (**zwischen Diensten**) |
-| gRPC-web | Browsertaugliche Variante von gRPC | ja (bei Bedarf) |
-| GraphQL | Abfragesprache: man fragt genau die gewünschten Felder ab | teilweise (**nur lesende Abfragen**) |
-| WASM | Führt Rust im Browser aus | nein (Technik für die Oberfläche) |
+| REST | Ein API-Stil, bei dem Operationen über URLs und HTTP-Methoden ausgedrückt werden | wird abgeschafft |
+| **Connect** | `POST /Dienst/Methode` mit JSON im Body; aufrufbar mit `curl` ebenso wie mit `fetch` im Browser | ja (**gewählt**) |
+| **gRPC** | Dasselbe Prinzip aus Dienst und Methode, aber über binäres protobuf und HTTP/2; schnell und gut für Streaming geeignet | ja (**zwischen Diensten**) |
+| gRPC-web | Eine für den Browser angepasste Variante von gRPC | ja (bei Bedarf) |
+| GraphQL | Abfragesprache, mit der man genau die benötigten Felder anfordert | teilweise (**nur für lesende Abfragen**) |
+| WASM | Führt Rust-Code direkt im Browser aus | nein (Technik für die Oberfläche) |
 
-- **Vom Browser oder per `curl` aufgerufene APIs nutzen Connect** (POST, JSON mit RS-JSON gelesen und geschrieben). Browser-WASM spricht kein reines gRPC; mit Connect bleibt es bei `fetch`, und `prost` wird nicht gebraucht (die Datei wächst nicht).
-- **Zwischen Diensten (Server zu Server, schwere Arbeit, Streaming) gilt gRPC.** Meist genügt Connect; auf gRPC wird nur dort umgestellt, wo Streaming wirklich nötig ist.
-- **GraphQL nur lesend**, für Abfragen, die mehrere Daten bündeln. Nicht für Schreibvorgänge.
-- **WASM bleibt die Technik für die Oberfläche.** Die aufgerufene API ist nur zu Connect geworden.
-- Schnittstellen, deren Form ein fremder Standard vorgibt (ACME, OAuth-Callbacks, Webhooks Dritter, Health-Checks, statische Dateien, OTLP), bleiben gewöhnliches HTTP.
-- **Im Zweifel Connect.**
+- **APIs, die von Browseroberflächen oder per `curl` aufgerufen werden, verwenden Connect** (POST; JSON wird mit RS-JSON gelesen und geschrieben). WASM im Browser kann kein reines gRPC sprechen. Mit Connect bleibt es bei einem gewöhnlichen `fetch`, und `prost` ist nicht nötig – die WASM-Datei wird dadurch nicht größer.
+- **Für die Kommunikation zwischen Diensten (Server zu Server, rechenintensive Aufgaben, Streaming) wird gRPC eingesetzt.** In den meisten Fällen reicht Connect aus; auf gRPC wird nur dort umgestellt, wo Streaming tatsächlich gebraucht wird.
+- **GraphQL dient ausschließlich lesenden Abfragen**, wenn mehrere Informationen gebündelt abgefragt werden sollen. Für Schreibzugriffe (Operationen) wird es nicht verwendet.
+- **WASM bleibt die Technik für die Oberfläche.** Geändert hat sich lediglich, dass die aufgerufene API nun auf Connect beruht.
+- Schnittstellen, deren Form durch einen externen Standard festgelegt ist (ACME, OAuth-Callbacks, Webhooks von Drittanbietern, Health-Checks, statische Dateien, OTLP), bleiben gewöhnliches HTTP.
+- **Im Zweifel: Connect.**
 
-### Русский (перевод выполнен с помощью ИИ и отредактирован; носителями языка пока не проверен)
-**Это не альтернативы, которые нужно свести к одной, а разные уровни.** Заменить REST могут только Connect, gRPC и GraphQL; WASM — это способ построить интерфейс.
+### Русский (перевод выполнен с помощью ИИ и литературно отредактирован; носителями языка пока не проверен)
+**Это не варианты, из которых нужно выбрать один, а технологии разных уровней.** Заменить REST могут только Connect, gRPC и GraphQL; WASM же — это способ создания пользовательского интерфейса.
 
 | Термин | Что это | Заменяет REST? |
 |---|---|---|
-| REST | Стиль API: операции выражаются через URL и HTTP-методы | отменяется |
-| **Connect** | `POST /Service/Method` с телом JSON; вызывается и из `curl`, и из браузерного `fetch` | да (**выбран**) |
-| **gRPC** | Та же идея «сервис/метод» поверх двоичного protobuf и HTTP/2; быстро, удобен для потоков | да (**между сервисами**) |
-| gRPC-web | Вариант gRPC для браузера | да (при необходимости) |
-| GraphQL | Язык запросов: запрашиваются именно нужные поля | частично (**только запросы на чтение**) |
-| WASM | Запускает Rust внутри браузера | нет (технология интерфейса) |
+| REST | Стиль построения API, при котором операции выражаются через URL и HTTP-методы | отменяется |
+| **Connect** | `POST /Сервис/Метод` с телом в формате JSON; вызывается как из `curl`, так и из браузерного `fetch` | да (**выбран**) |
+| **gRPC** | Тот же принцип «сервис — метод», но поверх двоичного формата protobuf и HTTP/2; работает быстро и хорошо подходит для потоковой передачи | да (**для связи между сервисами**) |
+| gRPC-web | Адаптированный для браузера вариант gRPC | да (при необходимости) |
+| GraphQL | Язык запросов: клиент запрашивает ровно те поля, которые ему нужны | частично (**только запросы на чтение**) |
+| WASM | Позволяет выполнять код на Rust прямо в браузере | нет (технология для интерфейса) |
 
-- **API, которые вызываются из браузера или через `curl`, используют Connect** (POST, JSON читается и пишется через RS-JSON). Браузерный WASM не умеет обычный gRPC; с Connect остаётся прежний `fetch`, а `prost` не нужен (размер файла не растёт).
-- **Между сервисами (сервер — сервер, тяжёлые задачи, потоки) используется gRPC.** В большинстве случаев хватает Connect; на gRPC переходят только там, где потоки действительно нужны.
-- **GraphQL — только для чтения**, для запросов, собирающих несколько данных. Для записи (операций) не применяется.
-- **WASM остаётся технологией для интерфейса.** Изменилось лишь то, что вызываемый им API стал Connect.
-- Интерфейсы, форму которых определяет чужой стандарт (ACME, обратные вызовы OAuth, вебхуки третьих сторон, проверки работоспособности, статические файлы, OTLP), остаются обычным HTTP.
-- **Если сомневаетесь — Connect.**
+- **API, которые вызываются из браузерных интерфейсов или через `curl`, строятся на Connect** (POST; JSON читается и записывается через RS-JSON). Браузерный WASM не умеет работать с «чистым» gRPC. С Connect достаточно обычного `fetch`, а `prost` не требуется — размер WASM-файла не увеличивается.
+- **Для обмена между сервисами (сервер — сервер, ресурсоёмкие задачи, потоковая передача) применяется gRPC.** В большинстве случаев достаточно Connect; на gRPC переходят только там, где потоковая передача действительно необходима.
+- **GraphQL используется только для чтения**, когда нужно получить сразу несколько связанных данных. Для записи (операций) он не применяется.
+- **WASM по-прежнему остаётся технологией для интерфейса.** Изменилось лишь то, что вызываемый им API теперь построен на Connect.
+- Интерфейсы, форма которых задана внешним стандартом (ACME, обратные вызовы OAuth, вебхуки сторонних сервисов, проверки работоспособности, статические файлы, OTLP), остаются обычным HTTP.
+- **Если есть сомнения — выбирайте Connect.**
