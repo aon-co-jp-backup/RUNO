@@ -18,7 +18,7 @@
 - old.aon.tokyo: no-files-or-same
 - open-english-news-archive-002: no-files-or-same
 - open-english-news-readme-archive-test: no-files-or-same
-- open-english-news-snippets-archive: clone-fail: error: unable to create file wiki/20_10 BSTBarrecore and Boom Cycle owner sudden
+- open-english-news-snippets-archive: README/CLAUDE/PORTING のいずれも無し(sparse checkoutで確認。通常cloneはWindowsのファイル名問題で失敗)
 - open-live-share: no-files-or-same
 - open-wordpress: no-files-or-same
 - poem-tauri-cosmo: no-files-or-same
