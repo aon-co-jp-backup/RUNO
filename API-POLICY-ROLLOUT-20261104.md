@@ -157,4 +157,5 @@
 - webeditor-sftp: README.md, CLAUDE.md, PORTING.md
 - world-lab: README.md, CLAUDE.md, PORTING.md
 
+注: 独語・露語を推敲した最新版(API-POLICY.md)で全129件を節ごと差し替え済み(冪等)。
 注: open-easy-webには同趣旨の日本語記述が本文中にあるが、同見出しの節は無かったため末尾に追記(既存記述の置換はしていない)。
