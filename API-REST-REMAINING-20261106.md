@@ -54,3 +54,9 @@
 - **aruaru.tokyo: 本番反映済み。aruaru-IME: push 済み、旧経路は 2026-12-06 まで残す**(期限つき互換)。
 - **ストリーミング: server-streaming 対応済み(RPoem)、VPS未反映**。`F:\gRPC-web-Connect` は手元・GitHub とも取得できず、実装は RPoem に統合済み。
 - 未着手: open-cosmo、aon.tokyo、backup-to-discord-by-github、小規模6件。判定待ち: open-gitea・open-redmine・ows-base・ows-stream。
+
+## 判定結果 (2026-11-07、読み取りのみ)
+- **open-gitea**: `/api/repos`・`/api/accounts`・`/api/auth/request-otp` などは**独自設計で Gitea 互換ではない**(本物は `/api/v1/...`)→ **移行対象**(約30本)。例外は git smart HTTP(`info/refs`・`git-upload-pack`・`git-receive-pack`)のみ。`/api/v1/repos/..` は外部(GitHub等)を呼ぶクライアント側の文字列で、提供ルートではない。
+- **open-redmine**: `/api/tickets`・`/api/projects`・`/api/saved_queries` などは**独自設計で Redmine 互換ではない**(本物は `/issues.json`)→ **移行対象**(約29本)。例外なし(GitHub連携の `/github/commits` も自前ルート)。
+- **ows-base / ows-stream**: GitHub に同名リポジトリは無く、VPS(`/root/repository/ows-base`・`ows-stream`)にある **open-web-server の古い複製**(READMEが open-web-server、`/admin/tenants` 等の管理ルートが同一)。管理RESTは origin の open-web-server で Connect 化済み → **別途の移行は不要**。複製の整理(削除か git pull 相当の更新)は version-control 側の扱いを決めてから。数字(52本)は二重計上。
+- 次の担当候補: open-gitea と open-redmine(自前のため移行対象)、open-cosmo、aon.tokyo。
