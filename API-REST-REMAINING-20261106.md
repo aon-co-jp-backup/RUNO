@@ -48,3 +48,9 @@
 1. **RS-EC + RS-Blog**(合計50、増加の原因確認から。自前の管理 API なら移行)。
 2. **aruaru.tokyo(17)+ aruaru-IME(14)**
    (open-gitea・open-redmine・ows-* は、先に例外かどうかの判定だけ行い、移行は判定後。)
+
+## 追記 (2026-11-07) 担当の完了報告による更新
+- **RS-EC・RS-Blog: 移行済み・本番反映済み**(Connect 68操作、旧 `/api/` 削除、例外なし)。
+- **aruaru.tokyo: 本番反映済み。aruaru-IME: push 済み、旧経路は 2026-12-06 まで残す**(期限つき互換)。
+- **ストリーミング: server-streaming 対応済み(RPoem)、VPS未反映**。`F:\gRPC-web-Connect` は手元・GitHub とも取得できず、実装は RPoem に統合済み。
+- 未着手: open-cosmo、aon.tokyo、backup-to-discord-by-github、小規模6件。判定待ち: open-gitea・open-redmine・ows-base・ows-stream。
