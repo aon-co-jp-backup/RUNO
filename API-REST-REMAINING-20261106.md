@@ -67,3 +67,10 @@
 - 内訳(多い順): open-gitea 30、open-redmine 29(いずれも自前=移行対象)、RPoem 23、open-cosmo 22、aruaru.tokyo 15、aruaru-IME 14、aon.tokyo 13、backup-to-discord-by-github 11、aruaru-db 8、atr-sonic 8、audiocafe-tokyo-rust 8、e-gov.info 7、open-easy-web-app 7。
 - 数字は例外(ACME・Webhook・ヘルスチェック等)を含む静的な目安。完了判断は `exceptions.toml` との突き合わせが必要。
 - 次の担当: open-gitea → open-redmine(同時に動かすのは最大2つ)。
+
+## 2026-11-07 追記: RS-Sync の確認結果(version-control の巡回・VPS 実測)
+- RS-Sync は `routes=50`・`rest-like=0`・`api/admin=0`(origin 基準)。手元の `--api-only` 巡回とVPSの自動巡回(06:20 JST)の両方で確認。
+- 手元・GitHub `origin/main`・VPS `/root/rs-sync` は `3b144cd` で一致、`rs-sync`・`rs-sync-demo` は稼働中。公開 Connect(`rs_sync.v1.Sync/ListAccounts`)は認証なしで 401。
+- 全体の REST 風ルートは 250 本(手元の全走査)/ 259 本(VPS 06:20)。差は走査時点とclone参照の違い。
+- 通知: メールはVPSから送信成功。手元は `notify.email_to` 空・環境変数 `OPEN_EASYWEB_DIST_SYNC_ADMIN_TOKEN` 未設定のため手元からは送れない(運用上はVPSが送る)。
+- **未確認のまま**: 本番のログイン後の画面操作(認証情報が必要。利用者本人の確認待ち)。
