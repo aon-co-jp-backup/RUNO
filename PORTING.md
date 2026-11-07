@@ -2430,3 +2430,14 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 - 稼働中の`aon-tokyo-server`・`rs-sync`・`rs-sync-demo`・`bdg-server`(`/usr/local/bin`へ配置、旧版は`.prev`)を再起動し、active・エラーログ無しを確認。
 - 確認: `/video/fukuyama/<ファイル>`は200(ディレクトリ自体はindex無しで404=従来どおり)。未確認: `/cancer/`が404(経路・公開設定の要確認)、bdgのWebhook実受信。
 - Refreshed by fetch + fast-forward only; services rebuilt/restarted and verified active. Unverified: `/cancer/` returns 404, real bdg webhook delivery.
+
+## 2026-11-07 バックアップ再開・紹介ページ追加の到達点 / Backup resumed and intro pages added
+
+**日本語**: (1) `open-github-backup`: 課金は解消、scheduleを再開、検証run成功(ミラー16・飛ばし132・失敗0)。全件runの失敗2件(`rs-dpiAwareness`・`rs-kokoro-ja`)は宛先の作成が一時的に失敗したもので、手動で作成・ミラー済み。宛先165件でActionsが有効だった14件を無効化し、ワークフローに「作成直後に無効化」を追加。
+(2) VPSデータの暗号化バックアップ(`vps-data-backup.timer`、毎日03:30)は稼働中・復号確認済み。秘密鍵は`F:\vps-data-backup-gpg-PRIVATE.asc`のみ(別媒体にも保管)。
+(3) `easy-web.tokyo`の紹介・ダウンロードページ: `open-media`・`pdf-r2l-rs`・`maid-cafe-se`・`open-cuda`・`open-cpu`・`RPoem`を追加(`webpage/index.html`、配布物はGitHubリリースのURL)。VPSの各クローンは`git pull --ff-only`で更新(VPSだけのコミットは無かった。「分岐」に見えたのは`git pull`の設定のため)。
+(4) **未了(判断待ち)**: `easy-web.tokyo/open-raid-z/`は管理UI(画面は誰でも開け、公開の`/api/status`はデモデータ、プール作成だけ`X-Admin-Token`)。VPSの`/root/easy-web.tokyo/open-raid-z`に未コミット変更4件(`webpage/index.html`の削除を含む)があり、触っていない。紹介ページにするか、管理UIを本人限定のメールOTPにするか、`/demo`に分けるかを決める。
+**English**: (1) `open-github-backup`: billing resolved, schedule re-enabled, verification run succeeded (16 mirrored, 132 skipped, 0 failed). The 2 failures of the full run (`rs-dpiAwareness`, `rs-kokoro-ja`) were transient creation failures and were fixed by hand. Actions disabled on 14 of the 165 destination repos that had it enabled; the workflow now disables it right after creation.
+(2) The encrypted VPS data backup (`vps-data-backup.timer`, daily 03:30) runs and was restore-verified. The private key exists only as `F:\vps-data-backup-gpg-PRIVATE.asc` (keep another copy elsewhere).
+(3) `easy-web.tokyo` intro/download pages added for `open-media`, `pdf-r2l-rs`, `maid-cafe-se`, `open-cuda`, `open-cpu` and `RPoem` (`webpage/index.html`; downloads are GitHub release URLs). VPS clones were updated with `git pull --ff-only` (there were no VPS-only commits; the "divergence" came from the `git pull` configuration).
+(4) **Open (needs a decision)**: `easy-web.tokyo/open-raid-z/` is an admin UI (anyone can open the screen, the public `/api/status` shows demo data, only pool creation needs `X-Admin-Token`). `/root/easy-web.tokyo/open-raid-z` on the VPS has 4 uncommitted changes (including a deleted `webpage/index.html`) and was left untouched. Decide: intro page, owner-only e-mail OTP for the admin UI, or a `/demo` split.
