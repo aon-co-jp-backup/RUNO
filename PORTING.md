@@ -2428,8 +2428,8 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 - RUNO(42遅れ)・aon.tokyo(5)・backup-to-discord-by-github(5)・rs-sync(1)を、`git fetch`後に`--ff-only`で最新化(履歴の書き換え無し)。
 - bdgの未コミット`Cargo.lock`差分は`/root/bdg-Cargo.lock.local.patch`に退避して最新を採用。bdg・rs-syncはビルド+テスト全通過、aon.tokyoはビルド成功(テスト0件)。
 - 稼働中の`aon-tokyo-server`・`rs-sync`・`rs-sync-demo`・`bdg-server`(`/usr/local/bin`へ配置、旧版は`.prev`)を再起動し、active・エラーログ無しを確認。
-- 確認: `/video/fukuyama/<ファイル>`は200(ディレクトリ自体はindex無しで404=従来どおり)。未確認: `/cancer/`が404(経路・公開設定の要確認)、bdgのWebhook実受信。
-- Refreshed by fetch + fast-forward only; services rebuilt/restarted and verified active. Unverified: `/cancer/` returns 404, real bdg webhook delivery.
+- 確認: `/video/fukuyama/<ファイル>`は200(ディレクトリ自体はindex無しで404=従来どおり)。`/cancer`・`/links`等は末尾スラッシュ無しで200(ルートは完全一致、`/cancer/`が404なのは従来仕様)。未確認: bdgのWebhook実受信。
+- Refreshed by fetch + fast-forward only; services rebuilt/restarted and verified active. Routes are exact-match (`/cancer` is 200, `/cancer/` 404 by design). Unverified: real bdg webhook delivery.
 
 ## 2026-11-07 バックアップ再開・紹介ページ追加の到達点 / Backup resumed and intro pages added
 
