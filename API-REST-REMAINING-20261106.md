@@ -95,3 +95,8 @@
 - **訂正**: aruaru-db の旧REST 7本(`/backup` 等)は VPS の古いクローン(origin より10コミット遅れ・未コミット変更あり)を読んだもので、origin/main には無い。対応不要。VPSのクローンは触らない。
 - **ows-base / ows-stream**: GitHubに無く open-web-server の複製。集計の二重計上。
 - **未了**: open-raid-z(`/api/status`・`/api/create`)と open-easy-web のビルド確認中、easy-web.tokyo のオンライン画面の中継の新経路化、aruaru-IME の旧経路(2026-12-06まで期限つき)と Android upstream、version-control 集計からテスト用ルートの除外。
+
+## 2026-11-08 追記: open-gitea・open-redmine の確認(別セッションが移行・反映済みのものを検証)
+- **open-gitea**: origin `f752ba5`(Connect `POST /open_gitea.v1.Gitea/<Method>` 移行は `feae9b5`、VPS反映済みと記録)。手元で `cargo test` 36件成功(初回に1件だけ失敗〈404≠400〉したが原因未特定、その後3回連続成功)。
+- **open-redmine**: origin `6612f6b` で Connect 化済み(旧 `/api` 削除)。新規 clone で `cargo test` 96件成功(2件ignored)。本番反映は未確認。
+- どちらも認証付きの正常系の実機呼び出しは未確認。「移行対象」としていた上の記述は、この追記で「移行済み」に置き換わる。
