@@ -2441,3 +2441,8 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 (2) The encrypted VPS data backup (`vps-data-backup.timer`, daily 03:30) runs and was restore-verified. The private key exists only as `F:\vps-data-backup-gpg-PRIVATE.asc` (keep another copy elsewhere).
 (3) `easy-web.tokyo` intro/download pages added for `open-media`, `pdf-r2l-rs`, `maid-cafe-se`, `open-cuda`, `open-cpu` and `RPoem` (`webpage/index.html`; downloads are GitHub release URLs). VPS clones were updated with `git pull --ff-only` (there were no VPS-only commits; the "divergence" came from the `git pull` configuration).
 (4) **Open (needs a decision)**: `easy-web.tokyo/open-raid-z/` is an admin UI (anyone can open the screen, the public `/api/status` shows demo data, only pool creation needs `X-Admin-Token`). `/root/easy-web.tokyo/open-raid-z` on the VPS has 4 uncommitted changes (including a deleted `webpage/index.html`) and was left untouched. Decide: intro page, owner-only e-mail OTP for the admin UI, or a `/demo` split.
+
+## 2026-11-08 検証の到達点 / Verification checkpoint
+
+- 日本語: HANDOFF(CLAUDE.md先頭)の2026-11-08項に同じ内容。確認済み=aruaru-searchの自動再開(本番ログ)、version-controlの`--pr`/`--push`(ローカルbare origin・`gh`は偽物)。未確認=本物の`gh pr create`、aruaru-llm要約(VPSは3分超でタイムアウト)。version-control手元クローンは分岐中(`git pull`しない)。
+- English: Same as the 2026-11-08 HANDOFF entry. Confirmed: aruaru-search auto-resume (production logs), version-control `--pr`/`--push` (local bare origin, stubbed `gh`). Unconfirmed: real `gh pr create`, aruaru-llm summaries (over 3 min on the VPS). The local version-control clone has diverged; do not `git pull`.
