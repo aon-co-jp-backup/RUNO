@@ -89,3 +89,9 @@
 ## 2026-11-08 追記: aon.tokyo / backup-to-discord-by-github の判定(調査のみ・コード変更なし)
 - **aon.tokyo(13本)**: `src/main.rs` の全ルートがGETの表示ページ・静的ファイル(/ /links /municipal /cancer /p /k /style.css /video/*.mp4 /r.pdf 等)と `/healthz`。自前のデータAPIは0 → **すべて例外(ブラウザGET・静的配信・ヘルスチェック)、移行対象なし**。`AON_TOP_HIDDEN=1` の挙動は無変更。本番実測: `/`=404(隠し設定どおり)、`/healthz`=200。`/video/fukuyama/`(末尾スラッシュ)と `/video/fukuyama/index.html` は本番で404だった。公開状態の確認は**未了**(今回は変更していないが、期待と違う可能性があるので別途要確認)。
 - **backup-to-discord-by-github(11本)**: 管理APIは既にコミット `9066b60`(2026-11-07)で Connect 化済み・push済み(`POST /bdg.admin.v1.Admin/<Method>`、本文はRS-JSON上限つき、エラー`{code,message}`)。残るのは `GET /healthz`(ヘルスチェック)と `POST /webhook/github`(GitHub Webhook、規格 https://docs.github.com/en/webhooks 、HMAC署名検証)= **例外**。テスト用の `bdg-testkit` の `/api/channels/...` は Discord/GitHub の模擬サーバーで、相手の規格どおり=例外。本番(VPS 127.0.0.1:8127、起動 2026-11-07 09:47 JST、コミット9066b60)で実測: `POST …/Admin/ListJobs`=401(トークン無し)、旧 `GET /api/jobs`=404、`/healthz`=200、`/webhook/github`=401(署名無し)。トークン付きの正常系呼び出しは今回**未実施**(テストは担当コミット時に成功と記録)。
+
+## 追記 (2026-11-08)
+- **移行・反映済み(新)**: open-gitea(31本、本番反映済み)、open-redmine(42本、本番反映済み `6612f6b`、バックアップ `/root/rd-bak-20261108-065255`)、RS-EC・RS-Blog、aruaru.tokyo、aon.tokyo(自前API 0本、全13は例外)、backup-to-discord-by-github、open-cg-cad(12本)、e-gov(`/board/post`)、RPoem の appserver 10本・open-cosmo(push済み)。
+- **訂正**: aruaru-db の旧REST 7本(`/backup` 等)は VPS の古いクローン(origin より10コミット遅れ・未コミット変更あり)を読んだもので、origin/main には無い。対応不要。VPSのクローンは触らない。
+- **ows-base / ows-stream**: GitHubに無く open-web-server の複製。集計の二重計上。
+- **未了**: open-raid-z(`/api/status`・`/api/create`)と open-easy-web のビルド確認中、easy-web.tokyo のオンライン画面の中継の新経路化、aruaru-IME の旧経路(2026-12-06まで期限つき)と Android upstream、version-control 集計からテスト用ルートの除外。
