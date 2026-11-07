@@ -60,3 +60,10 @@
 - **open-redmine**: `/api/tickets`・`/api/projects`・`/api/saved_queries` などは**独自設計で Redmine 互換ではない**(本物は `/issues.json`)→ **移行対象**(約29本)。例外なし(GitHub連携の `/github/commits` も自前ルート)。
 - **ows-base / ows-stream**: GitHub に同名リポジトリは無く、VPS(`/root/repository/ows-base`・`ows-stream`)にある **open-web-server の古い複製**(READMEが open-web-server、`/admin/tenants` 等の管理ルートが同一)。管理RESTは origin の open-web-server で Connect 化済み → **別途の移行は不要**。複製の整理(削除か git pull 相当の更新)は version-control 側の扱いを決めてから。数字(52本)は二重計上。
 - 次の担当候補: open-gitea と open-redmine(自前のため移行対象)、open-cosmo、aon.tokyo。
+
+## 2026-11-07 進捗(version-control の通知より)
+- 残り REST 風ルート(目安)**266本**(前日318本から -52、11-04の509本から -243)。
+- **ows-base / ows-stream の52本は open-web-server の古い複製による二重計上**のため、実質の残りは**約214本**(判定結果は上記)。
+- 内訳(多い順): open-gitea 30、open-redmine 29(いずれも自前=移行対象)、RPoem 23、open-cosmo 22、aruaru.tokyo 15、aruaru-IME 14、aon.tokyo 13、backup-to-discord-by-github 11、aruaru-db 8、atr-sonic 8、audiocafe-tokyo-rust 8、e-gov.info 7、open-easy-web-app 7。
+- 数字は例外(ACME・Webhook・ヘルスチェック等)を含む静的な目安。完了判断は `exceptions.toml` との突き合わせが必要。
+- 次の担当: open-gitea → open-redmine(同時に動かすのは最大2つ)。
