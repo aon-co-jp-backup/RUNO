@@ -2422,3 +2422,11 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 - **Not migrated**: RS-EC 28, RS-Blog 22, aruaru.tokyo 17, aruaru-IME 14, aon.tokyo 13, backup-to-discord-by-github 11, and small ones. **Exception-or-own undecided**: open-gitea, open-redmine, ows-base, ows-stream.
 - **Process**: per repository: survey → classify → build → test → record (README/CLAUDE/PORTING/POLICY) → deploy. At most two assignees at a time. Exceptions go to the `version-control` ledger with reason and standard URL.
 - **Caveat**: this is a record, not a claim that every repository is done; each repository's own docs are updated by its assignee when it is migrated. Production deployment is confirmed only for open-english and RS-Sync.
+
+## VPSクローン4件の最新化(2026-11-07、version-controlの通知対応) / Refreshed 4 VPS clones
+
+- RUNO(42遅れ)・aon.tokyo(5)・backup-to-discord-by-github(5)・rs-sync(1)を、`git fetch`後に`--ff-only`で最新化(履歴の書き換え無し)。
+- bdgの未コミット`Cargo.lock`差分は`/root/bdg-Cargo.lock.local.patch`に退避して最新を採用。bdg・rs-syncはビルド+テスト全通過、aon.tokyoはビルド成功(テスト0件)。
+- 稼働中の`aon-tokyo-server`・`rs-sync`・`rs-sync-demo`・`bdg-server`(`/usr/local/bin`へ配置、旧版は`.prev`)を再起動し、active・エラーログ無しを確認。
+- 確認: `/video/fukuyama/<ファイル>`は200(ディレクトリ自体はindex無しで404=従来どおり)。未確認: `/cancer/`が404(経路・公開設定の要確認)、bdgのWebhook実受信。
+- Refreshed by fetch + fast-forward only; services rebuilt/restarted and verified active. Unverified: `/cancer/` returns 404, real bdg webhook delivery.
