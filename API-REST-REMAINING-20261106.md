@@ -85,3 +85,7 @@
 - 新規 clone(`F:\RS-EC`・`F:\RS-Blog`)で `cargo test`: RS-EC 48件・RS-Blog 27件すべて成功(旧ルート404のテスト含む)。
 - 本番(VPS、localhost経由で実測): RS-EC(8102)・RS-Blog(8101)とも healthz 200、旧 `/api/products`・`/api/posts` 404、Connect `POST /rs_ec.v1.Products/List`・`/rs_blog.v1.Posts/List` は認証なしで 401(JSONエラー)。ログイン後の通し呼び出しは**未確認**(認証情報を使っていない)。
 - 注意: VPS上のgit cloneは古いコミットのまま(バイナリのみ差し替え)。
+
+## 2026-11-08 追記: aon.tokyo / backup-to-discord-by-github の判定(調査のみ・コード変更なし)
+- **aon.tokyo(13本)**: `src/main.rs` の全ルートがGETの表示ページ・静的ファイル(/ /links /municipal /cancer /p /k /style.css /video/*.mp4 /r.pdf 等)と `/healthz`。自前のデータAPIは0 → **すべて例外(ブラウザGET・静的配信・ヘルスチェック)、移行対象なし**。`AON_TOP_HIDDEN=1` の挙動は無変更。本番実測: `/`=404(隠し設定どおり)、`/healthz`=200。`/video/fukuyama/`(末尾スラッシュ)と `/video/fukuyama/index.html` は本番で404だった。公開状態の確認は**未了**(今回は変更していないが、期待と違う可能性があるので別途要確認)。
+- **backup-to-discord-by-github(11本)**: 管理APIは既にコミット `9066b60`(2026-11-07)で Connect 化済み・push済み(`POST /bdg.admin.v1.Admin/<Method>`、本文はRS-JSON上限つき、エラー`{code,message}`)。残るのは `GET /healthz`(ヘルスチェック)と `POST /webhook/github`(GitHub Webhook、規格 https://docs.github.com/en/webhooks 、HMAC署名検証)= **例外**。テスト用の `bdg-testkit` の `/api/channels/...` は Discord/GitHub の模擬サーバーで、相手の規格どおり=例外。本番(VPS 127.0.0.1:8127、起動 2026-11-07 09:47 JST、コミット9066b60)で実測: `POST …/Admin/ListJobs`=401(トークン無し)、旧 `GET /api/jobs`=404、`/healthz`=200、`/webhook/github`=401(署名無し)。トークン付きの正常系呼び出しは今回**未実施**(テストは担当コミット時に成功と記録)。
