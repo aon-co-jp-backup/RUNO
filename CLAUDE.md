@@ -379,8 +379,8 @@ Reading into `serde_json::Value` gives almost no speed-up even with SIMD (188 ms
 ### 日本語
 - **決定(2026-11-04、ユーザー)**: aon-co-jp 全リポジトリで REST API を廃止し、Connect(ブラウザ/`curl`)と gRPC / gRPC-web(サービス間)へ移す。方針の正本は [`API-POLICY.md`](API-POLICY.md)、担当への共通指示は [`API-MIGRATION-BRIEF.md`](API-MIGRATION-BRIEF.md)、残りの一覧は [`API-REST-REMAINING-20261106.md`](API-REST-REMAINING-20261106.md)。
 - **2026-11-07 更新**: 残り**266本**(実質約214本。ows-base/ows-streamの52本は open-web-server 複製の二重計上)。open-gitea・open-redmine は自前のため移行対象。詳細は `API-REST-REMAINING-20261106.md` 末尾。
-- **実施状況(origin 基準の静的な目安)**: REST風ルート 509(11-04)→481(11-05)→**318(11-06)**。移行済み: open-english・aruaru-search・aruaru-llm・open-web-server・RS-Sync。ほぼ移行: aruaru-db(残8)。作業中: open-cosmo(残22)、RPoem(23、第1段階)。
-- **未移行**: RS-EC 28 / RS-Blog 22 / aruaru.tokyo 17 / aruaru-IME 14 / aon.tokyo 13 / backup-to-discord-by-github 11 ほか小規模。**例外か自前かの判定待ち**: open-gitea・open-redmine(Gitea/Redmine互換なら例外)、ows-base・ows-stream(管理APIは自前なら移行)。
+- **実施状況(origin 基準の静的な目安)**: REST風ルート 509(11-04)→481(11-05)→**318(11-06)**。移行済み: open-english・aruaru-search・aruaru-llm・open-web-server・RS-Sync・RS-EC・RS-Blog(2026-11-07、本番で新401/旧404を実測、cargo test 48/27本成功)・aruaru.tokyo。ほぼ移行: aruaru-db(残8)。作業中: open-cosmo(残22)、RPoem(23、第1段階)。
+- **未移行**: aruaru-IME 14(一部) / aon.tokyo 13 / backup-to-discord-by-github 11 ほか小規模。**例外か自前かの判定待ち**: open-gitea・open-redmine(Gitea/Redmine互換なら例外)、ows-base・ows-stream(管理APIは自前なら移行)。
 - **進め方**: 各リポジトリで 調査 → 分類(移す/例外/ブラウザGET) → 開発 → TEST → 記録(README/CLAUDE/PORTING/POLICY) → 本番反映。同時に動かす担当は最大2つ。例外は理由と規格URLつきで `version-control` の台帳へ。
 - **正直な注意**: この節は記録であり、全リポジトリの完了を意味しない。各リポジトリへの同内容の追記は、担当セッションがそのリポジトリを移行する際に行う。本番反映済みと確認できたのは open-english(直接確認)と RS-Sync(担当報告)のみ。
 

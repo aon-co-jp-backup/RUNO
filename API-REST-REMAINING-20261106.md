@@ -28,8 +28,8 @@
 | 第1段階 | RPoem | 23 | GraphQL Mutation基盤 | 未反映 |
 | 例外の可能性(未判定) | open-gitea 30 / open-redmine 29 | 59(admin 55) | なし | Gitea・Redmine 互換 API なら例外 |
 | 例外の可能性(未判定) | ows-base 26 / ows-stream 26 | 52(admin 48) | なし | 管理 API。自前なら移行対象 |
-| **未移行・要判定** | **RS-EC 28(admin 28)** | 28 | なし | 朝の13から増加 → origin の方が新しい(**要確認**) |
-| **未移行・要判定** | **RS-Blog 22(admin 22)** | 22 | なし | 朝の11から増加(**要確認**) |
+| **未移行・要判定** | **RS-EC 28(admin 28)** | 28 | なし | **移行済み**(下の2026-11-07検証参照) |
+| **未移行・要判定** | **RS-Blog 22(admin 22)** | 22 | なし | **移行済み**(下の2026-11-07検証参照) |
 | 移行済み(2026-11-07、本番で新200/旧404を実測) | aruaru.tokyo | 0(自前API2本のみ、残りは静的・healthz) | なし | — |
 | 一部移行(常駐エンジン+TSF/macOS/fcitx5/ibusはConnect済み、旧経路は期限つき互換〜2026-12-06) | aruaru-IME | 旧経路11が互換で残存 | オンライン画面(RPoem crossui→open-easy-web /ime/api→VPS常駐エンジン)とAndroid upstreamが旧経路のまま | — |
 | 未移行 | aon.tokyo 13 / backup-to-discord-by-github 11 | 24 | なし | — |
@@ -79,3 +79,9 @@
 ## 2026-11-07 追記(aruaru.tokyo / aruaru-IME 担当)
 - **aruaru.tokyo**: 別担当の移行(`tokyo_aruaru.v1.Site/ListRepos|TokoroUnlock`)が origin・VPS(8afaf4b、active)に反映済み。本担当が実測: 新経路 200/401、旧`/api/repos`・`/api/tokoro-unlock`は404。重複作業をしかけたが、重複コミットは破棄(push していない)。
 - **aruaru-IME(未完)**: 旧経路の削除は未実施。理由: インストール済みTSF DLL・easy-web.tokyo/imeのオンライン画面が旧経路を使うため、配布済みクライアントを壊さない期限つき互換(2026-12-06)を維持。残作業は (1) RPoem `open-runo-crossui` の橋渡しJSを Connect パス(`/aruaru_ime.v1.Ime/Key|Session`)へ、(2) open-easy-web `ime_api` の中継を Connect パスへ(VPS反映)、(3) Android upstream、(4) IME新版exeをReleaseとVPSで同版に、(5) 期限後に daemon の旧 match 腕を削除。いずれも未着手(3リポジトリ+本番をまたぐため)。
+
+## 2026-11-07 RS-EC・RS-Blog の独立検証(別セッションによる再確認)
+- 増加の原因: 朝のクローンが古く、origin にはルートが多かった(以前の表の28/22は移行前の origin 基準)。移行は commit 0e8c223(RS-EC)・88a4a85(RS-Blog)で済み、旧 `/api/` は削除、例外なし。
+- 新規 clone(`F:\RS-EC`・`F:\RS-Blog`)で `cargo test`: RS-EC 48件・RS-Blog 27件すべて成功(旧ルート404のテスト含む)。
+- 本番(VPS、localhost経由で実測): RS-EC(8102)・RS-Blog(8101)とも healthz 200、旧 `/api/products`・`/api/posts` 404、Connect `POST /rs_ec.v1.Products/List`・`/rs_blog.v1.Posts/List` は認証なしで 401(JSONエラー)。ログイン後の通し呼び出しは**未確認**(認証情報を使っていない)。
+- 注意: VPS上のgit cloneは古いコミットのまま(バイナリのみ差し替え)。
