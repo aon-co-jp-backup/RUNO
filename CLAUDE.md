@@ -389,3 +389,5 @@ Reading into `serde_json::Value` gives almost no speed-up even with SIMD (188 ms
 - **Not migrated**: RS-EC 28, RS-Blog 22, aruaru.tokyo 17, aruaru-IME 14, aon.tokyo 13, backup-to-discord-by-github 11, and small ones. **Exception-or-own undecided**: open-gitea, open-redmine, ows-base, ows-stream.
 - **Process**: per repository: survey → classify → build → test → record (README/CLAUDE/PORTING/POLICY) → deploy. At most two assignees at a time. Exceptions go to the `version-control` ledger with reason and standard URL.
 - **Caveat**: this is a record, not a claim that every repository is done; each repository's own docs are updated by its assignee when it is migrated. Production deployment is confirmed only for open-english and RS-Sync.
+
+- **2026-11-07 追記**: aruaru.tokyo は移行済み(本番実測で新200/旧404)。aruaru-IME は常駐エンジン・TSF/macOS/fcitx5/ibus が Connect 済みで旧経路は2026-12-06までの期限つき互換、オンライン画面(crossui→easy-web /ime/api)とAndroid upstreamは**未了**。詳細は`API-REST-REMAINING-20261106.md`末尾。

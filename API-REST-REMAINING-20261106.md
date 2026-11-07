@@ -30,8 +30,8 @@
 | 例外の可能性(未判定) | ows-base 26 / ows-stream 26 | 52(admin 48) | なし | 管理 API。自前なら移行対象 |
 | **未移行・要判定** | **RS-EC 28(admin 28)** | 28 | なし | 朝の13から増加 → origin の方が新しい(**要確認**) |
 | **未移行・要判定** | **RS-Blog 22(admin 22)** | 22 | なし | 朝の11から増加(**要確認**) |
-| 未移行 | aruaru.tokyo | 17 | なし | — |
-| 未移行 | aruaru-IME | 14 | LLM呼び出し元のみ別担当 | — |
+| 移行済み(2026-11-07、本番で新200/旧404を実測) | aruaru.tokyo | 0(自前API2本のみ、残りは静的・healthz) | なし | — |
+| 一部移行(常駐エンジン+TSF/macOS/fcitx5/ibusはConnect済み、旧経路は期限つき互換〜2026-12-06) | aruaru-IME | 旧経路11が互換で残存 | オンライン画面(RPoem crossui→open-easy-web /ime/api→VPS常駐エンジン)とAndroid upstreamが旧経路のまま | — |
 | 未移行 | aon.tokyo 13 / backup-to-discord-by-github 11 | 24 | なし | — |
 | 未移行(小) | audiocafe-tokyo-rust 8 / atr-sonic 8 / open-easy-web-app 7 / e-gov.info 7 / runo.tokyo 4 / karu.tokyo 4 | 38 | なし | — |
 | 例外のみ(推定) | open-raid-z 2 / RS-Guard 2 / nasa.tokyo・icpo.tokyo・fbi.tokyo 各1 | 7 | 不要 | ヘルスチェック等と推定(未確認) |
@@ -74,3 +74,8 @@
 - 全体の REST 風ルートは 250 本(手元の全走査)/ 259 本(VPS 06:20)。差は走査時点とclone参照の違い。
 - 通知: メールはVPSから送信成功。手元は `notify.email_to` 空・環境変数 `OPEN_EASYWEB_DIST_SYNC_ADMIN_TOKEN` 未設定のため手元からは送れない(運用上はVPSが送る)。
 - **未確認のまま**: 本番のログイン後の画面操作(認証情報が必要。利用者本人の確認待ち)。
+
+
+## 2026-11-07 追記(aruaru.tokyo / aruaru-IME 担当)
+- **aruaru.tokyo**: 別担当の移行(`tokyo_aruaru.v1.Site/ListRepos|TokoroUnlock`)が origin・VPS(8afaf4b、active)に反映済み。本担当が実測: 新経路 200/401、旧`/api/repos`・`/api/tokoro-unlock`は404。重複作業をしかけたが、重複コミットは破棄(push していない)。
+- **aruaru-IME(未完)**: 旧経路の削除は未実施。理由: インストール済みTSF DLL・easy-web.tokyo/imeのオンライン画面が旧経路を使うため、配布済みクライアントを壊さない期限つき互換(2026-12-06)を維持。残作業は (1) RPoem `open-runo-crossui` の橋渡しJSを Connect パス(`/aruaru_ime.v1.Ime/Key|Session`)へ、(2) open-easy-web `ime_api` の中継を Connect パスへ(VPS反映)、(3) Android upstream、(4) IME新版exeをReleaseとVPSで同版に、(5) 期限後に daemon の旧 match 腕を削除。いずれも未着手(3リポジトリ+本番をまたぐため)。
