@@ -100,3 +100,10 @@
 - **open-gitea**: origin `f752ba5`(Connect `POST /open_gitea.v1.Gitea/<Method>` 移行は `feae9b5`、VPS反映済みと記録)。手元で `cargo test` 36件成功(初回に1件だけ失敗〈404≠400〉したが原因未特定、その後3回連続成功)。
 - **open-redmine**: origin `6612f6b` で Connect 化済み(旧 `/api` 削除)。新規 clone で `cargo test` 96件成功(2件ignored)。本番反映は未確認。
 - どちらも認証付きの正常系の実機呼び出しは未確認。「移行対象」としていた上の記述は、この追記で「移行済み」に置き換わる。
+
+## 2026-11-08 追記(aruaru-IME 続報)
+- **完了**: オンライン画面(RPoem crossui `f88f4d7` → open-easy-web `/ime/api` `bf2677b`)とAndroid上流呼び出しをConnect(`aruaru_ime.v1.Ime/Key|Session`)へ。easy-web.tokyo へ反映し、公開URLで新200・旧`/ime/api/key`200(互換)、実ブラウザで`/ime`の入力が`…Ime/Key`のみ200で変換されることを確認。
+- **v0.2.24**: タグ・Release(Windows setup.exe+sha256、Linux/macOS/Android資産)を公開し、VPS `/var/lib/aruaru-ime/downloads/` を同版に揃え(sha256照合OK、旧版は`/root/dl-bak-20261108`)。VPS常駐エンジンは0.2.23のまま(Connect対応済み、再起動せず)。
+- **注意**: CIのreleaseジョブは先にReleaseが存在しないと失敗する(手動で`gh release create`後に再実行で解消)。Windows exeはCIでは付かず、クリーンworktreeで`tools/build-installer.ps1`。
+- **未了/未確認**: 期限 2026-12-06 に旧経路(daemonの旧match腕・easyの旧`/ime/api/key|session`・Android旧経路)を削除。Android・Windowsインストーラーの実機動作は未確認(Androidはcargo test 5件のみ)。
+
