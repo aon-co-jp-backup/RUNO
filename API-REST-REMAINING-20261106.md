@@ -148,3 +148,8 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - 最新ソース `6c884ac` をローカルでビルドし、開発用OTP(`RSCHIKETTO_DEV_LOG_OTP=true`、メール送信なし)で実サーバーを起動して確認: `Auth/RequestOtp`→`Auth/VerifyOtp`(トークン取得)→`Projects/Create`・`Projects/List`・`Projects/Get`(`id`指定)=すべて200、作成物を読み戻せた。旧 `/api/projects`=404、`Auth/Logout`=200。
 - 試験中の400は、`Get` に `id` でなく `name` を渡した呼び出し側の誤りで、バグではない。
 - **未確認**: ログアウト後にトークンが無効になるか(最後の呼び出しは本文不備で入力検査の400になり、判定できていない)。稼働中バイナリが `6c884ac` から作られたかのビルド再現。本番での認証付き呼び出し。
+
+## 2026-11-08 RS-EC・RS-Blog 本番のログイン後の通し確認
+- 本番にSMTPが未設定でOTPが送れなかったため、VPSの各サービスに drop-in(`/etc/systemd/system/rs-blog.service.d/20-smtp.conf`・`rs-ec.service.d/20-smtp.conf`、権限600)で open-easy-web と同じLolipop SMTP(info@aon.co.jp)を設定して再起動。なお open-redmine のGmail設定は 535 で拒否されたため使えなかった(open-redmine側の資格情報が失効している可能性、未調査)。
+- 管理者メール宛のOTPでログインし、実呼び出しを確認: RS-Blog = Posts Create/Get/List/Delete(200、削除後Getは404)+Logout。RS-EC = Products Create/Get/List/Delete(200、削除後Getは404)+Cart/Get(200)+Logout。確認用データは削除済み。
+- 未確認: Orders(Checkout等)、Categories/Pages/Tags/Comments、QRログイン、otp_qrモード。
