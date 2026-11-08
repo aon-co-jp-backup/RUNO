@@ -130,3 +130,8 @@
 - **2026-11-08 未確認2点を確認**: (1) aon.tokyoの `/video/fukuyama/` はディレクトリ一覧を返さない仕様(StaticFilesEndpoint)で404が正常。動画ファイル `https://aon.tokyo/video/fukuyama/fukuyama-hotaru.mp4` は 206(video/mp4)で公開されている。(2) bdgはVPS上でトークン付き `POST /bdg.admin.v1.Admin/ListTargets` が 200 で対象一覧を返すことを確認(読み取りのみ)。
 - **2026-11-08 実機インストール試験(ユーザーが管理者で実行)**: v0.2.24 のインストーラー `install exit=0`、直後の`/health`は`v=0.2.24 proto=1`で稼働(スクリプトの2秒後確認は起動が間に合わず「unreachable」と記録されたが、その後の実測で正常)。**未了**: アンインストール→再起動→再インストールの一周、実際のアプリでの日本語入力の目視確認。
 
+
+## 2026-11-08 追記2: 未確認だった点の確認結果
+- **RPoem**(`6ca9b74`に更新して実行): `cargo test -p open-runo-gateway -p open-runo-router` は 37 / 180 / 1 件すべて成功(失敗0、無視2)。open-cosmo は別の clone だが同じコミット内容(`6c67196`)で、そちらの cargo test は未実行。
+- **aruaru-db 本番(VPS)**: 旧 `/admin/backup`・`/nodes`・`/keys`・`/status` は管理トークン付きで404。新 `POST /open_runo.aruaru.admin.v1.AdminNode/ClosedTsPublish` はトークンなし401、トークン付きでハンドラ到達(空の`{}`で400)。注意: 認証なしだと存在しない旧経路も401になるため、旧経路の削除は認証付き404で判断した。
+- **未移行のまま**: RPoem `POST /internal/db/mutate`(呼び出し側 open-web-server `Ledger` の同時改修が要るため、対象外のリポジトリには触れていない)。
