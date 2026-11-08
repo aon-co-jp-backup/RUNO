@@ -165,3 +165,10 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - **version-control の集計改修**(`65bfa83`・`20f8adc`、VPS反映済み、`--dry-run` で確認・本物のタイマー実行は未確認): REST風ルート 251 → **179本**(総ルート 398 → 318)。テスト用コードと複製・別名(ows-*、atr-sonic 等)の二重計上を除外。
 - **本番反映**: open-raid-z を反映(ロールバックなし)。open-easy-web とオンライン画面(aruaru-IME 新経路)は反映済みと確認。**RPoem・open-cosmo は VPS に稼働中のゲートウェイが無く(`rpoem-web`・`open-cosmo-web` は静的紹介ページのみ)、反映先なし**。ゲートウェイを稼働させる時に open-web-server `Ledger`(`OPEN_RUNO_API_KEY`)と同時に整合させる。
 - 残り: 集計の実タイマー実行での確認、実機(Android/Windowsインストーラー)確認、aruaru-IME 旧経路の削除(2026-12-06)、小規模リポジトリの最終確認。
+
+
+## 2026-11-09 追記: 「残り179本」の中身を調べ、集計を直した(179 → 115)
+- **確認**: 2026-11-09 のメール「残り179本」で上位だった open-gitea 29・open-redmine 29 は、実際には移行済み。Connect の入口(`connect::endpoint`)の内側にある**外から届かない内部ルーター**を、集計が公開ルートとして数えていた(open-gitea は公開側が `/healthz`・`/ui`・zip/raw・git smart HTTP のみ、open-redmine も `connect::endpoint` 経由のみ)。bdg の `/api/channels/...` は試験用の偽Discord(`bdg-testkit`)、open-easy-web の `/api/auth/confirm-email-change` はメール内リンクの旧ページで、いずれも自前 REST ではない。
+- **修正**: version-control `6304084` — `connect::endpoint(` を含むファイルのルートを内部ルーター扱いで除外し、`*testkit` ディレクトリを走査から外す(単体テスト追加、全7件成功)。WSLビルド(glibc 2.39)→VPSで `--dry-run` → 本番バイナリを入れ替え(元は `target/release/version-control.bak-20261109`)。結果: open-gitea 0・open-redmine 0・bdg 0、合計 **179 → 115**。
+- **残り115本の内訳(未精査)**: aruaru.tokyo 15・RPoem 14・aruaru-IME 14・aon.tokyo 13・open-cosmo 13・open-easy-web-app 9 ほかは、記録上は HTML ページ・SCIM・ACME・未マウントの残置コード・旧経路の期限つき互換(aruaru-IME は2026-12-06まで)で、自前 REST ではないと判断している。ただし集計は静的な目安で、ページとAPIを区別できない。
+- **注意**: 入れ替え前の `--dry-run` で VPS の `state.json`(進捗の履歴)に当日分の集計が書き込まれた(新しい集計方法の値)。通知は送っていない。次回12:20の実巡回の結果は未確認。
