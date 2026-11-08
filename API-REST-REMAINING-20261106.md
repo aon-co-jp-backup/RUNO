@@ -113,3 +113,9 @@
 - **ソースの古さを解消**: VPS の git clone(`/root/open-redmine`・`/root/repository/open-redmine`)が `bc2ddc1` のまま「ahead 61 / behind 65」で分岐していた。`git cherry` で ahead の61コミットはすべて origin に同等のパッチがある(固有の変更0)、作業ツリーの未コミット変更(`web/pkg`)も origin と内容が同一(sha1一致)と確認したうえで、事前に `git bundle`(`/root/open-redmine-pre-align-{root,repository}.bundle`)を取り、`git fetch` + `git reset --hard origin/main` で `6c884ac` に整列。サービスは再起動せず `/healthz` 200 のまま。
 - **未確認**: 稼働中バイナリが `6c884ac` のソースから作られたものか(ビルドの再現は未実施)、ログイン後の正常系呼び出し。
 - **教訓**: 履歴が書き換えられたリポジトリでは `git pull` ではなく、固有コミットの有無を `git cherry` で確かめてから `reset` する。
+
+## 2026-11-08 追記: open-cosmo・RPoem・aruaru-db の最終確認(別セッションの結果を origin で検証)
+- **open-cosmo**: origin/main `6c67196`(appserver系REST10本をAdminのConnect/gRPC `AppServer*` へ、旧経路削除)で自前RESTは0本。残りは例外(`/health`・ACME・`/mcp`・SCIM・`/graphql`系・`/demo`)。VPSでは稼働していないため本番反映は対象外。今回 cargo test は再実行していない(未確認)。
+- **RPoem**: origin/main `6ca9b74` で appserver 10本をConnect化。残る REST は (1) SCIM `/scim/v2/*`(RFC 7644、IdP向け標準=例外)、(2) `POST /internal/db/mutate`(内部経路。呼び出し側は open-web-server の `Ledger::forward_once` で認証ヘッダ無し)。(2)は呼び出し側を同時に直さないと壊れるため**未移行**(open-web-server側の変更が必要。今回の対象外)。`open-runo-poem-compat` の `/api/openapi.json` 等はライブラリのデモ/テストで、ゲートウェイには載らない。VPSでRPoemゲートウェイは稼働していない。
+- **aruaru-db**: origin/main `849f082`「REST全廃」済み。サーバー側のRESTルートはコード上に無く(`clients/rust-axum` のサンプルのみ)。以前の「残8本」はVPSの古いクローンを読んだ誤りで対応不要。手元cloneは無く、VPSは触っていない。
+- **未確認**: 上記3リポジトリの本番での新200/旧404(open-cosmo・RPoemは本番非稼働、aruaru-dbは稼働状態を今回見ていない)。
