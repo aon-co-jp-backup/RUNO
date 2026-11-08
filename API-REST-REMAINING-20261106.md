@@ -119,3 +119,11 @@
 - **RPoem**: origin/main `6ca9b74` で appserver 10本をConnect化。残る REST は (1) SCIM `/scim/v2/*`(RFC 7644、IdP向け標準=例外)、(2) `POST /internal/db/mutate`(内部経路。呼び出し側は open-web-server の `Ledger::forward_once` で認証ヘッダ無し)。(2)は呼び出し側を同時に直さないと壊れるため**未移行**(open-web-server側の変更が必要。今回の対象外)。`open-runo-poem-compat` の `/api/openapi.json` 等はライブラリのデモ/テストで、ゲートウェイには載らない。VPSでRPoemゲートウェイは稼働していない。
 - **aruaru-db**: origin/main `849f082`「REST全廃」済み。サーバー側のRESTルートはコード上に無く(`clients/rust-axum` のサンプルのみ)。以前の「残8本」はVPSの古いクローンを読んだ誤りで対応不要。手元cloneは無く、VPSは触っていない。
 - **未確認**: 上記3リポジトリの本番での新200/旧404(open-cosmo・RPoemは本番非稼働、aruaru-dbは稼働状態を今回見ていない)。
+
+## 2026-11-08 追記2(aruaru-IME 未確認分の検証)
+- **実測(v0.2.24 のWindows版エンジンを別ポート・別データ領域で起動)**: `/health`=0.2.24、Connect `Key`(konnichiwa→「今日わ」等の候補)200、`Version` 200、不正JSON 400、GETでConnect 404、`/ui`のページJSが`/aruaru_ime.v1.Ime/Key`と`/Session`を使うことを確認。
+- **CI(v0.2.24)**: android-test(pixel_6 phone / pixel_c tablet)・android-apk・install-test(macOS arm64 / Ubuntu)成功。これでAndroid上流のConnect呼び出しがエミュレーター上で通ることまで確認(実機は未確認)。
+- **解決**: 配布`VERSION`は公開URLでは配られない設計(easy-webが`/var/lib/aruaru-ime/downloads/VERSION`を内部で読む)=404は異常ではない。
+- **未確認のまま**: Windowsインストーラーの実機インストール/アンインストール試験(`tools/installer-e2e.ps1`、管理者権限と再起動が要る。人が操作していない時に実施)、旧経路削除(2026-12-06)。
+- **事故の記録**: 試験後の後始末で`taskkill`が手元PCの本物のエンジン(4660)も止めた。インストール先から起動し直し`/health`=OK(0.2.23)。インストール済みの手元エンジンはv0.2.23のまま(v0.2.24はインストーラー適用で更新)。
+
