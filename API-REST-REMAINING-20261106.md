@@ -136,6 +136,10 @@
 - **aruaru-db 本番(VPS)**: 旧 `/admin/backup`・`/nodes`・`/keys`・`/status` は管理トークン付きで404。新 `POST /open_runo.aruaru.admin.v1.AdminNode/ClosedTsPublish` はトークンなし401、トークン付きでハンドラ到達(空の`{}`で400)。注意: 認証なしだと存在しない旧経路も401になるため、旧経路の削除は認証付き404で判断した。
 - **未移行のまま**: RPoem `POST /internal/db/mutate`(呼び出し側 open-web-server `Ledger` の同時改修が要るため、対象外のリポジトリには触れていない)。
 - **2026-11-08 追記**: インストール後、ユーザーがアプリでテキスト入力して問題なしと確認(目視確認は完了)。未了は、アンインストール→再起動→再インストールの一周のみ(任意、時間のある時)。
-- **2026-11-08 インストーラー実機試験(一周完了)**: install exit=0 → アンインストール(DLL・エンジン・CLSID・Runキーがすべて外れたことをstatusで確認) → 再起動 → 再インストール `install exit=0`(`dll/clsid/daemon_exe/uninstaller=True`、HKLM Runキーあり)。インストール版エンジンは自動では立ち上がっていなかった(スクリプトの`health: unreachable`)ため手で起動し、`/health`=`v=0.2.24`・パスは`C:\Program Filesruaru-IME`であることを確認。**注意**: 再起動前は、開発用`F:ruaru-IME	argetelease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール版と別物)。TSF DLLは未起動時にエンジンを自動起動する設計。
+- **2026-11-08 インストーラー実機試験(一周完了)**: install exit=0 → アンインストール(DLL・エンジン・CLSID・Runキーがすべて外れたことをstatusで確認) → 再起動 → 再インストール `install exit=0`(`dll/clsid/daemon_exe/uninstaller=True`、HKLM Runキーあり)。インストール版エンジンは自動では立ち上がっていなかった(スクリプトの`health: unreachable`)ため手で起動し、`/health`=`v=0.2.24`・パスは`C:\Program Filesruaru-IME`であることを確認。**注意**: 再起動前は、開発用`F:ruaru-IME	arget
+elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール版と別物)。TSF DLLは未起動時にエンジンを自動起動する設計。
 - **これで aruaru-IME の未確認は、旧経路削除(2026-12-06)のみ**。
+- **2026-11-08 旧経路削除の準備(aruaru-IME)**: 手元のコード・スクリプトに旧経路(`/key` `/session` ほか)の呼び出し元が残っていないことを確認(残りはeasy-webの互換2行のみ)。本番のeasy-webが旧`/ime/api/key|session`を受けた回数をjournalに数えるよう変更(`f7c5146`、入力内容は記録しない)し、VPSへ反映(`active`、新経路200・旧経路200・ログ1件を実測)。
+  - **2026-12-06 の判断手順**: VPSで `journalctl -u open-easy-web --since "2026-11-08" | grep -c ime-legacy-route-hit` を見る。0に近ければ、easy-webの旧2行・daemonの旧match腕(`crates/aruaru-ime-daemon/src/main.rs`の`connect_route`以外)・Android(`crates/aruaru-ime-android`)の旧経路名を削除してv0.2.25としてリリース。多ければ期限を延ばす。
+  - **この計測の限界**: 数えるのは easy-web 経由(Android旧版・古いページ)だけ。利用者PCにインストール済みの旧TSF DLL→手元エンジンの通信(127.0.0.1)は本番から見えない。TSFは0.2.24で更新されるため、削除前に自動更新の配布状況を確認すること。
 
