@@ -127,3 +127,4 @@
 - **未確認のまま**: Windowsインストーラーの実機インストール/アンインストール試験(`tools/installer-e2e.ps1`、管理者権限と再起動が要る。人が操作していない時に実施)、旧経路削除(2026-12-06)。
 - **事故の記録**: 試験後の後始末で`taskkill`が手元PCの本物のエンジン(4660)も止めた。インストール先から起動し直し`/health`=OK(0.2.23)。インストール済みの手元エンジンはv0.2.23のまま(v0.2.24はインストーラー適用で更新)。
 
+- **2026-11-08 未確認2点を確認**: (1) aon.tokyoの `/video/fukuyama/` はディレクトリ一覧を返さない仕様(StaticFilesEndpoint)で404が正常。動画ファイル `https://aon.tokyo/video/fukuyama/fukuyama-hotaru.mp4` は 206(video/mp4)で公開されている。(2) bdgはVPS上でトークン付き `POST /bdg.admin.v1.Admin/ListTargets` が 200 で対象一覧を返すことを確認(読み取りのみ)。
