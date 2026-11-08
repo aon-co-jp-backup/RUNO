@@ -107,3 +107,9 @@
 - **注意**: CIのreleaseジョブは先にReleaseが存在しないと失敗する(手動で`gh release create`後に再実行で解消)。Windows exeはCIでは付かず、クリーンworktreeで`tools/build-installer.ps1`。
 - **未了/未確認**: 期限 2026-12-06 に旧経路(daemonの旧match腕・easyの旧`/ime/api/key|session`・Android旧経路)を削除。Android・Windowsインストーラーの実機動作は未確認(Androidはcargo test 5件のみ)。
 
+
+## 2026-11-08 追記: open-redmine の本番反映を確認・VPSのソースを整列
+- **本番は反映済み**: VPS の `rs-chiketto`(本番8100・デモ8113)は 06:52 JST のバイナリ。VPS・公開URL(easy-web.tokyo/open-redmine)とも、旧 `/api/projects`=404、`POST /open_redmine.v1.Projects/List`=200、認証なしの `Projects/Create`=401、`/healthz`=200。
+- **ソースの古さを解消**: VPS の git clone(`/root/open-redmine`・`/root/repository/open-redmine`)が `bc2ddc1` のまま「ahead 61 / behind 65」で分岐していた。`git cherry` で ahead の61コミットはすべて origin に同等のパッチがある(固有の変更0)、作業ツリーの未コミット変更(`web/pkg`)も origin と内容が同一(sha1一致)と確認したうえで、事前に `git bundle`(`/root/open-redmine-pre-align-{root,repository}.bundle`)を取り、`git fetch` + `git reset --hard origin/main` で `6c884ac` に整列。サービスは再起動せず `/healthz` 200 のまま。
+- **未確認**: 稼働中バイナリが `6c884ac` のソースから作られたものか(ビルドの再現は未実施)、ログイン後の正常系呼び出し。
+- **教訓**: 履歴が書き換えられたリポジトリでは `git pull` ではなく、固有コミットの有無を `git cherry` で確かめてから `reset` する。
