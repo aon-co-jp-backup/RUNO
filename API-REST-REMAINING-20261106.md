@@ -160,3 +160,8 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - **テスト**: RPoem は router 181・`ledger_fusion`(本物の `Ledger` から新経路で書き込み)・proto・gateway が成功、open-web-server-ledger 20 件成功。
 - **VPS で実測**(RPoem を `/root/RPoem` で `git pull` → `cargo build -j2` の dev ビルドを 127.0.0.1:18099 に一時起動、確認後に停止。systemd サービスは追加していない): 旧 `/internal/db/mutate`=404、旧 `/api/schemas`=404、新 `Admin/DbMutate` は鍵なし401・不正本文400・正常200(受領票)。open-cosmo の VPS 側は紹介ページのみで未起動のため、open-cosmo 自体の VPS 実測は無い(同じコードを RPoem で確認)。
 - **残る REST**: RPoem/open-cosmo は SCIM(RFC 7644)と `/health`・ACME・`/mcp`・`/graphql` 系のみ(例外)。`openapi.rs` の旧REST記述(`/internal/db/mutate` 含む)は未マウントの残置コードで未削除。
+
+## 追記 (2026-11-08 夕)
+- **version-control の集計改修**(`65bfa83`・`20f8adc`、VPS反映済み、`--dry-run` で確認・本物のタイマー実行は未確認): REST風ルート 251 → **179本**(総ルート 398 → 318)。テスト用コードと複製・別名(ows-*、atr-sonic 等)の二重計上を除外。
+- **本番反映**: open-raid-z を反映(ロールバックなし)。open-easy-web とオンライン画面(aruaru-IME 新経路)は反映済みと確認。**RPoem・open-cosmo は VPS に稼働中のゲートウェイが無く(`rpoem-web`・`open-cosmo-web` は静的紹介ページのみ)、反映先なし**。ゲートウェイを稼働させる時に open-web-server `Ledger`(`OPEN_RUNO_API_KEY`)と同時に整合させる。
+- 残り: 集計の実タイマー実行での確認、実機(Android/Windowsインストーラー)確認、aruaru-IME 旧経路の削除(2026-12-06)、小規模リポジトリの最終確認。
