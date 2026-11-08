@@ -143,3 +143,8 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
   - **2026-12-06 の判断手順**: VPSで `journalctl -u open-easy-web --since "2026-11-08" | grep -c ime-legacy-route-hit` を見る。0に近ければ、easy-webの旧2行・daemonの旧match腕(`crates/aruaru-ime-daemon/src/main.rs`の`connect_route`以外)・Android(`crates/aruaru-ime-android`)の旧経路名を削除してv0.2.25としてリリース。多ければ期限を延ばす。
   - **この計測の限界**: 数えるのは easy-web 経由(Android旧版・古いページ)だけ。利用者PCにインストール済みの旧TSF DLL→手元エンジンの通信(127.0.0.1)は本番から見えない。TSFは0.2.24で更新されるため、削除前に自動更新の配布状況を確認すること。
 
+
+## 2026-11-08 追記: open-redmine のローカル通し試験(認証付き)
+- 最新ソース `6c884ac` をローカルでビルドし、開発用OTP(`RSCHIKETTO_DEV_LOG_OTP=true`、メール送信なし)で実サーバーを起動して確認: `Auth/RequestOtp`→`Auth/VerifyOtp`(トークン取得)→`Projects/Create`・`Projects/List`・`Projects/Get`(`id`指定)=すべて200、作成物を読み戻せた。旧 `/api/projects`=404、`Auth/Logout`=200。
+- 試験中の400は、`Get` に `id` でなく `name` を渡した呼び出し側の誤りで、バグではない。
+- **未確認**: ログアウト後にトークンが無効になるか(最後の呼び出しは本文不備で入力検査の400になり、判定できていない)。稼働中バイナリが `6c884ac` から作られたかのビルド再現。本番での認証付き呼び出し。
