@@ -153,3 +153,10 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - 本番にSMTPが未設定でOTPが送れなかったため、VPSの各サービスに drop-in(`/etc/systemd/system/rs-blog.service.d/20-smtp.conf`・`rs-ec.service.d/20-smtp.conf`、権限600)で open-easy-web と同じLolipop SMTP(info@aon.co.jp)を設定して再起動。なお open-redmine のGmail設定は 535 で拒否されたため使えなかった(open-redmine側の資格情報が失効している可能性、未調査)。
 - 管理者メール宛のOTPでログインし、実呼び出しを確認: RS-Blog = Posts Create/Get/List/Delete(200、削除後Getは404)+Logout。RS-EC = Products Create/Get/List/Delete(200、削除後Getは404)+Cart/Get(200)+Logout。確認用データは削除済み。
 - 未確認: Orders(Checkout等)、Categories/Pages/Tags/Comments、QRログイン、otp_qrモード。
+
+## 2026-11-08 追記3: open-cosmo テスト成功・RPoem `/internal/db/mutate` の移行完了
+- **open-cosmo のテスト**: `cargo test -p open-runo-gateway -p open-runo-router` 全て成功(37 / 178、失敗0)。続く `/internal/db/mutate` 移行後も gateway 37・router 179・proto 5 が成功。
+- **`/internal/db/mutate` を移行**: RPoem `781c824`・open-cosmo `132e300`(同じ内容)で、旧 `POST /internal/db/mutate` を削除し `open_runo.admin.v1.Admin/DbMutate`(Connect/gRPC、`x-api-key` 認証)へ。呼び出し側は open-web-server の `Ledger`(`OPEN_RUNO_API_KEY` を `x-api-key` に付ける)を同時に変更して push(docs/integration.md も更新)。**旧経路は認証なしだったが、新経路は認証必須**になった。`admin.proto` への rpc 追加を忘れて統合テストが「unknown method」で落ちたため、追加して直した。
+- **テスト**: RPoem は router 181・`ledger_fusion`(本物の `Ledger` から新経路で書き込み)・proto・gateway が成功、open-web-server-ledger 20 件成功。
+- **VPS で実測**(RPoem を `/root/RPoem` で `git pull` → `cargo build -j2` の dev ビルドを 127.0.0.1:18099 に一時起動、確認後に停止。systemd サービスは追加していない): 旧 `/internal/db/mutate`=404、旧 `/api/schemas`=404、新 `Admin/DbMutate` は鍵なし401・不正本文400・正常200(受領票)。open-cosmo の VPS 側は紹介ページのみで未起動のため、open-cosmo 自体の VPS 実測は無い(同じコードを RPoem で確認)。
+- **残る REST**: RPoem/open-cosmo は SCIM(RFC 7644)と `/health`・ACME・`/mcp`・`/graphql` 系のみ(例外)。`openapi.rs` の旧REST記述(`/internal/db/mutate` 含む)は未マウントの残置コードで未削除。
