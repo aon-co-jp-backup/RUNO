@@ -135,3 +135,5 @@
 - **RPoem**(`6ca9b74`に更新して実行): `cargo test -p open-runo-gateway -p open-runo-router` は 37 / 180 / 1 件すべて成功(失敗0、無視2)。open-cosmo は別の clone だが同じコミット内容(`6c67196`)で、そちらの cargo test は未実行。
 - **aruaru-db 本番(VPS)**: 旧 `/admin/backup`・`/nodes`・`/keys`・`/status` は管理トークン付きで404。新 `POST /open_runo.aruaru.admin.v1.AdminNode/ClosedTsPublish` はトークンなし401、トークン付きでハンドラ到達(空の`{}`で400)。注意: 認証なしだと存在しない旧経路も401になるため、旧経路の削除は認証付き404で判断した。
 - **未移行のまま**: RPoem `POST /internal/db/mutate`(呼び出し側 open-web-server `Ledger` の同時改修が要るため、対象外のリポジトリには触れていない)。
+- **2026-11-08 追記**: インストール後、ユーザーがアプリでテキスト入力して問題なしと確認(目視確認は完了)。未了は、アンインストール→再起動→再インストールの一周のみ(任意、時間のある時)。
+
