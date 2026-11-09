@@ -191,3 +191,8 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - RPoemゲートウェイ(127.0.0.1:8140のみ): 残す。停止は `systemctl disable --now open-runo-gateway.service`。
 - systemd `Restart=always`(`10-autorestart.conf` drop-in): 残す。戻す場合はdrop-in削除+`daemon-reload`。
 - 依存更新の残り29件: REST全廃の範囲外のため打ち切り。version-controlの通知で扱う。
+
+## 2026-11-09 共有基盤の受付制御(配備方針の実装)
+- `aruaru-llm`に同時実行上限・サイト別公平キュー・待ち時間/実行時間の上限・429/503/504のConnect形式エラーを実装し、VPSへ反映(WSLビルド、glibc 2.39、旧バイナリ`target/release/aruaru-llm.before-20261109adm`、反映後3サイト同時の生成が全て200)。数値は`aruaru-llm/CLAUDE.md`。実機での公平性は推論が遅く測れず、単体の負荷測定(A=1400/B=767/C=867ms)のみ。
+- `open-cuda`・`open-directx`はライブラリのまま(共有サービス化しない)。理由は各`CLAUDE.md`。
+- 未了: 上限値の調整(既定2/32/8)、前面open-web-serverが`x-tenant`を付ける確認(未実施)、軽い呼び出し(Chat/Classify)は対象外。
