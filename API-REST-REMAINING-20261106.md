@@ -185,3 +185,9 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - RPoemゲートウェイ(`open-runo-gateway.service`、127.0.0.1:8140)は担当が新規常駐。続行/停止は判断待ち。VPSのsystemd `Restart=always`変更も残す/戻すを判断待ち。
 - version-control: 集計改修・誤検出修正をVPS反映。依存脆弱性は31件中2件(open-media `9cc2150`、aruaru-db `1c8a656`)のみ対応、残りはREST全廃の範囲外。
 - atr-sonic(audiocafe-tokyo-rust)のsonic書き換えをpush・本番反映(全7ページ出力一致、test 15件成功)。
+
+## 2026-11-09 判断(ユーザーがClaudeに一任)
+- aruaru-IME旧経路のRelease/VPS反映: 猶予期限2026-12-06まで保留(旧TSF DLL保護)。
+- RPoemゲートウェイ(127.0.0.1:8140のみ): 残す。停止は `systemctl disable --now open-runo-gateway.service`。
+- systemd `Restart=always`(`10-autorestart.conf` drop-in): 残す。戻す場合はdrop-in削除+`daemon-reload`。
+- 依存更新の残り29件: REST全廃の範囲外のため打ち切り。version-controlの通知で扱う。
