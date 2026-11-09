@@ -399,3 +399,17 @@ Reading into `serde_json::Value` gives almost no speed-up even with SIMD (188 ms
 - **2026-11-08 open-cosmo/RPoem/aruaru-db の確認**: 3リポジトリとも自前RESTはほぼ解消(open-cosmo `6c67196`・RPoem `6ca9b74`・aruaru-db `849f082`)。RPoemの `/internal/db/mutate` は呼び出し側 open-web-server `Ledger` の同時改修が要るため未移行、SCIMは例外。本番は open-cosmo/RPoem が非稼働。詳細は `API-REST-REMAINING-20261106.md` 末尾。
 - **2026-11-08 RPoem `/internal/db/mutate` 移行完了**: `Admin/DbMutate`(Connect、`x-api-key` 必須)へ移し、RPoem `781c824`・open-cosmo `132e300`・open-web-server `Ledger`(環境変数 `OPEN_RUNO_API_KEY`)を同時変更。VPSで一時起動して新401/400/200・旧404を実測。open-cosmo/RPoem/aruaru-db のテスト成功。残るRESTはSCIM等の例外のみ。
 - **2026-11-08 追記**: aruaru-IME のオンライン画面・Android上流もConnect化し、v0.2.24をRelease/VPSで同版に揃えた。旧経路の削除は2026-12-06。実機(Android/Windowsインストーラー)は未確認。詳細は`API-REST-REMAINING-20261106.md`末尾。
+
+## 配備アーキテクチャ方針: 共有基盤を1回だけ入れ、サイトごとのインストールは不要 (2026-11-09、ユーザー指示)
+
+### 日本語
+- **役割の対応**: `open-web-server` = Apache相当(前面のWebサーバー)、`RPoem` = Tomcat相当(アプリケーションサーバー)。
+- **共有基盤**: `open-cuda`・`aruaru-llm`・`open-directx` などの計算/AI基盤は、**VPSに1回インストールすれば足りる**。**WEBサイトごとにインストールしない**。各サイトは、共有基盤をConnect/gRPCで呼ぶだけにする。
+- **並行処理**: 共有基盤は非同期・マルチスレッドで、複数サイトからの同時要求(「分身の術」)をさばく。サイト間で状態を混ぜない(要求単位・テナント単位で分離)。
+- **記録の位置づけ**: これは方針の記録であり、現状の実装がすでにこの形であることを意味しない。各リポジトリの現状(サイトごとに同梱・個別起動していないか、同時要求の上限・分離・タイムアウト)は、未調査。調査は別途行い、結果を `API-REST-REMAINING-20261106.md` 等へ追記する。
+
+### English
+- **Role mapping**: `open-web-server` ≈ Apache (front web server); `RPoem` ≈ Tomcat (application server).
+- **Shared base**: compute/AI components such as `open-cuda`, `aruaru-llm`, `open-directx` need to be installed **once on the VPS**, not per website. Each site only calls the shared base over Connect/gRPC.
+- **Concurrency**: the shared base serves concurrent requests from many sites asynchronously and multi-threaded (the "shadow-clone" model), isolated per request/tenant.
+- **Status**: this records a policy, not that the current code already works this way. Per-repo status (bundled per site? concurrency limits, isolation, timeouts) is not yet surveyed.
