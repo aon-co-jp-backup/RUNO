@@ -178,3 +178,10 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - **version-control の集計を修正**(`cc62c63` `a9b959c` `7bad1aa` `be72f33`): テストモジュールを文字列・コメントを飛ばす括弧対応で除去、Connect入口/手書き橋渡し/acme.rs は内部扱い、`*testkit` 除外、GraphQL/SCIM/MCP/demo・catch-all・`/page/`・`/ranking/`・`/fonts/` は例外、マウント接頭辞つきConnectパス(`/ime/api/<pkg>.Svc/Method`)を認識、API形(`/api/` `/admin/` `/vN/` `/:id`)でない素のページ・動画は別枠 `pages` に集計。VPS で `--dry-run` して **179 → 2**、本番バイナリ入れ替え(元は `version-control.bak-20261109b`)。
 - **本当に残っている2本**: open-easy-web の `/ime/api/key`・`/ime/api/session`(aruaru-IME 旧経路の期限つき互換、**2026-12-06 に削除予定**)。本番ログに `ime-legacy-route-hit` が 2026-11-08〜09 で5件あり(最新 11-09 05:54)、まだ旧経路を叩く相手がいる → 期限前に消さない。
 - **限界**: `pages` は「API形でないパス」という静的な推定で、`/users` のような名詞だけのREST経路は `pages` に落ちて見逃す。新規REST追加の監視には `/api/`・`/admin/`・`/vN/`・`/:id` が目印になる。**未確認**: 12:20 の実巡回で出るメールの本数(dry-runのみで確認)。`cargo test` 全体では `fix::script_tests` 1件が Windows の Git Bash でパスが壊れて失敗(今回の変更と無関係、WSL では従来どおり)。
+
+## 2026-11-09 追記(夜)
+- aruaru-db: 公開 `/graphql` から管理Mutationを外し、管理操作はConnectに一本化(`3b4a0f7`/`0faaaf2`、本番反映済み。ブラウザでの画面確認のみ未了)。
+- aruaru-IME: 常駐エンジンの旧経路(`/key` `/session` `/convert` 等)を削除してpush済み(`6344880`)。ローカル実測で旧404・新200。**Release/VPS反映は保留**(旧TSF DLLが壊れる恐れ、猶予期限2026-12-06との整合を要判断)。Androidは APK内の接続先が新経路のみと確認、端末が叩いたURLの直接確認は未了。
+- RPoemゲートウェイ(`open-runo-gateway.service`、127.0.0.1:8140)は担当が新規常駐。続行/停止は判断待ち。VPSのsystemd `Restart=always`変更も残す/戻すを判断待ち。
+- version-control: 集計改修・誤検出修正をVPS反映。依存脆弱性は31件中2件(open-media `9cc2150`、aruaru-db `1c8a656`)のみ対応、残りはREST全廃の範囲外。
+- atr-sonic(audiocafe-tokyo-rust)のsonic書き換えをpush・本番反映(全7ページ出力一致、test 15件成功)。
