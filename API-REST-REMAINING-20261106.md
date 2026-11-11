@@ -3,6 +3,28 @@
 出典: version-control の巡回 `api-exceptions.json`(2026-11-06 10:44 生成、https://easy-web.tokyo/version-control/)。**今回から REST風ルートは、VPS の古いクローンではなく origin の最新(`git archive @{u}` の `.rs`)から数えています**(読み取りのみ。origin を読めなかった9件はクローンのまま)。
 方針の正本: [API-POLICY.md](API-POLICY.md)、担当への共通指示: [API-MIGRATION-BRIEF.md](API-MIGRATION-BRIEF.md)。
 
+## 現状まとめ (2026-11-11 20:27 JST、VPS の version-control で巡回を1回実行・通知なし)
+- 巡回の REST風ルート(静的な目安)は **0本**(全ルート311)。推移: 11-04 509 → 11-06 318 → 11-07 319 → 11-08 179 → 11-09以降 0。origin を読めず作業コピーで数えたのは6件。
+- **注意(0は完了の証明ではない)**: 11-08〜09 の間に数え方が変わっています(マウント接頭辞つきConnectパス・catch-all・コンテンツページ・フォント配信・GraphQL/SCIM/MCP/demo・ACME のパスを除外。コミット cc62c63・7bad1aa・be72f33)。除外の中に、実は移行対象のものが混じっていないかは未確認です。
+- 下の「(1) 区分」の表は **2026-11-06 時点の記録**で、その後の追記(11-07・11-08)が最新の状態を上書きしています。
+
+### 区分の現状(追記の内容を整理)
+| 区分 | リポジトリ | 状態 |
+|---|---|---|
+| 移行済み・本番反映済み | open-english、RS-Sync、RS-EC、RS-Blog、aruaru.tokyo、open-gitea、open-redmine、backup-to-discord-by-github、aruaru-db(旧REST7本は古いクローンの誤読で対応不要) | 本番で新200/401・旧404を実測(正常系の認証付き呼び出しは多くが未確認) |
+| 移行済み・本番は対象外 | open-cosmo、RPoem(appserver 10本)、open-cg-cad、e-gov | VPS で稼働していない、または push 済みで本番未確認 |
+| 全て例外(移行対象なし) | aon.tokyo(13本)、ows-base / ows-stream(open-web-server の古い複製の二重計上) | — |
+| 期限つき互換 | aruaru-IME | Connect 化済み。旧経路は **2026-12-06 に削除予定** |
+
+### 残り(未移行・判定待ち・未確認)
+1. **RPoem `POST /internal/db/mutate`**: 内部経路。呼び出し側の open-web-server `Ledger::forward_once` を同時に直す必要があり、未移行。
+2. **aruaru-IME の旧経路削除(2026-12-06)**: daemon の旧 match 腕、open-easy-web の旧 `/ime/api/key|session`、Android の旧経路。
+3. **open-raid-z**(`/api/status`・`/api/create`)と **open-easy-web** のビルド確認: 2026-11-08 時点で確認中のまま、その後の記録なし。
+4. **小規模の未確認**: audiocafe-tokyo-rust・atr-sonic・open-easy-web-app・e-gov.info・runo.tokyo・karu.tokyo は、この表に個別の判定記録なし(現在の巡回では0本だが、上の「0は完了の証明ではない」参照)。
+5. **ows-base / ows-stream の複製**の整理(削除か更新)は、version-control 側の扱い未決。
+6. **本番の認証付き正常系**の通し呼び出しは、RS-EC・RS-Blog・RS-Sync・open-redmine・open-gitea などで未確認。
+7. REST風ルートの増加を知らせる通知メールは、実運用で増加が検知された例がまだ無い(送信経路自体は VPS から成功)。
+
 ## 読む前の注意
 - 数え方は静的な目安です(axum `.route` / poem `.at` / hyper `(Method,"/path")`。Connect形式・`:param` 付きConnect形・例外パスは除外)。実行時に組み立てるルートは見えません。
 - `api_admin` は `/api/`・`/admin/` 配下の数(`rest_like` の内数)。**Gitea / Redmine / S3 など他製品互換の API は、共通指示書では「例外(台帳に載せる)」です**。下の「例外の可能性」は未判定です。
@@ -15,7 +37,7 @@
 | 2026-11-05 | 481 | 573 | クローン基準 |
 | 2026-11-06 | **318** | 456 | **origin 基準**(同日朝のクローン基準は 411) |
 
-## (1) 区分 / (2) 本番(VPS)反映 — origin 基準の数
+## (1) 区分 / (2) 本番(VPS)反映 — origin 基準の数(2026-11-06 時点の記録。現状は上の「現状まとめ」)
 | 区分 | リポジトリ | REST風 | 担当セッション | 本番(VPS)反映 |
 |---|---|---|---|---|
 | 移行済み | open-english | 2(例外のみ。全93ルート中) | 完了 | **反映済み**(画面・旧パス404を確認。サーバー本体は最新コード) |
