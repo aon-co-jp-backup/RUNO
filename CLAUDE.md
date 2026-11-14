@@ -400,6 +400,8 @@ Reading into `serde_json::Value` gives almost no speed-up even with SIMD (188 ms
 - **2026-11-08 RPoem `/internal/db/mutate` 移行完了**: `Admin/DbMutate`(Connect、`x-api-key` 必須)へ移し、RPoem `781c824`・open-cosmo `132e300`・open-web-server `Ledger`(環境変数 `OPEN_RUNO_API_KEY`)を同時変更。VPSで一時起動して新401/400/200・旧404を実測。open-cosmo/RPoem/aruaru-db のテスト成功。残るRESTはSCIM等の例外のみ。
 - **2026-11-08 追記**: aruaru-IME のオンライン画面・Android上流もConnect化し、v0.2.24をRelease/VPSで同版に揃えた。旧経路の削除は2026-12-06。実機(Android/Windowsインストーラー)は未確認。詳細は`API-REST-REMAINING-20261106.md`末尾。
 
+- **2026-11-14 Ledger→RPoem接続の配線完了**: RPoemゲートウェイは稼働中(127.0.0.1:8140、aruaru-db接続)。open-web-serverの`admin.env`に`OPEN_RUNO_API_KEY`を追加して再起動(旧は`admin.env.before-apikey`)、5ドメインHTTPS 200・正キー=400(入力検証)/誤キー=401を実測。実際のLedger書き込みの通しは未確認。*Gateway live; OWS now has OPEN_RUNO_API_KEY (restarted, 5 domains 200, right key→400, wrong key→401); real Ledger write not yet exercised.*
+
 ## 配備アーキテクチャ方針: 共有基盤を1回だけ入れ、サイトごとのインストールは不要 (2026-11-09、ユーザー指示)
 
 ### 日本語
