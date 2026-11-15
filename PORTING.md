@@ -2503,11 +2503,11 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 ## 2026-11-15 再開用メッセージ(検証の残り・共有基盤調査) / Resume message (verification leftovers, shared-base survey)
 
 ### 日本語
-**再開するリポジトリ**: `F:uno`(本リポジトリ、索引と記録)・`F:ersion-control`・`F:ruaru-search`・`F:ruaru-llm`。別件の再開(2FastAPI・2FastAPI-VSC・RMojo・Windows ARM64のCI)は、直上の「2026-11-15 別アカウントでの再開用メモ」を使う。
+**再開するリポジトリ**: `F:\runo`(本リポジトリ、索引と記録)・`F:\version-control`・`F:\aruaru-search`・`F:\aruaru-llm`。別件の再開(2FastAPI・2FastAPI-VSC・RMojo・Windows ARM64のCI)は、直上の「2026-11-15 別アカウントでの再開用メモ」を使う。
 
 **確認済み(2026-11-08〜15)**
 - aruaru-search の自動再開(`b15f63a`)は本番ログで実働(探り成功で復帰、braveは429でバックオフ)。
-- version-control の `--pr`/`--push` は、ローカルbareのoriginを使ったWSLの往復で成功(`gh`は偽物)。`F:ersion-control` の手元クローンは `origin/main` と一致(分岐は解消済み)。
+- version-control の `--pr`/`--push` は、ローカルbareのoriginを使ったWSLの往復で成功(`gh`は偽物)。`F:\version-control` の手元クローンは `origin/main` と一致(分岐は解消済み)。
 - VPSの稼働状況(読み取りのみ): aruaru-llm(127.0.0.1:4600)・aruaru-search(4610)は**1プロセスずつ**で、サイトごとの同梱・個別起動の形跡は無い。
 
 **未了**
@@ -2519,14 +2519,14 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 **落とし穴**: 書き換え済みの公開リポジトリで `git pull` しない(`git fetch` + `git reset --mixed origin/<branch>`)。PowerShell 5.1で日本語を含むファイルを書かない(Pythonか Edit/Write)。Git Bashは `/mnt/...` を書き換えるのでWSLはPowerShellから呼ぶ。トークン類は `F:\` 直下のtxtに置き、値を出力・commitしない。チャットは日本語のみ。
 
 **再開用メッセージ(そのまま貼り付け)**:
-> `F:uno\PORTING.md` 末尾の「2026-11-15 再開用メッセージ」と「2026-11-15 別アカウントでの再開用メモ」を読んで続きをして。まず未了4(CIが赤のopen-raid-z / open-easy-web / open-web-server を `gh run view --log-failed` で確認して修正)、次に未了3(共有基盤の同時要求の上限・分離・タイムアウトを `aruaru-llm`・`aruaru-search`・`open-cuda` で調査して記録)、未了2(高速な推論先で `version-control` の変更点要約を確認)の順。未了1(本物の `gh pr create`)は、私の許可があるまでやらない。確認なしで開発・TEST・DEBUG・commit・pushしてよい。チャットは日本語のみ。
+> `F:\runo\PORTING.md` 末尾の「2026-11-15 再開用メッセージ」と「2026-11-15 別アカウントでの再開用メモ」を読んで続きをして。まず未了4(CIが赤のopen-raid-z / open-easy-web / open-web-server を `gh run view --log-failed` で確認して修正)、次に未了3(共有基盤の同時要求の上限・分離・タイムアウトを `aruaru-llm`・`aruaru-search`・`open-cuda` で調査して記録)、未了2(高速な推論先で `version-control` の変更点要約を確認)の順。未了1(本物の `gh pr create`)は、私の許可があるまでやらない。確認なしで開発・TEST・DEBUG・commit・pushしてよい。チャットは日本語のみ。
 
 ### English
-**Repositories to resume**: `F:uno` (this meta repo, index and records), `F:ersion-control`, `F:ruaru-search`, `F:ruaru-llm`. For the other thread (2FastAPI, 2FastAPI-VSC, RMojo, Windows ARM64 CI) use the section just above, "2026-11-15 別アカウントでの再開用メモ".
+**Repositories to resume**: `F:\runo` (this meta repo, index and records), `F:\version-control`, `F:\aruaru-search`, `F:\aruaru-llm`. For the other thread (2FastAPI, 2FastAPI-VSC, RMojo, Windows ARM64 CI) use the section just above, "2026-11-15 別アカウントでの再開用メモ".
 
 **Verified (2026-11-08 to 15)**
 - aruaru-search auto-resume (`b15f63a`) works in production logs (probe success -> recovered; brave backs off on 429).
-- version-control `--pr`/`--push` succeeded in a WSL round trip against a local bare origin (`gh` was stubbed). The local clone of `F:ersion-control` now matches `origin/main` (the divergence is gone).
+- version-control `--pr`/`--push` succeeded in a WSL round trip against a local bare origin (`gh` was stubbed). The local clone of `F:\version-control` now matches `origin/main` (the divergence is gone).
 - VPS state (read-only): aruaru-llm (127.0.0.1:4600) and aruaru-search (4610) run as **one process each**; no sign of per-site bundling or per-site instances.
 
 **Open**
@@ -2538,7 +2538,7 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 **Pitfalls**: never `git pull` in a rewritten public repository (`git fetch` + `git reset --mixed origin/<branch>`). Do not write Japanese into files with PowerShell 5.1 (use Python or Edit/Write). Git Bash rewrites `/mnt/...`, so call WSL from PowerShell. Keep tokens in txt files at the root of `F:\`; never print or commit values. Chat in Japanese only.
 
 **Resume message (paste as is)**:
-> Read "2026-11-15 再開用メッセージ" and "2026-11-15 別アカウントでの再開用メモ" at the end of `F:uno\PORTING.md`, then continue: first open item 4 (check the red CI of open-raid-z / open-easy-web / open-web-server with `gh run view --log-failed` and fix), then item 3 (survey concurrency limits, isolation and timeouts of the shared base in `aruaru-llm`, `aruaru-search`, `open-cuda` and record them), then item 2 (verify `version-control` change summaries against a fast inference backend). Do not do item 1 (a real `gh pr create`) until I give permission. You may develop, test, debug, commit and push without asking. Chat in Japanese only.
+> Read "2026-11-15 再開用メッセージ" and "2026-11-15 別アカウントでの再開用メモ" at the end of `F:\runo\PORTING.md`, then continue: first open item 4 (check the red CI of open-raid-z / open-easy-web / open-web-server with `gh run view --log-failed` and fix), then item 3 (survey concurrency limits, isolation and timeouts of the shared base in `aruaru-llm`, `aruaru-search`, `open-cuda` and record them), then item 2 (verify `version-control` change summaries against a fast inference backend). Do not do item 1 (a real `gh pr create`) until I give permission. You may develop, test, debug, commit and push without asking. Chat in Japanese only.
 
 ## 2026-11-15 追記: Android同梱バイナリのConnect化の結果(open-english v0.8.18)/ Addendum: Android bundled binaries (open-english v0.8.18)
 
@@ -2667,20 +2667,20 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 > Read "2026-11-15 再開用メッセージ(open-gitea / open-redmine のConnect化の本番反映)" at the end of `F:\runo\PORTING.md` and continue. First open item 1 (open-gitea `/` returns 404): compare with the pre-deploy binary (`/root/open-gitea-bin.bak.1794050996` on the VPS) to see whether it is a regression, check in the browser that `/ui/` is not a white screen, decide how to route the entrance (forward from the front or in the app), fix it and redeploy (WSL build -> backup -> swap -> restart -> verify -> roll back on failure). Then open item 2 (authenticated end-to-end flows). You may develop, test, debug, commit and push without asking. Do not restart other VPS services. Chat in Japanese only.
 
 ## 2026-11-15 再開用メッセージ: 共有基盤の受付制御(別アカウントで再開)
-**再開するリポジトリ**: `F:ruaru-llm`(本体)、`F:uno`(記録)。`F:\open-cuda`・`F:\open-directx`は判断の記録のみ(コード変更なし)。
+**再開するリポジトリ**: `F:\aruaru-llm`(本体)、`F:\runo`(記録)。`F:\open-cuda`・`F:\open-directx`は判断の記録のみ(コード変更なし)。
 **済み**: aruaru-llmに受付制御(`src/admission.rs`、`src/connect.rs`)を実装し、2026-11-09にVPSへ反映(同時2・待ち行列全体32/サイト別8・待ち30秒=503・実行120秒=504・満杯=429、Connect形式)。3サイト同時の生成は全て200。単体の公平性測定はA=1400/B=767/C=867ms。open-cuda/open-directxはライブラリのまま(理由は各`CLAUDE.md`)。コミットはorigin/mainに反映済みを確認。
 **未了**: (1)前面open-web-serverが`x-tenant`ヘッダを付けているかの確認(付かないと全サイトが`anonymous`扱い=公平配分が効かない)。(2)実推論での公平性の実測(VPS/WSLのGPT-2は遅く、単発でも60秒超。高速な推論先が要る)。(3)上限値(既定2/32/8)の調整。(4)Chat/Classify等の軽い呼び出しは対象外のまま。
 **落とし穴**: VPSではビルドしない(WSLでビルド→glibc<=2.39確認→scp→バックアップ→再起動→自動ロールバック)。`ARUARU_LLM_GPT2_DIR=models/gpt2`が無いとモデルを読めない。シェルスクリプトで`wait`を引数なしで使うとバックグラウンドのサーバーまで待つ。
 **そのまま貼る再開用メッセージ**:
-> `F:ruaru-llm/CLAUDE.md`の「共有基盤としての受付制御」と`F:uno/API-REST-REMAINING-20261106.md`末尾(2026-11-09)を読み、未了(1)`x-tenant`ヘッダの前面付与の実機確認から再開して。VPSではビルドせずWSLでビルドして差し替え、REST新設禁止(Connect)、秘密は出さない。
+> `F:\aruaru-llm/CLAUDE.md`の「共有基盤としての受付制御」と`F:\runo/API-REST-REMAINING-20261106.md`末尾(2026-11-09)を読み、未了(1)`x-tenant`ヘッダの前面付与の実機確認から再開して。VPSではビルドせずWSLでビルドして差し替え、REST新設禁止(Connect)、秘密は出さない。
 
 ### 2026-11-15 Resume message: shared-base admission control (resuming on another account)
-**Repos to resume**: `F:ruaru-llm` (code), `F:uno` (records). `F:\open-cuda` and `F:\open-directx` only hold a decision record (no code change).
+**Repos to resume**: `F:\aruaru-llm` (code), `F:\runo` (records). `F:\open-cuda` and `F:\open-directx` only hold a decision record (no code change).
 **Done**: admission control in aruaru-llm (`src/admission.rs`, `src/connect.rs`), deployed to the VPS on 2026-11-09 (2 concurrent, queue 32 total / 8 per site, 30 s wait = 503, 120 s run = 504, full = 429, Connect-style errors). Three simultaneous sites all got 200. Unit-level fairness: A=1400 / B=767 / C=867 ms. open-cuda / open-directx stay libraries (reasons in each `CLAUDE.md`). The commits are confirmed on origin/main.
 **Open**: (1) verify the front open-web-server sets `x-tenant` (otherwise every site is `anonymous` and fairness has no effect); (2) measure fairness with real inference (GPT-2 on the VPS/WSL is slow, >60 s even for one call; needs a fast backend); (3) tune the limits (defaults 2/32/8); (4) light calls (Chat/Classify) are still not governed.
 **Pitfalls**: never build on the VPS (build in WSL, check glibc <= 2.39, scp, back up, restart, auto-rollback). Without `ARUARU_LLM_GPT2_DIR=models/gpt2` the model fails to load. A bare `wait` in a shell script also waits for a background server.
 **Paste-ready resume message**:
-> Read "Shared-base admission control" in `F:ruaru-llm/CLAUDE.md` and the 2026-11-09 section at the end of `F:uno/API-REST-REMAINING-20261106.md`, then resume at open item (1): verify on the real front server that `x-tenant` is set. Do not build on the VPS (WSL build then swap), no new REST (Connect only), never print secrets.
+> Read "Shared-base admission control" in `F:\aruaru-llm/CLAUDE.md` and the 2026-11-09 section at the end of `F:\runo/API-REST-REMAINING-20261106.md`, then resume at open item (1): verify on the real front server that `x-tenant` is set. Do not build on the VPS (WSL build then swap), no new REST (Connect only), never print secrets.
 
 ## 2026-11-15 Android実機確認(REST全廃後)と再開用メッセージ / Android device verification after REST abolition, and resume message
 
