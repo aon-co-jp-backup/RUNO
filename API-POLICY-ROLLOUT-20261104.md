@@ -164,3 +164,7 @@
 
 - 反映: **128件**(open-raid-zは再試行で成功) / 飛ばし: **1件**(対象は前回反映の129件)
 - 飛ばし RUNO: 索引リポジトリ自身(F:\runo と同一)で、既に同内容
+
+## 新規リポジトリへの追加反映 (2026-11-15)
+
+- 2026-11-05以降に増えた7件(メイン節+補足節を日英独露で追記): open-raid-z-installer(README/CLAUDE/PORTING)、RMojo(同)、2FastAPI-VSC(同)、2FastAPI(同)、MFastAPI(README/CLAUDE)、fuser-android(README)、rrd-rotation-test-catalog(README)。反映 7件 / 飛ばし 0件。
