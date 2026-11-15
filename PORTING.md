@@ -2579,3 +2579,49 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 **再開用メッセージ(そのまま貼り付け)**: 「`F:\open-raid-z-installer`の`CLAUDE.md`の再開用メッセージに従い通し試験(実ウィンドウ・MSI/NSISのインストール/アンインストール)を行って。全て通ったら`F:\open-raid-z`の旧`open_runo_zfs_source/open_runo_installer`を削除してpushし、通った/通らなかった項目を正直に報告して。その後、version-controlの次回通知メールで`make-disk-legacy`が出なくなったことを確認し、残りの更新(open-mediaのlopdf 0.47/sonic-rs 0.5/thiserror 2、whisper.cppのnpm、open-gitea=分岐しているので先にユーザーへ確認、aruaru-llmの脆弱性=`nllb-translate`機能を外すか判断待ち、open-cosmoの`cargo fmt`でCIが赤)を進めて。更新済みcrate(open-redmine・open-easy-web・aruaru-search・realdata.pro)のVPS反映は未実施。」
 **English**: Status: (1) The version-control notification e-mails were worked through in order: major updates (RustCrypto/rand/reqwest etc.) for e-gov, open-redmine, open-easy-web, aruaru-search, RPoem, realdata.pro and open-bar are pushed (tests pass in each). make-disk now holds only a bilingual "moved to open-media" README and the LICENSE (`9e516a0`); version-control skips `make-disk-legacy` (`c5d094d`) and **the VPS binary was swapped** (old one: `version-control.bak-20261114`). (2) open-raid-z: dependencies updated (`0dd19d4`; bincode stays at 1.3 because 3.0.0 does not compile), the Android fuser fork moved to the new repo `fuser-android`, the installer UI moved to the new repo `open-raid-z-installer` (Leptos). **Deleting the old TypeScript version waits for the end-to-end tests.**
 **Resume message (paste as is)**: "Follow the resume message in `F:\open-raid-z-installer\CLAUDE.md` and run the end-to-end tests (real window, MSI/NSIS install/uninstall). If all pass, delete the old `open_runo_zfs_source/open_runo_installer` in `F:\open-raid-z`, push, and report honestly what passed and what did not. Then confirm that the next version-control e-mail no longer lists `make-disk-legacy`, and continue with the remaining updates: open-media (lopdf 0.47 / sonic-rs 0.5 / thiserror 2), whisper.cpp npm, open-gitea (diverged: ask the user first), aruaru-llm vulnerabilities (decide whether to drop the `nllb-translate` feature), and open-cosmo's red CI from `cargo fmt`. Deploying the updated crates (open-redmine, open-easy-web, aruaru-search, realdata.pro) to the VPS has not been done."
+
+## 2026-11-15 追記: open-bar・version-control・インストーラー試験・RPoemゲートウェイの再開用メモ / Addendum: open-bar, version-control, installer test, RPoem gateway
+
+(同じ日付の他の節〈2FastAPI・RMojo・ARM64／検証の残り・共有基盤／Android同梱バイナリ〉とは別の作業群。それぞれ未了があるので、続きは全部を見ること。/ A separate group of work from the other sections of the same date; each has open items, so read them all.)
+
+### 日本語
+**到達点(確認済みのもののみ)**
+- **open-bar**: `wasapi` 0.27へ更新してpush(`4f65b95`)。実機テスト`real_files` 11件は**直列実行(`-- --test-threads=1`)で全件成功**。並列だと同じ音声デバイスを取り合って3件が失敗する(0.26でも同じ=0.27のせいではない)。`tests/fixtures`の古い録音のノイズは録音自体のもの(確認音はノイズ無し)。注意書きは`open-bar/CLAUDE.md`末尾。
+- **version-control**: `make-disk`の旧`src-tauri`を削除(`make-disk` `9e516a0`)、`make-disk-legacy`を走査対象から除外(`c5d094d`)。VPSのバイナリを`c5d094d`版に差し替え済み(旧は`target/release/version-control.bak-20261114`)、`state.json`に`make-disk-legacy`の記述が0件であることを実確認。`cargo test` 42件成功。
+- **RPoemゲートウェイ**: VPSで稼働(127.0.0.1:8140、専用aruaru-db。書き込みの永続化・特殊文字・誤キー401/正キー200を実測、`RPoem/PORTING.md` `e8571b2`)。
+- **共有基盤**(`CLAUDE.md`「配備アーキテクチャ方針」): aruaru-llmに同時実行の上限・サイト別の公平な待ち行列・タイムアウトを実装(`6c8f552`)、open-web-serverにサイト別の接続上限・ポート自動割り当て(`c971a38`)。open-cuda・open-directxはライブラリのまま(`e429720`・`1ae10a9`)。
+- **aruaru-db・open-cosmo**の自前RESTは0本。Androidは新経路のみ(`/ime/api/aruaru_ime.v1.Ime/Key`)を本番ログで確認。
+
+**未了・注意**
+1. **`open-raid-z-installer`の通し試験**: `cargo tauri build`は成功(MSI 3.08 MiB・NSIS 2.04 MiBが`F:\adb-target\oritauri\release\bundle\`)、ビルドしたexeの起動・応答・200% DPIの描画・実データ表示は確認済み。**MSIのインストール/アンインストール試験と複数解像度は未了**(担当が利用上限で停止)。済むまで**旧TypeScript版`open_runo_installer`は削除しない**。
+2. **aruaru-IMEのVPS反映は2026-12-06まで保留**(旧経路`/key`・`/session`・`/convert`等の削除を含む`6344880`はmainにあるが未リリース。VPSは0.2.23で旧経路が生きている)。
+3. 共有基盤の負荷試験(同時実行・公平性)の**実測値は未確認**(担当の最終報告を読んでいない)。open-barのwasapi以外では、pushしたリポジトリの`cargo test`は流していない(open-web-server・open-easy-web・aruaru-llmは`cargo check --locked`のみ)。
+4. 依存更新は打ち切り(aruaru-llmのh2 0.3・protobuf 2・zip 0.6等の脆弱性は残る。mongodb 3.x待ちのidna/rustlsも)。`version-control`の通知で扱う。
+5. 判断待ち: `open-cosmo`本体の本番起動(RPoemゲートウェイと役割が重なる)、`open-gitea`の紹介ページの置き場所、`F:\open-easy-web\target-ime\`(607MB)と`F:\runo\.tmp-*`の削除(秘密の混入未確認のためコミットしていない)。
+6. open-web-serverの`STATIC_TOKEN_MODE=loopback`切替は、本人がメールOTP+TOTPで2FAログインを通してから。
+
+**落とし穴**: VPSでビルドしない(WSLでビルド→glibc≤2.39確認→scp→旧バイナリ退避→差し替え→そのサービスだけ再起動)。Git Bashでcargoを使うときは`export PATH="/c/Users/noruk/.cargo/bin:$PATH"`。書き換え済みリポジトリで`git pull`しない。複数セッションが同じ`README.md`/`CLAUDE.md`/`PORTING.md`を追記するので、編集前に`git status`と`git pull --rebase`で最新を確認する。
+
+**再開用メッセージ(そのまま貼り付け)**:
+> `F:\runo\PORTING.md`末尾「2026-11-15 追記: open-bar・version-control・インストーラー試験・RPoemゲートウェイの再開用メモ」を読んで続きをして。まず未了1(`F:\open-raid-z-installer`の`src-tauri`でMSIのインストール/アンインストール試験と複数解像度の確認。全部通ったら旧TypeScript版`open_runo_installer`を削除してpush)、次に未了3(`F:\aruaru-llm`の共有基盤の負荷試験の実測と`API-REST-REMAINING-20261106.md`への記録)。未了2は2026-12-06まで触らない。確認なしで開発・TEST・DEBUG・commit・pushしてよいが、VPSの本番反映は手順(WSLビルド→カナリア→差し替え→失敗時は自動で戻す)を守る。チャットは日本語のみ。関連リポジトリ: open-bar / version-control / open-raid-z-installer / aruaru-llm / open-web-server / RPoem / aruaru-IME。
+
+### English
+**Where things stand (verified items only)**
+- **open-bar**: updated to `wasapi` 0.27 and pushed (`4f65b95`). The 11 real-device tests in `real_files` **pass when run serially (`-- --test-threads=1`)**; in parallel 3 tests fight over the same audio device and fail (identical on 0.26, so not caused by 0.27). The noise in the old recordings under `tests/fixtures` is in the recordings themselves (the confirmation tone is clean). The warning is at the end of `open-bar/CLAUDE.md`.
+- **version-control**: removed the legacy `src-tauri` from `make-disk` (`9e516a0`) and excluded `make-disk-legacy` from scanning (`c5d094d`). The VPS binary was swapped to `c5d094d` (old one kept as `target/release/version-control.bak-20261114`); `state.json` was checked to have 0 mentions of `make-disk-legacy`. `cargo test`: 42 pass.
+- **RPoem gateway**: live on the VPS (127.0.0.1:8140, dedicated aruaru-db; persistence, special characters, wrong key 401 / right key 200 measured; `RPoem/PORTING.md` `e8571b2`).
+- **Shared infrastructure** (see "Deployment architecture policy" in `CLAUDE.md`): aruaru-llm now has a concurrency cap, a per-site fair queue and timeouts (`6c8f552`); open-web-server has a per-site connection cap and port auto-assignment (`c971a38`). open-cuda and open-directx stay libraries (`e429720`, `1ae10a9`).
+- **aruaru-db and open-cosmo** have 0 own REST routes; the Android app was seen in production logs using only the new route (`/ime/api/aruaru_ime.v1.Ime/Key`).
+
+**Open / cautions**
+1. **`open-raid-z-installer` end-to-end test**: `cargo tauri build` succeeded (MSI 3.08 MiB and NSIS 2.04 MiB under `F:\adb-target\oritauri\release\bundle\`); the built exe launches, responds, renders at 200% DPI and shows real data. **MSI install/uninstall and multi-resolution checks are not done** (the assignee hit its usage limit). Until they pass, **do not delete the old TypeScript `open_runo_installer`**.
+2. **The aruaru-IME VPS update is held until 2026-12-06** (`6344880`, which removes the old `/key`, `/session`, `/convert` routes, is on main but unreleased; the VPS runs 0.2.23 with the old routes alive).
+3. The **measured numbers of the shared-infra load test** (concurrency / fairness) have not been read (the assignee's final report is unread). Apart from open-bar, `cargo test` was not run on the pushed repositories (open-web-server, open-easy-web and aruaru-llm only got `cargo check --locked`).
+4. Dependency updates were cut off (aruaru-llm's h2 0.3, protobuf 2, zip 0.6 etc. stay vulnerable, as do idna/rustls waiting on mongodb 3.x); handled through version-control notifications.
+5. Waiting for a decision: running open-cosmo itself in production (its role overlaps the RPoem gateway), where to put open-gitea's intro page, and deleting `F:\open-easy-web\target-ime\` (607 MB) and `F:\runo\.tmp-*` (not committed; possible secrets unchecked).
+6. Do not switch open-web-server to `STATIC_TOKEN_MODE=loopback` until the owner has completed a real 2FA login (e-mail OTP + TOTP).
+
+**Pitfalls**: never build on the VPS (build in WSL → check glibc ≤ 2.39 → scp → back up the old binary → swap → restart only that service). In Git Bash, prefix `export PATH="/c/Users/noruk/.cargo/bin:$PATH"` before cargo. Never `git pull` in a rewritten repository. Several sessions append to the same `README.md` / `CLAUDE.md` / `PORTING.md`, so run `git status` and `git pull --rebase` before editing.
+
+**Resume message (paste as is)**:
+> Read "2026-11-15 追記: open-bar・version-control・インストーラー試験・RPoemゲートウェイの再開用メモ" at the end of `F:\runo\PORTING.md` and continue: first open item 1 (in `F:\open-raid-z-installer`'s `src-tauri`, run the MSI install/uninstall test and multi-resolution checks; once everything passes, delete the old TypeScript `open_runo_installer` and push), then item 3 (measure the shared-infra load test in `F:\aruaru-llm` and record it in `API-REST-REMAINING-20261106.md`). Do not touch item 2 before 2026-12-06. You may develop, test, debug, commit and push without asking, but follow the production procedure on the VPS (WSL build → canary → swap → automatic rollback on failure). Chat in Japanese only. Related repositories: open-bar / version-control / open-raid-z-installer / aruaru-llm / open-web-server / RPoem / aruaru-IME.
