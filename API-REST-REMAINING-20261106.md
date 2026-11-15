@@ -232,3 +232,8 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - 意味: 現状は全呼び出しが `anonymous` の1枠になり、同時実行上限は効くがサイト別公平キューは実質効かない。
 - 直す案(未実施・判断待ち): (A)各呼び出し側クライアントに `x-tenant: <自サイト名>` を付ける(aruaru-search/jobs/realdata-pro/IME/open-easy-web、各リポジトリ小変更、再起動要。最も確実)。(B)前面open-web-serverが外部→aruaru-llmを中継する経路を新設する場合に限り、ホスト名から`x-tenant`を付与(現状その経路が無いので効果なし)。推奨はA。
 - **未確認**: 実際にaruaru-llmへ届くヘッダ(無害な実呼び出しでのログ確認は未実施。ログに`x-tenant`を出す機能が無いため)、各呼び出し側コード内のヘッダ付与の有無の全数確認(open-easy-web等のコードは未精査)。
+
+## 2026-11-15 追記2: x-tenant 付与を実装(呼び出し側方式)
+- **VPSでの確認**: aruaru-llm は 127.0.0.1:4600 だけで待ち受け、呼び出し元は内部サービス(daily-news-collect・aruaru-search・aruaru-jobs・realdata-pro・aruaru-ime-daemon)。前面の open-web-server は経由しない=**前面での付与は効かない**ため、呼び出し側で付ける方式にした(前の提案を訂正)。
+- **実装**: RPoem `open-runo-pdf-ocr` の共有クライアントが `x-tenant`(環境変数 `ARUARU_TENANT`、無ければ実行ファイル名)を付与(`a7b6887`+テスト追加、実際に送信されることをローカルのTCP受信で確認)。aruaru-IME のクライアントは `x-tenant: aruaru-ime`(`d3e8d87`)。aruaru-llm 側は `tenant_of` の優先順位・文字制限のテストを追加(`e2bcb46`)。いずれもテスト成功・push済み。
+- **未実施**: VPSへの反映。共有クライアントを使う realdata-pro・aruaru-search などの再ビルドと再起動が要る。反映するまでは本番の呼び出しは従来どおり `anonymous`。軽い呼び出し(Chat/Classify/SearchRaw)は受付制御の対象外のため付与していない。`/f/aruaru-IME` の手元は別作業の未コミット変更(`Cargo.lock`)があり、同期はしていない。
