@@ -2701,3 +2701,35 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 **Repositories to resume**: `F:\aruaru-IME`, `F:\open-redmine` (`android/`), `F:\open-english` (`aon-co-jp/maid-cafe-english`), `F:\open-media`, `F:\runo` (index).
 **Paste-ready resume message**:
 > Read "2026-11-15 Android実機確認" at the end of `F:\runo\PORTING.md` and resume from the open items (open-english chat reply, open-media real operations, open-redmine browser side, font sizes). The device is on adb (`ZY22J7RFND`). Do not change device settings (IME, Play Protect). No new REST (Connect only). Never print secrets (passwords, tokens).
+
+## 2026-11-15 再開用メモ: appserver系REST・open-raid-z管理UIのConnect化(別アカウントでの再開用) / Resume note: appserver REST and open-raid-z UI on Connect
+
+### 日本語
+**到達点(すべてpush済み、各リポジトリの`origin/main`)**
+- **RPoem `6ca9b74` / open-cosmo `6c67196`**: `/admin/appserver-processes*`(6本)・`/admin/appserver-tenants*`(3本)ほか計10本を削除し、`open_runo.admin.v1.Admin` の `AppServerRegisterProcess`/`ListProcesses`/`ProcessStatus`/`StopProcess`/`StopProcessGraceful`/`RestartProcess`/`StopAll`/`UpsertTenant`/`ListTenants`/`RemoveTenant` へ移行(gRPC・gRPC-web・Connect共通、要求・応答は `google.protobuf.Struct`)。実装はルーターの拡張フック `grpc_admin::AdminExt` と、ゲートウェイの `appserver_admin.rs`(`AppServerAdmin`)。試験: router 180件・gateway `appserver_admin` 3件成功(WSL)。
+- **open-easy-web `33863ad`**: 呼び出し元(`server/src/appserver_registration.rs`、PoemCosmoTauri登録)を `AppServerUpsertTenant` に変更(試験4件成功)。
+- **open-raid-z `bb31771`**: `web/` の `/api/status`・`/api/create` を `POST /open_raid_z.admin.v1.Admin/Status`・`/CreatePool` へ(`/healthz`は例外)。実サーバーで未認証/不正トークン401・旧パス404・`/healthz` 200を確認(Statusは`orzctl`の無い環境で500=想定どおり)。
+- **aruaru-db `849f082`(記録のみ)**: `admin_routes()` はルート0本で旧REST無し(「旧REST7本」はVPSの古いクローン由来で対象外)。
+**未了・注意**
+- **VPS未反映**: RPoemゲートウェイはVPSで稼働中(127.0.0.1:8140)だが、今回のappserver系の変更は未反映(再ビルド・差し替えが必要)。open-raid-zはVPSクローンに未コミット変更4件があり触っていない。open-easy-webのVPS反映も未実施。反映手順=WSLでビルド→glibc確認→scp→バックアップ→入れ替え→再起動→確認(VPSでビルドしない)。
+- Connect経由で実プロセスを起動する通しの試験は未実施(レジストリ自体は`open-runo-appserver`の試験で担保)。
+- `version-control` の集計から、テストコード内のモックルート(`/api/db/:table/:key`、ACMEモック、`cfg(test)`・`tests/`配下)を除外する件は別セッション(`vc-exclude-tests`)が担当。
+- 作業用のcloneは`F:\_work_rest`(兄弟リポジトリへのシンボリックリンクあり)。ビルドは`MSYS_NO_PATHCONV=1 wsl -d Ubuntu -- bash <script>`、`CARGO_TARGET_DIR`はWSLのホーム。`cargo fmt --all`禁止、`git pull`ではなく`git fetch`+rebase。
+**再開するリポジトリ**: `RPoem`・`open-cosmo`・`open-raid-z`・`open-easy-web`(必要なら`aruaru-db`)と、索引の`runo`。
+**そのまま貼り付ける再開用メッセージ**:
+> `F:uno\PORTING.md` 末尾「2026-11-15 再開用メモ: appserver系REST・open-raid-z管理UIのConnect化」を読み、未了(RPoemゲートウェイ・open-easy-webのVPS反映、Connect経由の実プロセス起動試験)から再開してください。対象リポジトリは RPoem・open-cosmo・open-raid-z・open-easy-web(いずれも新規cloneで作業)。VPSでビルドせずWSLでビルドしてscp、反映前にバックアップとロールバック手順を用意。open-raid-zのVPSクローンの未コミット変更は触らない。新規RESTは作らない(Connectのみ)。秘密(トークン・パスワード)は画面・ログ・コミットに出さない。チャットは日本語のみ。
+
+### English
+**Where things stand (all pushed to each repo's `origin/main`)**
+- **RPoem `6ca9b74` / open-cosmo `6c67196`**: removed the 10 REST routes (`/admin/appserver-processes*` x6, `/admin/appserver-tenants*` x3, and the register route) and moved them to `open_runo.admin.v1.Admin` RPCs `AppServerRegisterProcess`/`ListProcesses`/`ProcessStatus`/`StopProcess`/`StopProcessGraceful`/`RestartProcess`/`StopAll`/`UpsertTenant`/`ListTenants`/`RemoveTenant` (gRPC, gRPC-web and Connect share them; messages are `google.protobuf.Struct`). Implemented via the router extension hook `grpc_admin::AdminExt` and the gateway's `appserver_admin.rs` (`AppServerAdmin`). Tests (WSL): router 180 and gateway `appserver_admin` 3 pass.
+- **open-easy-web `33863ad`**: the caller (`server/src/appserver_registration.rs`, PoemCosmoTauri registration) now uses `AppServerUpsertTenant` (4 tests pass).
+- **open-raid-z `bb31771`**: `web/` `/api/status` and `/api/create` moved to `POST /open_raid_z.admin.v1.Admin/Status` and `/CreatePool` (`/healthz` stays as an exception). On a real server: unauthenticated/bad token 401, old paths 404, `/healthz` 200 (Status returns 500 without `orzctl`, as expected).
+- **aruaru-db `849f082` (docs only)**: `admin_routes()` has zero routes; no old REST remains (the "7 old routes" came from an old VPS clone).
+**Open items / cautions**
+- **Not deployed to the VPS**: the RPoem gateway runs on the VPS (127.0.0.1:8140) but without this appserver change (rebuild and swap needed). open-raid-z's VPS clone has 4 uncommitted changes that were left alone. open-easy-web is not redeployed. Procedure: build in WSL -> check glibc -> scp -> backup -> swap -> restart -> verify (never build on the VPS).
+- A full test that starts a real process through Connect has not been run (the registry itself is covered by `open-runo-appserver` tests).
+- Excluding test-only mock routes (`/api/db/:table/:key`, ACME mocks, anything under `cfg(test)`/`tests/`) from the `version-control` count belongs to another session (`vc-exclude-tests`).
+- Working clones live in `F:\_work_rest` (with symlinks to sibling repos). Build with `MSYS_NO_PATHCONV=1 wsl -d Ubuntu -- bash <script>`; `CARGO_TARGET_DIR` in the WSL home. No `cargo fmt --all`; use `git fetch` + rebase, not `git pull`.
+**Repositories to resume**: `RPoem`, `open-cosmo`, `open-raid-z`, `open-easy-web` (and `aruaru-db` if needed), plus the index repo `runo`.
+**Paste-ready resume message**:
+> Read "2026-11-15 再開用メモ: appserver系REST・open-raid-z管理UIのConnect化" at the end of `F:uno\PORTING.md` and resume from the open items (deploy the RPoem gateway and open-easy-web to the VPS; a real process-start test over Connect). Repos: RPoem, open-cosmo, open-raid-z, open-easy-web (work in fresh clones). Never build on the VPS: build in WSL and scp, with a backup and rollback plan first. Do not touch the uncommitted changes in open-raid-z's VPS clone. No new REST (Connect only). Never print secrets (tokens, passwords). Chat in Japanese only.
