@@ -2625,3 +2625,59 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 
 **Resume message (paste as is)**:
 > Read "2026-11-15 追記: open-bar・version-control・インストーラー試験・RPoemゲートウェイの再開用メモ" at the end of `F:\runo\PORTING.md` and continue: first open item 1 (in `F:\open-raid-z-installer`'s `src-tauri`, run the MSI install/uninstall test and multi-resolution checks; once everything passes, delete the old TypeScript `open_runo_installer` and push), then item 3 (measure the shared-infra load test in `F:\aruaru-llm` and record it in `API-REST-REMAINING-20261106.md`). Do not touch item 2 before 2026-12-06. You may develop, test, debug, commit and push without asking, but follow the production procedure on the VPS (WSL build → canary → swap → automatic rollback on failure). Chat in Japanese only. Related repositories: open-bar / version-control / open-raid-z-installer / aruaru-llm / open-web-server / RPoem / aruaru-IME.
+
+## 2026-11-15 再開用メッセージ(open-gitea / open-redmine のConnect化の本番反映) / Resume message (production deploy of open-gitea / open-redmine Connect)
+
+### 日本語
+**再開するリポジトリ**: `F:\runo`(本リポジトリ、索引と記録)・`F:\open-gitea-rest`(`aon-co-jp/open-gitea`のローカルclone、`main`=`54058bf`、`Cargo.lock`に未コミット変更あり=触らない)。`open-redmine`のローカルcloneは`F:\`に無く、`https://github.com/aon-co-jp/open-redmine.git`を別cloneする(`6612f6b`+`6c884ac`)。
+
+**到達点(2026-11-08、VPS=`ssh conoha`)**
+- **open-redmine**: `6612f6b`を反映済み。WSLでリリースビルド(必要glibc 2.34、VPSは2.39)→ scp → バックアップ(`/root/rd-bak-20261108-065255`)→ 入れ替え(`rs-chiketto`・`web/index.html`・`web/pkg`)→ `open-redmine`(8100)と`open-redmine-demo`(8113)を再起動。確認: `/`=200、旧`/api/projects`=404、Connect `open_redmine.v1.Projects/List`=200・`Create`に空本文=400、画面は白画面でなくログイン表示、コンソールエラー無し。ロールバック無し。記録は`open-redmine/PORTING.md`(`6c884ac`、push済み)。
+- **open-gitea**: 別セッションが2026-11-07 20:29に反映済み(バイナリ+`static/`、旧バイナリは`/root/open-gitea-bin.bak.1794050996`)。この反映では二重に入れ替えていない。確認: 旧`/api/repos`=404、Connect `open_gitea.v1.Gitea/ListRepos`=200。
+- サービス: `open-gitea.service`(ポート8090、`/root/open-gitea/target/release/open-gitea`、`/root/open-gitea`は`/root/repository/open-gitea`へのリンク、VPSのcloneに未コミットの`Cargo.lock`変更あり=触らない)、`open-redmine.service`(8100)、`open-redmine-demo.service`(8113、同じバイナリ)。前面は`open-web-server`(nginxは停止中・触らない)。
+
+**未了 / 注意**
+1. **open-giteaの`/`が404**(`/index.html`は200)。画面は`/ui`配下で配信される仕様(`src/main.rs`の`.nest("/ui", StaticFilesEndpoint…)`)で、それ以外は最後のルート`/*path`(git smart HTTP)に落ちる。公開`https://easy-web.tokyo/open-gitea/`も404。反映前から同じか未確認(旧バイナリは上記バックアップにある)。直すなら「前面から`/ui/`へ転送」か「アプリ側で`/`を`/ui/`へ」を決めてから、コード変更→再反映。`/ui/`が白画面でないかのブラウザ確認も未実施。
+2. open-redmine・open-giteaとも、**ログイン後の通し操作は未実施**(認証つきの画面操作)。
+3. open-giteaのWSLビルドは、兄弟リポジトリ(RS-JSON・RPoem・open-web-server・RS-SmartTCP・open-raid-z)が`../`に無いと失敗する。`F:\`から`~/dep/`へコピーして揃える。WSLの`~/dep/`にビルド作業ディレクトリが残っている(削除可)。
+4. ローカルのsshトンネル(`-L 18100:localhost:8100`)が残っている可能性。VPSには影響しない。
+
+**注意**: VPSでビルドしない(3.6GB)。`git pull`せず、秘密を出さない。Git Bashは`/mnt/...`を書き換える(`MSYS_NO_PATHCONV=1 wsl -d Ubuntu -- bash スクリプト`)。
+
+**再開用メッセージ(そのまま貼り付け)**:
+> `F:\runo\PORTING.md`末尾の「2026-11-15 再開用メッセージ(open-gitea / open-redmine のConnect化の本番反映)」を読んで続きをして。まず未了1(open-giteaの`/`が404の件)を、反映前のバイナリ(VPSの`/root/open-gitea-bin.bak.1794050996`)との比較で退行かどうか確かめ、`/ui/`が白画面でないかブラウザで確認し、入口の振り替え方(前面から転送かアプリ側か)を決めて直して再反映(WSLビルド→バックアップ→入れ替え→再起動→確認→失敗時ロールバック)。次に未了2(ログイン後の通し操作)。確認なしで開発・TEST・DEBUG・commit・pushしてよい。VPSの他サービスは再起動しない。チャットは日本語のみ。
+
+### English
+**Repositories to resume**: `F:\runo` (this meta repo, index and records) and `F:\open-gitea-rest` (local clone of `aon-co-jp/open-gitea`, `main` = `54058bf`, uncommitted `Cargo.lock` change: leave it). There is no local clone of `open-redmine` under `F:\`; clone `https://github.com/aon-co-jp/open-redmine.git` fresh (`6612f6b` + `6c884ac`).
+
+**Where things stand (2026-11-08, VPS = `ssh conoha`)**
+- **open-redmine**: `6612f6b` is deployed. WSL release build (needs glibc 2.34; the VPS has 2.39) -> scp -> backup (`/root/rd-bak-20261108-065255`) -> swap (`rs-chiketto`, `web/index.html`, `web/pkg`) -> restart `open-redmine` (8100) and `open-redmine-demo` (8113). Checks: `/` = 200, old `/api/projects` = 404, Connect `open_redmine.v1.Projects/List` = 200, `Create` with an empty body = 400, the UI shows the login screen (not a white screen), no console errors. No rollback. Recorded in `open-redmine/PORTING.md` (`6c884ac`, pushed).
+- **open-gitea**: another session deployed it on 2026-11-07 20:29 (binary + `static/`; old binary at `/root/open-gitea-bin.bak.1794050996`). It was not swapped a second time. Checks: old `/api/repos` = 404, Connect `open_gitea.v1.Gitea/ListRepos` = 200.
+- Services: `open-gitea.service` (port 8090, `/root/open-gitea/target/release/open-gitea`; `/root/open-gitea` links to `/root/repository/open-gitea`, whose uncommitted `Cargo.lock` change must be left alone), `open-redmine.service` (8100), `open-redmine-demo.service` (8113, same binary). The front is `open-web-server` (nginx is stopped; leave it).
+
+**Open / cautions**
+1. **open-gitea returns 404 for `/`** (`/index.html` is 200). By the current code the UI is served under `/ui` (`.nest("/ui", StaticFilesEndpoint…)` in `src/main.rs`); everything else falls to the last route `/*path` (git smart HTTP). The public `https://easy-web.tokyo/open-gitea/` is also 404. Whether it was the same before the deploy is unverified (the old binary is in the backup above). To fix: decide between forwarding to `/ui/` from the front or redirecting `/` to `/ui/` in the app, then change the code and redeploy. A browser check that `/ui/` is not a white screen has not been done.
+2. For both open-redmine and open-gitea, **authenticated end-to-end flows were not exercised**.
+3. The open-gitea WSL build fails unless the sibling repos (RS-JSON, RPoem, open-web-server, RS-SmartTCP, open-raid-z) exist next to it; copy them from `F:\` into `~/dep/`. A build working directory is left in WSL `~/dep/` (safe to delete).
+4. A local ssh tunnel (`-L 18100:localhost:8100`) may still be running; it does not affect the VPS.
+
+**Pitfalls**: never build on the VPS (3.6 GB), never `git pull`, never print secrets; Git Bash rewrites `/mnt/...` (use `MSYS_NO_PATHCONV=1 wsl -d Ubuntu -- bash script`).
+
+**Resume message (paste as is)**:
+> Read "2026-11-15 再開用メッセージ(open-gitea / open-redmine のConnect化の本番反映)" at the end of `F:\runo\PORTING.md` and continue. First open item 1 (open-gitea `/` returns 404): compare with the pre-deploy binary (`/root/open-gitea-bin.bak.1794050996` on the VPS) to see whether it is a regression, check in the browser that `/ui/` is not a white screen, decide how to route the entrance (forward from the front or in the app), fix it and redeploy (WSL build -> backup -> swap -> restart -> verify -> roll back on failure). Then open item 2 (authenticated end-to-end flows). You may develop, test, debug, commit and push without asking. Do not restart other VPS services. Chat in Japanese only.
+
+## 2026-11-15 再開用メッセージ: 共有基盤の受付制御(別アカウントで再開)
+**再開するリポジトリ**: `F:ruaru-llm`(本体)、`F:uno`(記録)。`F:\open-cuda`・`F:\open-directx`は判断の記録のみ(コード変更なし)。
+**済み**: aruaru-llmに受付制御(`src/admission.rs`、`src/connect.rs`)を実装し、2026-11-09にVPSへ反映(同時2・待ち行列全体32/サイト別8・待ち30秒=503・実行120秒=504・満杯=429、Connect形式)。3サイト同時の生成は全て200。単体の公平性測定はA=1400/B=767/C=867ms。open-cuda/open-directxはライブラリのまま(理由は各`CLAUDE.md`)。コミットはorigin/mainに反映済みを確認。
+**未了**: (1)前面open-web-serverが`x-tenant`ヘッダを付けているかの確認(付かないと全サイトが`anonymous`扱い=公平配分が効かない)。(2)実推論での公平性の実測(VPS/WSLのGPT-2は遅く、単発でも60秒超。高速な推論先が要る)。(3)上限値(既定2/32/8)の調整。(4)Chat/Classify等の軽い呼び出しは対象外のまま。
+**落とし穴**: VPSではビルドしない(WSLでビルド→glibc<=2.39確認→scp→バックアップ→再起動→自動ロールバック)。`ARUARU_LLM_GPT2_DIR=models/gpt2`が無いとモデルを読めない。シェルスクリプトで`wait`を引数なしで使うとバックグラウンドのサーバーまで待つ。
+**そのまま貼る再開用メッセージ**:
+> `F:ruaru-llm/CLAUDE.md`の「共有基盤としての受付制御」と`F:uno/API-REST-REMAINING-20261106.md`末尾(2026-11-09)を読み、未了(1)`x-tenant`ヘッダの前面付与の実機確認から再開して。VPSではビルドせずWSLでビルドして差し替え、REST新設禁止(Connect)、秘密は出さない。
+
+### 2026-11-15 Resume message: shared-base admission control (resuming on another account)
+**Repos to resume**: `F:ruaru-llm` (code), `F:uno` (records). `F:\open-cuda` and `F:\open-directx` only hold a decision record (no code change).
+**Done**: admission control in aruaru-llm (`src/admission.rs`, `src/connect.rs`), deployed to the VPS on 2026-11-09 (2 concurrent, queue 32 total / 8 per site, 30 s wait = 503, 120 s run = 504, full = 429, Connect-style errors). Three simultaneous sites all got 200. Unit-level fairness: A=1400 / B=767 / C=867 ms. open-cuda / open-directx stay libraries (reasons in each `CLAUDE.md`). The commits are confirmed on origin/main.
+**Open**: (1) verify the front open-web-server sets `x-tenant` (otherwise every site is `anonymous` and fairness has no effect); (2) measure fairness with real inference (GPT-2 on the VPS/WSL is slow, >60 s even for one call; needs a fast backend); (3) tune the limits (defaults 2/32/8); (4) light calls (Chat/Classify) are still not governed.
+**Pitfalls**: never build on the VPS (build in WSL, check glibc <= 2.39, scp, back up, restart, auto-rollback). Without `ARUARU_LLM_GPT2_DIR=models/gpt2` the model fails to load. A bare `wait` in a shell script also waits for a background server.
+**Paste-ready resume message**:
+> Read "Shared-base admission control" in `F:ruaru-llm/CLAUDE.md` and the 2026-11-09 section at the end of `F:uno/API-REST-REMAINING-20261106.md`, then resume at open item (1): verify on the real front server that `x-tenant` is set. Do not build on the VPS (WSL build then swap), no new REST (Connect only), never print secrets.
