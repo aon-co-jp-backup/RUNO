@@ -2455,3 +2455,47 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 - **2026-11-08 追記(tokio)**: RS-Blog・RS-EC・karu.tokyo の tokio を 1.54.1 へ更新(RUSTSEC-2026-0386、Cargo.lockのみ)。cargo test成功、`cargo audit`は3つとも警告0、VPSで再ビルド・再起動、healthz(8101/8102)と`https://karu.tokyo/`が200。認証つき操作は引き続き未確認。 / Bumped tokio to 1.54.1 in the three repos; audit clean, redeployed, health checks 200; authenticated flows still unverified.
 
 - **2026-11-08 追記(本番のログイン後確認)**: RS-Blog(`https://runo.tokyo/blog`)・RS-EC(`https://runo.tokyo/ec`)で、管理者のメールOTPでログイン→一覧・作成(下書き)・取得・削除→ログアウト後に401、を本番で実測(依存更新後のバイナリ)。確認用データは削除済み。 / Authenticated production flows (list/create draft/get/delete/logout, 401 afterwards) verified on both services after the dependency updates; test data deleted.
+
+## 2026-11-15 別アカウントでの再開用メモ / Resume notes for another account (2FastAPI, 2FastAPI-VSC, RMojo, Windows ARM64)
+
+### 日本語
+**到達点**
+- `2FastAPI`(`F:\2FastAPI`、v0.2.0+): Flask/Django→FastAPI(MFastAPI互換)変換。Flask: フック・render_template・request.files・Flask-RESTful/MethodView対応。Django: `View`継承クラス対応。`2fastapi scan/auto/convert`(複数プロジェクト自動検出、変換先を英日で質問、フォルダ自動作成)。差分テスト36件、CIは3OSで成功。
+- `2FastAPI-VSC`(`F:\2FastAPI-VSC`、v0.1.0、新規): VS Code拡張。CLIを呼び、スキャン→選択→保存先→作成確認(英日)→変換。テスト6件+実CLI(WSL)通し確認、CI成功、.vsix同梱。VS Code画面の実操作は未確認。
+- `RMojo`(`F:\RMojo`、v0.3.0): Windows x64インストーラー・Android実機・Android TVエミュレーターで確認済み。Windows ARM64(Snapdragon)のネイティブビルドとインストーラー(`RMojo-Setup-arm64.exe`)をCIで追加(実機は未確認)。
+- **Windows ARM64(Snapdragon)**: 14リポジトリの`release.yml`に非ブロッキングの`build-windows-arm64`(`windows-11-arm`)を追加。CIで成功: RS-Blog/RS-EC/RS-Red/RS-Guard/RS-Ops/RS-Sync/open-cpu/open-cuda/open-cosmo/RPoem/open-gitea。
+- 元からのCI不具合を修正: open-gitea・RPoemは兄弟リポジトリ(`../RS-JSON`等)がCIに無く失敗していた→cloneする手順を追加。open-easy-webはYAMLの名前のコロンで読み込めなかった→引用符で修正。
+
+**未了**
+1. ARM64ジョブが失敗: open-raid-z・open-easy-web・open-web-server(x64/Linuxも同時に失敗=元からの兄弟依存等の疑い。ログ確認から)。
+2. ARM64未対応: Tauri系(open-media/make-disk/open-bar)、インストーラー系(aruaru-IME/open-english/aruaru-llm/maid-cafe-se)、pdf-r2l-rs、MFastAPIのwheel(cibuildwheelにwindows-11-arm追加)。
+3. 2FastAPI: Django `TemplateView`/DRF、Flask-SQLAlchemy/marshmallow/JWT等の組み合わせ、PyPI公開。2FastAPI-VSC: Marketplace/Open VSX公開、VS Code画面の実操作確認。
+4. RMojo: Snapdragon実機、BSD実機、iOS実行パッケージ、リスト多用時の速度(CPythonの約3.5倍遅い)。
+5. WSL(Ubuntu)でのAndroidビルド: Linux版NDKが無くリンクで失敗(Windows側cargoでは成功)。WSLへLinux NDKを入れて検証する。
+6. 後片付け: `F:\_vsc_smoke_*`、`F:\rmojo_verify_*`、`F:\ci_sim_*`、`F:\runo\.tmp-*`の削除(ユーザー確認の上)。
+
+**落とし穴**: Git Bashは`/mnt/...`を書き換える→WSLはPowerShellから呼ぶ。bashのheredocで`\b`等のバックスラッシュが壊れる→Writeツールで書く。`wsl.exe`はバックスラッシュを潰す→`F:/`形式で渡す。`rm -rf`は安全チェックで拒否される。
+
+**再開用メッセージ(そのまま貼り付け)**:
+> `F:\runo\PORTING.md`末尾「2026-11-15 別アカウントでの再開用メモ」と、`F:\2FastAPI`・`F:\2FastAPI-VSC`・`F:\RMojo`の`PORTING.md`を読んで続きをして。まず未了1(open-raid-z / open-easy-web / open-web-server のCIログを`gh run view --log-failed`で確認して修正)、次に未了2(MFastAPIのwheelにWindows ARM64を追加)、未了3・4の順。確認なしで開発・TEST・DEBUG・commit・pushしてよい。チャットは日本語のみ。
+
+### English
+**Where things stand**
+- `2FastAPI` (`F:\2FastAPI`, v0.2.0+): Flask/Django → FastAPI (MFastAPI compatible). Flask: hooks, render_template, request.files, Flask-RESTful/MethodView. Django: plain `View` subclasses. `2fastapi scan/auto/convert` detects several projects, asks (English + Japanese) where to put the result and creates folders. 36 differential tests; CI green on 3 OSes.
+- `2FastAPI-VSC` (`F:\2FastAPI-VSC`, v0.1.0, new): VS Code extension driving the CLI (scan → choose → destination → create? → convert). 6 tests + a real-CLI run via WSL, CI green, .vsix attached. Real interaction inside VS Code is not verified.
+- `RMojo` (`F:\RMojo`, v0.3.0): verified on the Windows x64 installer, a real Android phone and the Android TV emulator. Native Windows ARM64 (Snapdragon) build + installer (`RMojo-Setup-arm64.exe`) added in CI (no real device yet).
+- **Windows ARM64 (Snapdragon)**: a non-blocking `build-windows-arm64` job (`windows-11-arm`) was added to 14 repositories' `release.yml`. Green in CI: RS-Blog, RS-EC, RS-Red, RS-Guard, RS-Ops, RS-Sync, open-cpu, open-cuda, open-cosmo, RPoem, open-gitea.
+- Pre-existing CI bugs fixed: open-gitea and RPoem failed because sibling repos (`../RS-JSON` etc.) are absent in CI (now cloned); open-easy-web's workflow was unparsable (colon in a name, now quoted).
+
+**Open**
+1. ARM64 job red: open-raid-z, open-easy-web, open-web-server (x64/Linux fail too, so probably pre-existing sibling-dependency problems; read `gh run view --log-failed`).
+2. No ARM64 yet: Tauri apps (open-media/make-disk/open-bar), installer-based apps (aruaru-IME/open-english/aruaru-llm/maid-cafe-se), pdf-r2l-rs, MFastAPI wheels (add `windows-11-arm` to cibuildwheel).
+3. 2FastAPI: Django `TemplateView`/DRF, Flask-SQLAlchemy/marshmallow/JWT combinations, PyPI. 2FastAPI-VSC: Marketplace/Open VSX, real UI check.
+4. RMojo: Snapdragon hardware, BSD hardware, iOS runnable package, list-heavy speed (~3.5x slower than CPython).
+5. Android build inside WSL (Ubuntu): the Windows NDK has no Linux host tools, so linking fails there (works with Windows cargo). Install a Linux NDK in WSL and verify.
+6. Clean-up with the user's OK: `F:\_vsc_smoke_*`, `F:\rmojo_verify_*`, `F:\ci_sim_*`, `F:\runo\.tmp-*`.
+
+**Pitfalls**: Git Bash rewrites `/mnt/...` (call WSL from PowerShell); bash heredocs mangle backslashes such as `\b` (use the Write tool); `wsl.exe` eats backslashes (pass `F:/...`); `rm -rf` is blocked by the safety check.
+
+**Resume message (paste as is)**:
+> Read "2026-11-15 別アカウントでの再開用メモ" at the end of `F:\runo\PORTING.md` and the `PORTING.md` of `F:\2FastAPI`, `F:\2FastAPI-VSC` and `F:\RMojo`, then continue: first open item 1 (read the failing CI logs of open-raid-z / open-easy-web / open-web-server with `gh run view --log-failed` and fix), then item 2 (add Windows ARM64 to MFastAPI wheels), then 3 and 4. You may develop, test, debug, commit and push without asking. Chat in Japanese only.
