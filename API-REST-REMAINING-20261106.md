@@ -218,3 +218,8 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - `aruaru-llm`に同時実行上限・サイト別公平キュー・待ち時間/実行時間の上限・429/503/504のConnect形式エラーを実装し、VPSへ反映(WSLビルド、glibc 2.39、旧バイナリ`target/release/aruaru-llm.before-20261109adm`、反映後3サイト同時の生成が全て200)。数値は`aruaru-llm/CLAUDE.md`。実機での公平性は推論が遅く測れず、単体の負荷測定(A=1400/B=767/C=867ms)のみ。
 - `open-cuda`・`open-directx`はライブラリのまま(共有サービス化しない)。理由は各`CLAUDE.md`。
 - 未了: 上限値の調整(既定2/32/8)、前面open-web-serverが`x-tenant`を付ける確認(未実施)、軽い呼び出し(Chat/Classify)は対象外。
+
+## 2026-11-15 追記: aruaru-llm の公平キューが「サイト別」に効くかの調査(読み取りのみ)
+- **確認**: aruaru-llm の `admission.rs` は `x-tenant`→`x-forwarded-host`→`anonymous` の順でサイトを識別する。一方、`open-web-server` は `x-tenant`・`x-forwarded-host` のどちらも付けて転送していない(ソース全体を検索、該当なし。管理APIの `host` は別物)。`open-easy-web` の `aruaru_llm_client.rs` も付けていない。
+- **意味すること(推定、実機のヘッダは未確認)**: 呼び出し側が付けない限り、全サイトが `anonymous` の1つの枠に入り、**同時実行の上限は効くが、サイト間の公平性は効かない**可能性が高い。
+- **次の手**: (1) 実際に aruaru-llm へ届くヘッダをVPSで確認する、(2) 呼び出し側(open-easy-web ほか)に `x-tenant` を付ける、または前面で付与する方式を決めて実装する。(2)は複数リポジトリ+本番に及ぶため、方式の判断が先。
