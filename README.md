@@ -252,6 +252,8 @@ Commit authors in the public repositories are anonymous (`aon-co-jp`). Other dev
 
 ## 再開用メッセージ / Resume message (2026-11-15)
 
+**追記 / Addendum**: Android同梱バイナリ(`open-english` v0.8.18)の再開用メッセージは[`PORTING.md`](PORTING.md)末尾「2026-11-15 追記: Android同梱バイナリ」(日英)。/ The resume message for the Android bundled binaries (`open-english` v0.8.18) is at the end of [`PORTING.md`](PORTING.md) ("2026-11-15 追記").
+
 **日本語**: 別のアカウントで再開するときは、[`PORTING.md`](PORTING.md)末尾の「2026-11-15 再開用メッセージ」と「2026-11-15 別アカウントでの再開用メモ」をそのまま貼り付ける。再開するリポジトリは`runo`(本リポジトリ)・`version-control`・`aruaru-search`・`aruaru-llm`(別件は`2FastAPI`・`2FastAPI-VSC`・`RMojo`)。本リポジトリは索引であり、コード実装は持たない。
 
 **English**: To resume on another account, paste "2026-11-15 再開用メッセージ" and "2026-11-15 別アカウントでの再開用メモ" from the end of [`PORTING.md`](PORTING.md) as they are. Repositories to resume: `runo` (this one), `version-control`, `aruaru-search`, `aruaru-llm` (the other thread: `2FastAPI`, `2FastAPI-VSC`, `RMojo`). This repository is an index and holds no implementation code.
