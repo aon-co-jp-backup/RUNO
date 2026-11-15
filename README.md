@@ -248,3 +248,10 @@ Commit authors in the public repositories are anonymous (`aon-co-jp`). Other dev
 - **Not migrated**: RS-EC 28, RS-Blog 22, aruaru.tokyo 17, aruaru-IME 14, aon.tokyo 13, backup-to-discord-by-github 11, and small ones. **Exception-or-own undecided**: open-gitea, open-redmine, ows-base, ows-stream.
 - **Process**: per repository: survey → classify → build → test → record (README/CLAUDE/PORTING/POLICY) → deploy. At most two assignees at a time. Exceptions go to the `version-control` ledger with reason and standard URL.
 - **Caveat**: this is a record, not a claim that every repository is done; each repository's own docs are updated by its assignee when it is migrated. Production deployment is confirmed only for open-english and RS-Sync.
+
+
+## 再開用メッセージ / Resume message (2026-11-15)
+
+**日本語**: 別のアカウントで再開するときは、[`PORTING.md`](PORTING.md)末尾の「2026-11-15 再開用メッセージ」と「2026-11-15 別アカウントでの再開用メモ」をそのまま貼り付ける。再開するリポジトリは`runo`(本リポジトリ)・`version-control`・`aruaru-search`・`aruaru-llm`(別件は`2FastAPI`・`2FastAPI-VSC`・`RMojo`)。本リポジトリは索引であり、コード実装は持たない。
+
+**English**: To resume on another account, paste "2026-11-15 再開用メッセージ" and "2026-11-15 別アカウントでの再開用メモ" from the end of [`PORTING.md`](PORTING.md) as they are. Repositories to resume: `runo` (this one), `version-control`, `aruaru-search`, `aruaru-llm` (the other thread: `2FastAPI`, `2FastAPI-VSC`, `RMojo`). This repository is an index and holds no implementation code.

@@ -2499,3 +2499,77 @@ RPoem now forwards to external subgraphs over HTTP (`RPoem` `babc658`). The VPS 
 
 **Resume message (paste as is)**:
 > Read "2026-11-15 別アカウントでの再開用メモ" at the end of `F:\runo\PORTING.md` and the `PORTING.md` of `F:\2FastAPI`, `F:\2FastAPI-VSC` and `F:\RMojo`, then continue: first open item 1 (read the failing CI logs of open-raid-z / open-easy-web / open-web-server with `gh run view --log-failed` and fix), then item 2 (add Windows ARM64 to MFastAPI wheels), then 3 and 4. You may develop, test, debug, commit and push without asking. Chat in Japanese only.
+
+## 2026-11-15 再開用メッセージ(検証の残り・共有基盤調査) / Resume message (verification leftovers, shared-base survey)
+
+### 日本語
+**再開するリポジトリ**: `F:uno`(本リポジトリ、索引と記録)・`F:ersion-control`・`F:ruaru-search`・`F:ruaru-llm`。別件の再開(2FastAPI・2FastAPI-VSC・RMojo・Windows ARM64のCI)は、直上の「2026-11-15 別アカウントでの再開用メモ」を使う。
+
+**確認済み(2026-11-08〜15)**
+- aruaru-search の自動再開(`b15f63a`)は本番ログで実働(探り成功で復帰、braveは429でバックオフ)。
+- version-control の `--pr`/`--push` は、ローカルbareのoriginを使ったWSLの往復で成功(`gh`は偽物)。`F:ersion-control` の手元クローンは `origin/main` と一致(分岐は解消済み)。
+- VPSの稼働状況(読み取りのみ): aruaru-llm(127.0.0.1:4600)・aruaru-search(4610)は**1プロセスずつ**で、サイトごとの同梱・個別起動の形跡は無い。
+
+**未了**
+1. 本物の `gh pr create` は未実行(実PRが作られるため、本人の許可を得てから、使い捨てのリポジトリで)。
+2. aruaru-llm の変更点要約: VPS(4コアCPU、GPT-2)では同じ形のGenerate(48トークン)が3分超で、`llm_timeout_secs=45` では必ず打ち切られる。高速な推論先(GPU等)を `version-control` の `llm_url` に向けて確認する。**確認用の呼び出しを続けて投げない**(1件でVPSのCPUを数分使い切る)。
+3. 配備アーキテクチャ方針(共有基盤を1回だけ入れる)の調査: 同時要求の上限・テナントごとの分離・タイムアウトは未調査。調査結果は `API-REST-REMAINING-20261106.md` 末尾へ。
+4. 直上の再開用メモの未了1〜6(open-raid-z/open-easy-web/open-web-server のCI赤など)。
+
+**落とし穴**: 書き換え済みの公開リポジトリで `git pull` しない(`git fetch` + `git reset --mixed origin/<branch>`)。PowerShell 5.1で日本語を含むファイルを書かない(Pythonか Edit/Write)。Git Bashは `/mnt/...` を書き換えるのでWSLはPowerShellから呼ぶ。トークン類は `F:\` 直下のtxtに置き、値を出力・commitしない。チャットは日本語のみ。
+
+**再開用メッセージ(そのまま貼り付け)**:
+> `F:uno\PORTING.md` 末尾の「2026-11-15 再開用メッセージ」と「2026-11-15 別アカウントでの再開用メモ」を読んで続きをして。まず未了4(CIが赤のopen-raid-z / open-easy-web / open-web-server を `gh run view --log-failed` で確認して修正)、次に未了3(共有基盤の同時要求の上限・分離・タイムアウトを `aruaru-llm`・`aruaru-search`・`open-cuda` で調査して記録)、未了2(高速な推論先で `version-control` の変更点要約を確認)の順。未了1(本物の `gh pr create`)は、私の許可があるまでやらない。確認なしで開発・TEST・DEBUG・commit・pushしてよい。チャットは日本語のみ。
+
+### English
+**Repositories to resume**: `F:uno` (this meta repo, index and records), `F:ersion-control`, `F:ruaru-search`, `F:ruaru-llm`. For the other thread (2FastAPI, 2FastAPI-VSC, RMojo, Windows ARM64 CI) use the section just above, "2026-11-15 別アカウントでの再開用メモ".
+
+**Verified (2026-11-08 to 15)**
+- aruaru-search auto-resume (`b15f63a`) works in production logs (probe success -> recovered; brave backs off on 429).
+- version-control `--pr`/`--push` succeeded in a WSL round trip against a local bare origin (`gh` was stubbed). The local clone of `F:ersion-control` now matches `origin/main` (the divergence is gone).
+- VPS state (read-only): aruaru-llm (127.0.0.1:4600) and aruaru-search (4610) run as **one process each**; no sign of per-site bundling or per-site instances.
+
+**Open**
+1. A real `gh pr create` has not been run (it creates a real PR: only with the owner's permission, on a throwaway repository).
+2. aruaru-llm change summaries: on the VPS (4-core CPU, GPT-2) the same-shaped Generate call (48 tokens) takes over 3 minutes, so `llm_timeout_secs=45` always cuts it off. Point `llm_url` of `version-control` at a fast backend (GPU etc.) and verify. **Do not fire repeated probe calls** (one call saturates the VPS CPU for minutes).
+3. Survey for the deployment policy (install the shared base once): concurrency limits, per-tenant isolation and timeouts are not yet surveyed for `aruaru-llm`, `aruaru-search`, `open-cuda`. Record results at the end of `API-REST-REMAINING-20261106.md`.
+4. Open items 1-6 of the resume notes just above (red CI of open-raid-z / open-easy-web / open-web-server, etc.).
+
+**Pitfalls**: never `git pull` in a rewritten public repository (`git fetch` + `git reset --mixed origin/<branch>`). Do not write Japanese into files with PowerShell 5.1 (use Python or Edit/Write). Git Bash rewrites `/mnt/...`, so call WSL from PowerShell. Keep tokens in txt files at the root of `F:\`; never print or commit values. Chat in Japanese only.
+
+**Resume message (paste as is)**:
+> Read "2026-11-15 再開用メッセージ" and "2026-11-15 別アカウントでの再開用メモ" at the end of `F:uno\PORTING.md`, then continue: first open item 4 (check the red CI of open-raid-z / open-easy-web / open-web-server with `gh run view --log-failed` and fix), then item 3 (survey concurrency limits, isolation and timeouts of the shared base in `aruaru-llm`, `aruaru-search`, `open-cuda` and record them), then item 2 (verify `version-control` change summaries against a fast inference backend). Do not do item 1 (a real `gh pr create`) until I give permission. You may develop, test, debug, commit and push without asking. Chat in Japanese only.
+
+## 2026-11-15 追記: Android同梱バイナリのConnect化の結果(open-english v0.8.18)/ Addendum: Android bundled binaries (open-english v0.8.18)
+
+### 日本語
+**到達点**
+- 原因: `open-cuda`がopen-cpuをgit依存、`aruaru-llm`がpath依存で持ち、`Cargo.lock`にopen-cpuが2つ入って同名JNIシンボルが二重リンクされていた。修正は`aruaru-llm/Cargo.toml`の`[patch."https://github.com/aon-co-jp/open-cpu"]`(別セッションが`dae7d25`で先にpush済み。私の重複コミットは破棄)。
+- 確認済み: `cargo ndk -t arm64-v8a build --release`が`aruaru-llm`・`open-cpu`・`open-english/server`で成功。バイナリに新しいConnect版の文字列(`aruaru_llm.v1.Llm`・`openenglish.v1.`)を確認。
+- `open-english`は版を0.8.18に上げ`v0.8.18`タグをpush。リリースCI成功(APK phone/tablet・Windows/Linux/macOSインストーラー)。
+- 実機(`ZY22J7RFND`)で、手元ビルドのdebug APKと**CIが作ったリリースAPK**の両方を起動確認: `libopenenglishserver.so`・`libaruarullm.so`が稼働、`aruaru_llm.v1.Llm/Runtime`と`openenglish.v1.PlatformInfo`が応答、旧REST経路は404、クラッシュ0。
+
+**未了 / 注意**
+1. 署名が違うと上書きインストールできない(debug↔リリース)。入れ替えにはアンインストール(アプリ内データは消える)が必要。
+2. `open-english`の`server/Cargo.lock`はビルドで大きく変わるため、そのままコミットしない(取り込むなら別途`cargo update`方針を決める)。
+3. 実機のUI操作(チャット送信・翻訳など、画面からの通し試験)は未実施。サーバー応答までの確認。
+4. 別セッションの国別ニュース話題の件は`aruaru-llm/CLAUDE.md`の「HANDOFF 2026-11-15」を参照。
+
+**再開用メッセージ**:
+> `F:\runo\PORTING.md`末尾「2026-11-15 追記: Android同梱バイナリ」を読み、`F:\open-english`(`maid-cafe-english`)のv0.8.18リリースAPKを実機にインストールして、画面からチャット・翻訳を通しで試し、不具合があれば`web/`を直して`mobile/android/app/src/main/assets/webroot`へ同期し、次のタグでリリースして。確認なしで開発・TEST・commit・pushしてよい。チャットは日本語のみ。
+
+### English
+**Where things stand**
+- Cause: `open-cuda` depends on open-cpu via git while `aruaru-llm` uses a path, so `Cargo.lock` held two open-cpu copies and the same JNI symbols were linked twice. Fix: `[patch."https://github.com/aon-co-jp/open-cpu"]` in `aruaru-llm/Cargo.toml` (another session pushed it first as `dae7d25`; my duplicate commit was dropped).
+- Verified: `cargo ndk -t arm64-v8a build --release` succeeds for `aruaru-llm`, `open-cpu` and `open-english/server`; the binaries contain the new Connect strings (`aruaru_llm.v1.Llm`, `openenglish.v1.`).
+- `open-english` was bumped to 0.8.18 and tag `v0.8.18` pushed; the release CI succeeded (phone/tablet APKs, Windows/Linux/macOS installers).
+- On the real device (`ZY22J7RFND`) both the local debug APK and the **CI-built release APK** start: `libopenenglishserver.so` and `libaruarullm.so` run, `aruaru_llm.v1.Llm/Runtime` and `openenglish.v1.PlatformInfo` answer, the old REST route returns 404, zero crashes.
+
+**Open / cautions**
+1. APKs with different signatures cannot be installed over each other (debug vs release); uninstalling is needed (app data is lost).
+2. Do not commit `open-english`'s `server/Cargo.lock` as is (the build churns it a lot); decide a `cargo update` policy first.
+3. No end-to-end UI test yet (sending chat, translating from the screen); only up to server responses.
+4. For the separate session's country-news topic issue see "HANDOFF 2026-11-15" in `aruaru-llm/CLAUDE.md`.
+
+**Resume message**:
+> Read "2026-11-15 追記: Android同梱バイナリ" at the end of `F:\runo\PORTING.md`, install the v0.8.18 release APK of `F:\open-english` (`maid-cafe-english`) on the real device, run chat and translation end to end from the screen, fix any bug in `web/` (sync it into `mobile/android/app/src/main/assets/webroot`) and release the next tag. You may develop, test, commit and push without asking. Chat in Japanese only.
