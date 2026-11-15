@@ -223,3 +223,12 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - **確認**: aruaru-llm の `admission.rs` は `x-tenant`→`x-forwarded-host`→`anonymous` の順でサイトを識別する。一方、`open-web-server` は `x-tenant`・`x-forwarded-host` のどちらも付けて転送していない(ソース全体を検索、該当なし。管理APIの `host` は別物)。`open-easy-web` の `aruaru_llm_client.rs` も付けていない。
 - **意味すること(推定、実機のヘッダは未確認)**: 呼び出し側が付けない限り、全サイトが `anonymous` の1つの枠に入り、**同時実行の上限は効くが、サイト間の公平性は効かない**可能性が高い。
 - **次の手**: (1) 実際に aruaru-llm へ届くヘッダをVPSで確認する、(2) 呼び出し側(open-easy-web ほか)に `x-tenant` を付ける、または前面で付与する方式を決めて実装する。(2)は複数リポジトリ+本番に及ぶため、方式の判断が先。
+
+## 2026-11-15 前面open-web-serverのx-tenant付与の確認(読み取りのみ・本番変更なし)
+- **結論: 付いていない。そもそも前面open-web-serverはaruaru-llm(127.0.0.1:4600)の経路に入っていない。**
+- 読み取り側(`F:\aruaru-llm\src\admission.rs:180`): `x-tenant` → `x-forwarded-host` → `anonymous` の順。
+- 付与側: `F:\open-web-server` に `x-tenant` は0件。`x-forwarded-host` も付けない。転送時にHostを補うだけ(`gateway/src/lib.rs` `ensure_host_header`)。`X-Forwarded-*`は信用・付与とも方針上しない(`rate_limit.rs`)。
+- VPS(`domains.toml`): 4600への経路は無い(`/aruaru-llm`は静的紹介ページ8131)。実際の呼び出しは全て**ループバック直結**: aruaru-search・aruaru-jobs・daily-news-collect・news-archive-push・realdata-pro・aruaru-ime-daemon(ESTAB接続を確認)。いずれもヘッダ付与の記述は未確認(systemdはURLのみ)。
+- 意味: 現状は全呼び出しが `anonymous` の1枠になり、同時実行上限は効くがサイト別公平キューは実質効かない。
+- 直す案(未実施・判断待ち): (A)各呼び出し側クライアントに `x-tenant: <自サイト名>` を付ける(aruaru-search/jobs/realdata-pro/IME/open-easy-web、各リポジトリ小変更、再起動要。最も確実)。(B)前面open-web-serverが外部→aruaru-llmを中継する経路を新設する場合に限り、ホスト名から`x-tenant`を付与(現状その経路が無いので効果なし)。推奨はA。
+- **未確認**: 実際にaruaru-llmへ届くヘッダ(無害な実呼び出しでのログ確認は未実施。ログに`x-tenant`を出す機能が無いため)、各呼び出し側コード内のヘッダ付与の有無の全数確認(open-easy-web等のコードは未精査)。
