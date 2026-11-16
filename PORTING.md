@@ -2818,3 +2818,6 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 
 **Paste-ready resume message**:
 > Read "2026-11-15 別アカウントでの再開用メモ(REST全廃の仕上げ: ストリーミング・bdg・open-cg-cad・e-gov)" at the end of `F:\runo\PORTING.md` and resume from the open items. Repositories: `RPoem` (streaming; is a VPS update needed?), `backup-to-discord-by-github`, `open-cg-cad` (`Generate` success path, browser, the open-english session call), `e-gov` (fresh clone, browser check) and `runo` (this index repo). Build no new REST (Connect only), never `git pull` (use `git fetch` + `--ff-only`), never build on the VPS (WSL build -> scp -> backup -> swap -> verify), never print secrets, chat in Japanese only.
+
+## 2026-11-17 追記: 2FastAPI / RMojo / MFastAPI の到達点
+2FastAPI v0.3.3(Flask `session`/`g`変換)、RMojo v0.4.1、MFastAPI v0.2.3(win_arm64済み)。直上「2026-11-15 別アカウントでの再開用メモ」の2FastAPI・RMojo・MFastAPI関連の記述は、この節が新しい。残り: PyPI/Marketplace(所有者の認証)、実機Snapdragon、open-raid-z等のCI。 / Latest: 2FastAPI v0.3.3, RMojo v0.4.1, MFastAPI v0.2.3 (win_arm64 done); this supersedes the older note above. Open: PyPI/Marketplace (owner credentials), real Snapdragon, CI of open-raid-z etc.
