@@ -251,3 +251,11 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - VPS で origin から再走査(ows-base/ows-stream は設定で除外、`atr-sonic` は audiocafe-tokyo-rust の別ブランチ複製): REST風は **aruaru-llm 1本(`/v1/ocr/fonts/:name`、フォント配布)** のみ。担当セッションへ判断を依頼済み。SCIM 8本は標準として除外。
 - 小規模6リポジトリ(origin の `.rs` を直接確認): audiocafe-tokyo-rust・e-gov.info・runo.tokyo・karu.tokyo は画面/health/webhook/Connect のみ。open-easy-web-app は `/ime/api/`(旧経路、2026-12-06削除予定)とメール確認リンク(ブラウザで開くページ)のみ。atr-sonic は audiocafe-tokyo-rust と同じ origin の別ブランチ。
 - 未確認: origin を読めず作業コピーで数えた6リポジトリ(`[clone]`)、`.rs` 以外(JS/TS サーバー)のルート。
+
+## 2026-11-16 x-tenant の本番反映(aruaru-llm・aruaru-IMEデーモン)
+
+- **訂正**: 2026-11-09の「受付制御はVPS反映済み」は誤りだった。VPSの`/root/aruaru-llm`のソースに`src/admission.rs`が無く、バイナリに`x-tenant`文字列も無かった(確認: ソース・`grep -c`)。
+- 反映(2026-11-16 15:58 JST): `aruaru-llm`をorigin/main(`28007df`)からWSLでビルドして入れ替え(旧は`target/release/aruaru-llm.before-admission-20261116`)。起動・`/healthz`200・`Translate`(重い呼び出し)200。IMEデーモンは`49d740b`(x-tenant付与の`d3e8d87`含む)をビルドして入れ替え(旧は`/opt/aruaru-ime/aruaru-ime-daemon.bak-20261116`)、`aruaru-ime-server`稼働・`Key`ルートが入力検証400で応答、`aruaru-llm`への接続を確認。
+- 注意: ビルドに使った`Cargo.lock`は手元のもの(origin管理外)。VPSのaruaru-llmクローンは`behind 11`・未コミット変更2件のまま(`git pull`していない)。
+- **未確認**: aruaru-llm側で実際に`x-tenant`が使われたかを外から観測する手段が無い(スナップショット非公開)。上限値の調整、`realdata-pro`・`aruaru-search`等の呼び出し側のヘッダ付与は未実施。pdf-ocrクライアントを持つのは手元アプリ`pdf-r2l-rs`のみでVPSには入っていない。
+- 手元の一時worktree`F:\_wt-aruaru-llm`・`F:\_wt-ime`と一時ファイル(`F:\_llm-new.bin`等)は削除が許可されず残っている(要手動削除)。
