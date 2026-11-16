@@ -245,3 +245,9 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - **User-Agent/送信元**: ログはパスしか出力しておらず**特定不能(未確認)**。前面のopen-web-serverのアクセスログにも該当行は見つからず、nginxは停止中。
 - **切り分け**: `F:\aruaru-IME`のコードに旧経路(`/ime/api/key|session`)の呼び出しは無く、`v0.2.24`(11-08)で常駐エンジン・TSF・Android・オンライン画面は新経路(`/aruaru_ime.v1.Ime/Key|Session`)へ移行済み、`v0.2.25`(11-11)で常駐エンジン側の旧経路も削除。オンライン画面は新経路のみ(11-08確認)。ヒット時刻が配備(13:22)・動作確認作業・削除直前と重なるため、**自前の試験(または古い版のクライアント1台)の可能性が高いが、断定はできない(未確認)**。古いTSF DLL・Androidのどれかは不明。
 - **影響**: v0.2.23以前の古いクライアントが残っていれば、現在は404で変換できない。ただし11-09以降の本番ログ(journal 11-13〜)に旧経路の試行は残っておらず、messages側も11-09 15:58以降ゼロのため、実害の兆候は**確認できていない**(11-09 16:24〜11-13の間はjournalが無くmessagesも新規ヒットなし=ヒットカウンタ自体が削除済みのため、この間の旧経路の試行は記録されない点に注意)。
+
+## 除外条件の見直し結果 (2026-11-16, version-control 5a2b86c)
+- `/api/`・`/admin/`・`/rest/`・`/vN/` 配下は、静的/ページ/`.json` などの除外をしない(自前RESTを隠さない)。SCIM(RFC 7644)・GraphQL・MCP・health/webhook/callback は標準なので配下でも除外。
+- VPS で origin から再走査(ows-base/ows-stream は設定で除外、`atr-sonic` は audiocafe-tokyo-rust の別ブランチ複製): REST風は **aruaru-llm 1本(`/v1/ocr/fonts/:name`、フォント配布)** のみ。担当セッションへ判断を依頼済み。SCIM 8本は標準として除外。
+- 小規模6リポジトリ(origin の `.rs` を直接確認): audiocafe-tokyo-rust・e-gov.info・runo.tokyo・karu.tokyo は画面/health/webhook/Connect のみ。open-easy-web-app は `/ime/api/`(旧経路、2026-12-06削除予定)とメール確認リンク(ブラウザで開くページ)のみ。atr-sonic は audiocafe-tokyo-rust と同じ origin の別ブランチ。
+- 未確認: origin を読めず作業コピーで数えた6リポジトリ(`[clone]`)、`.rs` 以外(JS/TS サーバー)のルート。
