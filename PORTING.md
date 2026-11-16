@@ -2702,6 +2702,59 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 **Paste-ready resume message**:
 > Read "2026-11-15 Android実機確認" at the end of `F:\runo\PORTING.md` and resume from the open items (open-english chat reply, open-media real operations, open-redmine browser side, font sizes). The device is on adb (`ZY22J7RFND`). Do not change device settings (IME, Play Protect). No new REST (Connect only). Never print secrets (passwords, tokens).
 
+## 2026-11-15 別アカウントでの再開用メモ(aruaru-db / open-cosmo のREST全廃の仕上げ・ブラウザ確認)
+
+**日本語**: aruaru-db と open-cosmo は自前RESTが0本(例外のみ残存)。aruaru-db は公開`/graphql`から管理Mutationを撤去(内部`AruaruSchema`=Connect用、公開`PublicSchema`=管理Mutationなし)し、Connect 32メソッドで同等機能を維持、旧REST残骸約540行を削除。コミット: aruaru-db `777b9d5`・`5ed818a`・`3b4a0f7`・`0faaaf2`、open-cosmo `9d4f1c2`・`31416cb`・`7fa4241`(open-cosmoの例外・理由は`POLICY.md`、`openapi.rs`は`/mcp`が使うため残す)。本番(VPS)は`aruaru-server`と`realdata-aruaru-db`を反映済み(WSLビルド・glibc 2.39以下・バックアップ・入れ替え・自動ロールバック付き)。open-cosmoはVPSで非稼働のため反映対象外。
+**確認済み**: 本番の管理画面`https://easy-web.tokyo/aruaru-db/`は白画面でなく描画、`Demo`/`Status`がConnect(`/…Admin/…`)で200、旧REST呼び出し0、`Rebalance`をトークンなしで401(仕様)。Tauri管理画面(`aruaru-db/admin`)はビルド・起動し、WebViewに`localhost:1420`(vite dev)のUIが描画されることを確認(`#root`にUI、`main.tsx`読み込みエラーなし)。
+**未了**: (1)`aruaru-admin`アプリ本体(Web管理画面)は`tsc`型検査まで・ブラウザでの操作確認と本番反映は未実施(本番に出ているのは`web/`のデモUI)。(2)Rebalance成功側など本番での書き込み操作は管理トークンを入れる必要があり未実施。(3)aruaru-db `admin.rs`の未使用警告(`engine/registry/backups`フィールド・`replicator`メソッド)。(4)open-cosmoの`docs/*.md`に旧`/api/...`の記述が残る(注記つき)。(5)VPSのaruaru-db cloneは`849f082`のまま(未コミット変更1件・`git pull`しない)。
+**落とし穴**: 手元の`F:\runo\repository\*`は履歴が書き換わっているため`git pull`/`merge`しない(新規cloneか`F:\_work\aruaru-db`を使う)。WSLビルドは兄弟`RS-JSON`が同階層に要る(`F:\_work\RS-JSON`)。VPSでビルドしない(RAM 3.6GB)。Tauriの`cargo build`(dev)はdevUrl(1420)を見るので、事前に`npm run dev`でviteを起動する(組み込みなら`npx tauri build --debug --no-bundle`)。管理トークンを画面・ログ・コミットに出さない。
+**再開するリポジトリ**: `aon-co-jp/aruaru-db`(作業用`F:\_work\aruaru-db`)、`aon-co-jp/open-cosmo`、`F:\runo`(索引)。
+**貼り付け用の再開用メッセージ**:
+> `F:\runo\PORTING.md` 末尾「2026-11-15 別アカウントでの再開用メモ(aruaru-db / open-cosmo …)」を読み、未了(aruaru-admin本体のブラウザ確認と反映、`admin.rs`の未使用警告、open-cosmoのdocs整理)から再開してください。リポジトリは aruaru-db(新規clone)と open-cosmo。新規RESTは作らずConnectのみ。`git pull`禁止(履歴書き換え済み)、VPSでビルドしない、秘密(管理トークン等)は出さない。チャットは日本語のみ。
+
+**English**: aruaru-db and open-cosmo now have 0 own REST routes (exceptions only). aruaru-db removed admin mutations from the public `/graphql` (internal `AruaruSchema` serves Connect; public `PublicSchema` has no admin mutations), kept parity through 32 Connect methods, and deleted ~540 lines of dead REST code. Commits: aruaru-db `777b9d5`, `5ed818a`, `3b4a0f7`, `0faaaf2`; open-cosmo `9d4f1c2`, `31416cb`, `7fa4241` (exceptions and reasons in open-cosmo `POLICY.md`; `openapi.rs` is kept because `/mcp` uses it). Production: `aruaru-server` and `realdata-aruaru-db` deployed (WSL build, glibc <= 2.39, backup, swap, auto-rollback). open-cosmo is not running on the VPS, so nothing to deploy.
+**Verified**: the production admin UI `https://easy-web.tokyo/aruaru-db/` renders (no white screen), `Demo`/`Status` return 200 over Connect (`/…Admin/…`), no old REST calls, `Rebalance` without a token returns 401 (by design). The Tauri admin (`aruaru-db/admin`) builds, starts, and its WebView renders the UI from `localhost:1420` (vite dev; UI in `#root`, no `main.tsx` load error).
+**Open**: (1) the `aruaru-admin` app itself (web admin) was only type-checked with `tsc`; no browser test or deployment (production serves the `web/` demo UI). (2) Production write paths such as a successful `Rebalance` were not exercised (needs the admin token). (3) Unused-code warnings in aruaru-db `admin.rs` (`engine/registry/backups` fields, `replicator` method). (4) open-cosmo `docs/*.md` still contain old `/api/...` text (with notices). (5) The VPS aruaru-db clone is still at `849f082` (1 uncommitted change; do not `git pull`).
+**Pitfalls**: local `F:\runo\repository\*` clones have rewritten history, so never `git pull`/merge there (use a fresh clone or `F:\_work\aruaru-db`). WSL builds need the sibling `RS-JSON` (`F:\_work\RS-JSON`). Never build on the VPS (3.6 GB RAM). Tauri dev `cargo build` points at devUrl (1420), so start vite with `npm run dev` first (or embed with `npx tauri build --debug --no-bundle`). Never print the admin token.
+**Repositories to resume**: `aon-co-jp/aruaru-db` (working copy `F:\_work\aruaru-db`), `aon-co-jp/open-cosmo`, `F:\runo` (index).
+**Paste-ready resume message**:
+> Read "2026-11-15 別アカウントでの再開用メモ(aruaru-db / open-cosmo …)" at the end of `F:\runo\PORTING.md` and resume from the open items (browser test and deployment of the aruaru-admin app, the `admin.rs` unused warnings, open-cosmo docs cleanup). Repositories: aruaru-db (fresh clone) and open-cosmo. No new REST (Connect only). No `git pull` (history was rewritten), no builds on the VPS, never print secrets (admin token etc.). Chat in Japanese only.
+
+
+## 2026-11-15 別アカウントでの再開用メモ(REST全廃の本番確認・反映 / aruaru-db・open-easy-web・aruaru-IME)
+
+### 日本語
+**到達点**
+- 本番VPS(`ssh conoha`)で、移行済みサービス(aruaru-search/llm・open-web-server・aruaru.tokyo・RS-Sync・RS-EC・RS-Blog・aruaru-db・open-english・open-easy-web)の**新Connectが応答し、旧RESTは404**であることを実測。
+- **aruaru-db**: 本番バイナリが古かったため、`849f082`をWSLでなくVPS上でビルドして差し替え(バックアップ`/root/aruaru-server.bak.20261109`)。管理トークン付きで旧`/admin/*`=404、新Connect=200を確認。
+- **open-easy-web**: `/ime/api/key`・`/ime/api/session`の旧経路を削除(`6344880`)、VPS再ビルド・再起動(バックアップ`/root/open-easy-web-server.bak-20261109`)。新経路は`/ime/api/aruaru_ime.v1.Ime/Key|Session`。
+- **aruaru-IME**: v0.2.25(`bdf237d`)で常駐エンジンの旧経路も削除。VPSエンジン(4660)は旧`/key`・`/session`=404、新=400(ハンドラ到達)。旧経路ヒットは全期間7件で11-09 15:58が最後。2026-12-06の削除作業は不要。
+**未了・要確認**
+1. VPSの`/var/lib/aruaru-ime/downloads/VERSION`が**0.2.24のまま**(タグはv0.2.25)。Release/VPSの版揃えを確認。
+2. Android実機の通し試験(別セッション`rest-android`担当)、open-easy-webのAndroidアプリは0.1.0のまま。
+3. VPS `/root/aruaru-db`の`Cargo.lock`に未コミット差分(`rust-json`2行、ビルド由来)。コミットせず整理。
+4. 古いTSF DLL(v0.2.23以前)のクライアントは旧経路が404で変換不可になる。影響の兆候は未確認。
+5. open-gitea/open-redmineの紹介ページ置き場所、open-giteaの`/`が404の件(前節参照)。
+**落とし穴**: 認証層が先に動くため、未認証の`/admin/*`は存在しないパスでも401(404は管理トークン付きでのみ見える)。VPSの古いcloneを信用しない(originを確認)。トークンはSSH標準入力で渡し画面に出さない。VPS上の`cargo build --locked`はlock不一致で失敗しうる。
+**再開用メッセージ(そのまま貼り付け)**:
+> `F:\runo`の`PORTING.md`末尾「2026-11-15 別アカウントでの再開用メモ(REST全廃の本番確認・反映)」を読み、再開するリポジトリ`F:\runo`・`F:\aruaru-IME`・`F:\open-easy-web`・`aruaru-db`(新規clone)で未了1(VPSの`downloads/VERSION`が0.2.24のまま→v0.2.25へ揃える)から進めてください。新規RESTは作らずConnectのみ、秘密は出力しない、VPSの古いcloneは信用せずoriginを確認、WSL/VPSの差し替えは必ずバックアップ付きで。
+
+### English
+**Reached**
+- On the production VPS (`ssh conoha`), migrated services (aruaru-search/llm, open-web-server, aruaru.tokyo, RS-Sync, RS-EC, RS-Blog, aruaru-db, open-english, open-easy-web) answer on the **new Connect routes and return 404 on the old REST**.
+- **aruaru-db**: the production binary was stale; `849f082` was built on the VPS and swapped in (backup `/root/aruaru-server.bak.20261109`). With the admin token: old `/admin/*` = 404, new Connect = 200.
+- **open-easy-web**: legacy `/ime/api/key` and `/ime/api/session` removed (`6344880`), VPS rebuilt and restarted (backup `/root/open-easy-web-server.bak-20261109`). New path: `/ime/api/aruaru_ime.v1.Ime/Key|Session`.
+- **aruaru-IME**: v0.2.25 (`bdf237d`) removed the daemon's legacy routes too. VPS engine (4660): old `/key`, `/session` = 404, new = 400 (reaches the handler). Legacy hits: 7 in total, last on 11-09 15:58. The planned 2026-12-06 removal is unnecessary.
+**Open / to verify**
+1. VPS `/var/lib/aruaru-ime/downloads/VERSION` is **still 0.2.24** (tag is v0.2.25): align Release and VPS.
+2. End-to-end Android device test (owned by the `rest-android` session); the open-easy-web Android app is still 0.1.0.
+3. Uncommitted `Cargo.lock` diff in VPS `/root/aruaru-db` (2 `rust-json` lines from the build): do not commit, clean up.
+4. Old TSF DLL clients (v0.2.23 or earlier) now get 404 and cannot convert; no sign of real impact found.
+5. Intro page placement for open-gitea/open-redmine, and open-gitea `/` returning 404 (see the previous section).
+**Pitfalls**: the auth layer runs first, so unauthenticated `/admin/*` returns 401 even for nonexistent paths (404 is only visible with the admin token). Do not trust stale VPS clones (check origin). Pass tokens via SSH stdin, never print them. `cargo build --locked` on the VPS can fail on a lock mismatch.
+**Paste-ready resume message**:
+> Read "2026-11-15 別アカウントでの再開用メモ(REST全廃の本番確認・反映)" at the end of `PORTING.md` in `F:\runo`. Repos to resume: `F:\runo`, `F:\aruaru-IME`, `F:\open-easy-web`, `aruaru-db` (fresh clone). Start with open item 1 (VPS `downloads/VERSION` is still 0.2.24; align to v0.2.25). No new REST (Connect only), never print secrets, do not trust stale VPS clones (check origin), always back up before swapping binaries.
+
 ## 2026-11-15 再開用メモ: appserver系REST・open-raid-z管理UIのConnect化(別アカウントでの再開用) / Resume note: appserver REST and open-raid-z UI on Connect
 
 ### 日本語

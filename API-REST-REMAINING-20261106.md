@@ -259,3 +259,4 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - 注意: ビルドに使った`Cargo.lock`は手元のもの(origin管理外)。VPSのaruaru-llmクローンは`behind 11`・未コミット変更2件のまま(`git pull`していない)。
 - **未確認**: aruaru-llm側で実際に`x-tenant`が使われたかを外から観測する手段が無い(スナップショット非公開)。上限値の調整、`realdata-pro`・`aruaru-search`等の呼び出し側のヘッダ付与は未実施。pdf-ocrクライアントを持つのは手元アプリ`pdf-r2l-rs`のみでVPSには入っていない。
 - 手元の一時worktree`F:\_wt-aruaru-llm`・`F:\_wt-ime`と一時ファイル(`F:\_llm-new.bin`等)は削除が許可されず残っている(要手動削除)。
+- **aruaru-llm の残り1本(2026-11-16のメール)**: origin/mainの`.at(...)`を確認すると、Connect/healthz以外は`GET /v1/ocr/fonts/:name`(フォントファイル配信=静的ファイル、例外)と`GET /`(画面)のみ。自前APIのRESTは0本と判断(コード変更なし)。
