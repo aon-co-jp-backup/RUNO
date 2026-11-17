@@ -17,7 +17,7 @@ import re
 import sys
 import urllib.request
 
-PRODUCTS = ["MFastAPI", "RMojo", "2FastAPI", "2FastAPI-VSC"]
+PRODUCTS = ["MFastAPI", "RMojo", "2FastAPI", "2FastAPI-VSC", "2Poem"]
 ORG = "aon-co-jp"
 MARK_BEGIN = "<!-- latest-versions:begin -->"
 MARK_END = "<!-- latest-versions:end -->"
@@ -30,7 +30,7 @@ SNIPPET = (
 <script>(function(){var p=location.pathname.split('/').filter(Boolean)[0]||'';
 fetch('/'+p+'/versions.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(v){
 var s=v.products&&v.products[p]; if(s){document.getElementById('lv-self').textContent=p+' '+s.tag+(s.published?' ('+s.published+')':'');}
-var u=v.upstream||{},o=[];['python','flask','django','fastapi','starlette','rust','mojo'].forEach(function(k){if(u[k])o.push((({python:'Python',flask:'Flask',django:'Django',fastapi:'FastAPI',starlette:'Starlette',rust:'Rust',mojo:'Mojo'})[k])+' '+u[k]);});
+var u=v.upstream||{},o=[];['python','flask','django','fastapi','starlette','rust','mojo','poem','node','typescript','react','bootstrap','postgresql','mysql','sqlite'].forEach(function(k){if(u[k])o.push((({python:'Python',flask:'Flask',django:'Django',fastapi:'FastAPI',starlette:'Starlette',rust:'Rust',mojo:'Mojo',poem:'Poem',node:'Node.js',typescript:'TypeScript',react:'React',bootstrap:'Bootstrap',postgresql:'PostgreSQL',mysql:'MySQL',sqlite:'SQLite'})[k])+' '+u[k]);});
 document.getElementById('lv-up').textContent=o.join(' · ')+(v.generated?'  — '+v.generated:'');}).catch(function(){var e=document.getElementById('latest-versions');if(e)e.style.display='none';});})();</script>"""
     + MARK_END
 )
@@ -62,6 +62,18 @@ def pypi(name):
     return get("https://pypi.org/pypi/%s/json" % name)["info"]["version"]
 
 
+def npm(name):
+    return get("https://registry.npmjs.org/%s/latest" % name)["version"]
+
+
+def crates(name):
+    return get("https://crates.io/api/v1/crates/%s" % name)["crate"]["max_stable_version"]
+
+
+def eol(product):
+    return get("https://endoflife.date/api/%s.json" % product)[0]["latest"]
+
+
 def python_latest():
     j = get("https://endoflife.date/api/python.json")
     return j[0]["latest"]
@@ -85,6 +97,14 @@ def collect(prev):
         ("starlette", pypi, ("starlette",)),
         ("rust", rust_latest, ()),
         ("mojo", pypi, ("mojo",)),
+        ("poem", crates, ("poem",)),
+        ("node", eol, ("nodejs",)),
+        ("typescript", npm, ("typescript",)),
+        ("react", npm, ("react",)),
+        ("bootstrap", npm, ("bootstrap",)),
+        ("postgresql", eol, ("postgresql",)),
+        ("mysql", eol, ("mysql",)),
+        ("sqlite", eol, ("sqlite",)),
     ]:
         v = safe(fn, *arg)
         if v:
