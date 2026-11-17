@@ -3277,3 +3277,12 @@ uno`. Continue from the admin re-install of aruaru-IME v0.2.23. (1) Run `git -C 
 ### 2026-11-17 追記: 未了の続き(x-tenant) / Follow-up (x-tenant)
 - **日本語**: aruaru-IMEのソース(`crates/aruaru-ime-core/src/client.rs`)は全呼び出しに`x-tenant: aruaru-ime`を付けている(コード上は確認)。VPSでIMEデーモンへ手で呼んだ際はaruaru-llm(4600)への通信が発生せず、tcpdumpでの実測は未了のまま(Translate経路は404、本物の変換要求が来た時に再確認)。メモ帳での実入力・bdg Webhook実受信は引き続き未了(画面操作の許可/実イベント待ち)。
 - **English**: The aruaru-IME source (`crates/aruaru-ime-core/src/client.rs`) sets `x-tenant: aruaru-ime` on every call (confirmed in code only). A manual call to the VPS IME daemon produced no traffic to aruaru-llm (4600), so the tcpdump measurement is still pending (re-check on a real conversion request). Notepad typing and a real bdg webhook delivery remain open (need UI permission / a real event).
+
+## 2026-11-18 x-tenantの本番実測 / x-tenant measured in production
+
+### 日本語
+VPSのループバック(127.0.0.1:4600)をtcpdumpで120秒取得して実測した。aruaru-llmへの実呼び出しは2系統で、**どちらも`x-tenant`ヘッダが無い**(Hostは`127.0.0.1:4600`)=公平キュー上は共通の`anonymous`扱いになる。(1) `aruaru-search`(pid 1290852)→`Llm/Rerank`、(2) `rrd-server`(realdata-pro、pid 286765)→`Llm/SearchRaw`。`aruaru-ime-daemon`も接続中だが、このときは呼び出しを観測していない(IME側は`client.rs`で`x-tenant: aruaru-ime`を付与する実装)。**未了**: aruaru-searchとrrd-serverの呼び出しコードに`x-tenant`(例: `aruaru-search`/`realdata-pro`)を付ける修正と再ビルド・VPS反映(本番変更のため事前確認)。aruaru-IME側のヘッダ実測は、IME変換の実呼び出し時に再確認する。
+
+### English
+Captured 120 s of loopback traffic (127.0.0.1:4600) with tcpdump on the VPS. Real calls to aruaru-llm come from two callers and **neither sends an `x-tenant` header** (Host is `127.0.0.1:4600`), so both fall into the shared `anonymous` bucket of the fair queue: (1) `aruaru-search` (pid 1290852) -> `Llm/Rerank`, (2) `rrd-server` (realdata-pro, pid 286765) -> `Llm/SearchRaw`. `aruaru-ime-daemon` is also connected but no call was seen in the window (its `client.rs` sets `x-tenant: aruaru-ime`). **Open**: add `x-tenant` (e.g. `aruaru-search` / `realdata-pro`) in the callers of aruaru-search and rrd-server, rebuild and deploy (production change, confirm first). Re-check the IME header when a real conversion call happens.
+
