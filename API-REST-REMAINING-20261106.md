@@ -260,3 +260,15 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - **未確認**: aruaru-llm側で実際に`x-tenant`が使われたかを外から観測する手段が無い(スナップショット非公開)。上限値の調整、`realdata-pro`・`aruaru-search`等の呼び出し側のヘッダ付与は未実施。pdf-ocrクライアントを持つのは手元アプリ`pdf-r2l-rs`のみでVPSには入っていない。
 - 手元の一時worktree`F:\_wt-aruaru-llm`・`F:\_wt-ime`と一時ファイル(`F:\_llm-new.bin`等)は削除が許可されず残っている(要手動削除)。
 - **aruaru-llm の残り1本(2026-11-16のメール)**: origin/mainの`.at(...)`を確認すると、Connect/healthz以外は`GET /v1/ocr/fonts/:name`(フォントファイル配信=静的ファイル、例外)と`GET /`(画面)のみ。自前APIのRESTは0本と判断(コード変更なし)。
+
+## 2026-11-17 再開用メモ: RS-EC・RS-Blogの本番確認の残り / Resume memo: remaining RS-EC / RS-Blog production checks
+
+### 日本語
+- 到達点・本番に加えた変更(SMTPドロップイン、VPSの`/tmp`の確認スクリプト)・落とし穴は[`CLAUDE.md`](CLAUDE.md)冒頭HANDOFFの同日項目と、各リポジトリ(RS-EC・RS-Blog)末尾の「2026-11-17 追記」にある。
+- **貼り付け用メッセージ**:
+> `F:uno`・`RS-EC`・`RS-Blog`(後ろ2つは `aon-co-jp` から新規clone)で再開してください。REST全廃は完了・本番反映済みで、Posts/Products/Cartの本番通し確認も済みです。残りは、本人のメールOTP(norukia.jp@gmail.com宛、5分で失効、1サービスずつ送る)でログインし、RS-Blog=Categories/Tags/Pages/Comments、RS-EC=Accounts/Categories/Favorites/Reviews/Cart/Orders(Checkoutは本番に注文が1件残る)、両方のQRログインと`otp_qr`(確認後は必ず`otp`へ戻す)を本番で確認することです。VPSは`ssh conoha`、RS-Blogはポート8101、RS-ECはポート8102。確認後に各リポジトリと`runo`の`API-REST-REMAINING-20261106.md`・`CLAUDE.md`を更新してpushしてください。秘密値は表示しない。チャットは日本語のみ。
+
+### English
+- The state, production changes (the SMTP drop-ins, the check scripts left in the VPS `/tmp`) and pitfalls are in the same-day item at the top of the HANDOFF in [`CLAUDE.md`](CLAUDE.md) and in "2026-11-17 追記" at the end of RS-EC and RS-Blog.
+- **Paste-ready message**:
+> Resume in `F:uno`, `RS-EC` and `RS-Blog` (fresh clones of the latter two from `aon-co-jp`). REST abolition is done and deployed, and the Posts/Products/Cart production checks are done. What is left: log in with the owner's e-mail OTP (to norukia.jp@gmail.com; expires in 5 minutes; one service at a time) and verify on production RS-Blog Categories/Tags/Pages/Comments, RS-EC Accounts/Categories/Favorites/Reviews/Cart/Orders (a checkout leaves one order in production), and the QR login and `otp_qr` of both (always restore `otp` afterwards). VPS: `ssh conoha`, RS-Blog port 8101, RS-EC port 8102. Afterwards update each repo and `API-REST-REMAINING-20261106.md` / `CLAUDE.md` in `runo` and push. Never print secrets. Chat in Japanese only.
