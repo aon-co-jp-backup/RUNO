@@ -2904,3 +2904,51 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 ### 追記(2026-11-17): VPSの確認結果 / Addendum: VPS check (read-only)
 **日本語**: VPSでは`open-runo-gateway.service`が稼働中(127.0.0.1:8140、Admin/DbMutate)。VPSの`/root/RPoem`は`57582aa`でoriginに2コミット遅れ、**ストリーミング強化(`1570371`・`34cb595`)を含むバイナリはまだ入っていない**(反映には WSL でビルド→scp→バックアップ→入れ替え→再起動→確認。VPSではビルドしない)。反映前の検証(connect-server 9件・router grpc_admin 17件)は手元で成功済み。本番は変更していない。
 **English**: On the VPS, `open-runo-gateway.service` is running (127.0.0.1:8140, Admin/DbMutate). `/root/RPoem` is at `57582aa`, 2 commits behind origin, so **the binary with the streaming hardening (`1570371`, `34cb595`) is not deployed yet** (deploy = WSL build -> scp -> backup -> swap -> restart -> verify; never build on the VPS). Pre-deploy tests (connect-server 9, router grpc_admin 17) pass locally. Production was not changed.
+
+## 2026-11-17 到達点のまとめと再開用メッセージ / Checkpoint summary and resume message (2026-11-17)
+
+(同じ日付前後の他の節の内容を置き換えるものではなく、2026-11-17時点で**各担当の最新の報告**をまとめた索引。個別の詳細は各節・各リポジトリを見ること。/ An index of the latest reports as of 2026-11-17; it does not replace the other sections.)
+
+### 日本語
+**確認できたこと(担当の報告に基づく。私が直接確認したものは明記)**
+- **open-raid-z-installer**: `cargo tauri build`成功、NSIS版のインストール・起動・画面下端までの到達を確認。横スクロールバーの原因はヘッダーの折り返し不足(CSSを直して再ビルド中)。**直した版でのインストール・表示確認・アンインストールの試験は未了**。MSIの試験も未了。済むまで旧TypeScript版`open_runo_installer`は削除しない。
+- **RPoemゲートウェイ**: appserver系Connect化込み(`3a0d9b9`基準)をVPSへ反映。新Connect応答・キー無し401・旧`/admin/appserver-*`404・`DbMutate`健在(400=入力検証)を実測、active継続。旧バイナリは`open-runo-gateway.before-appserver-20261117`。**実プロセス起動のE2EとVPSのopen-easy-web反映は未了**。
+- **ストリーミング**(Connect/gRPC): 反映前の検証をやり直し成功(`open-runo-connect-server` 9件・`grpc_admin` 17件、失敗0)。RPoem `1570371`・`34cb595`。**本番(VPS)には未反映**。
+- **aruaru-IME**: VPSの`downloads/VERSION`は0.2.25でタグと一致(解決済み)。VPSの旧経路`/key`・`/session`は404、新経路は応答(私の担当が読み取りで確認)。v0.2.25のWindowsインストーラーをSHA256一致で管理者インストール→新経路200・旧経路404を確認(試験用インストールは元に戻したが**TSF DLLが1件残っている**)。**メモ帳での実入力は未確認**。
+- **open-gitea**: `/`が404なのは反映前のバイナリでも同じ(退行ではない)、`/ui/`は200、直近3日のログにerror/panic 0件。**`/`を`/ui/`へ振り替えるかはユーザーの判断待ち**。
+- **open-bar**: wasapi 0.27へ更新・push(`4f65b95`)、実機テストは`-- --test-threads=1`で直列実行すること。
+- **version-control**: `make-disk-legacy`除外をVPSへ反映・実確認済み。
+
+**未了・注意(優先順)**
+1. open-raid-z-installerの通し試験(直した版でのNSIS/MSIのインストール・表示確認・アンインストール)→全部通ったら旧TS版を削除。
+2. aruaru-IMEのメモ帳での実入力、残ったTSF DLLの後始末(管理者権限・ユーザーの許可が要る)。
+3. ストリーミングの本番反映(反映手順を守る)。RPoem実プロセス起動のE2E、open-easy-web反映。
+4. open-giteaの`/`の扱いの判断。Android実機の通し試験。共有基盤の負荷試験の実測。
+5. 依存更新は打ち切り(`version-control`の通知で扱う)。
+
+**落とし穴**: VPSでビルドしない(WSLビルド→glibc≤2.39→scp→旧バイナリ退避→差し替え→そのサービスだけ再起動)。複数セッションが同じ3ファイルに追記するので、編集前に`git status`と`git pull --rebase`。書き換え済みリポジトリで`git pull`しない。UAC・実機操作の許可が出ない作業は、迂回せずユーザーに依頼する。
+
+**再開用メッセージ(そのまま貼り付け)**:
+> `F:\runo\PORTING.md`末尾「2026-11-17 到達点のまとめと再開用メッセージ」と、その上の各「2026-11-15」節を読んで続きをして。まず未了1(`F:\open-raid-z-installer`の`src-tauri`でCSS修正版のNSIS/MSIのインストール・複数解像度の表示確認・アンインストール。全部通ったら旧TypeScript版`open_runo_installer`を削除してpush)、次に未了3(ストリーミングのVPS反映:RPoemの`docs/connect-hybrid.md`の手順、カナリア→差し替え→失敗時は自動で戻す)。未了2・4はユーザーの許可・判断が要るので、まず状況を報告して聞く。確認なしで開発・TEST・DEBUG・commit・pushしてよいが、VPS本番はWSLビルド→glibc確認→旧バイナリ退避の手順を守る。チャットは日本語のみ。関連リポジトリ: open-raid-z-installer / RPoem / open-easy-web / aruaru-IME / open-gitea / open-bar / version-control。
+
+### English
+**Verified (per the assignees' reports; what I checked myself is stated)**
+- **open-raid-z-installer**: `cargo tauri build` succeeded; the NSIS build installs, launches and reaches the bottom edge of the window. The horizontal scrollbar came from missing header wrapping (CSS fixed, rebuilding). **Install / display check / uninstall of the fixed build is not done yet**, nor is the MSI test. Do not delete the old TypeScript `open_runo_installer` until they pass.
+- **RPoem gateway**: the build with the appserver Connect migration (based on `3a0d9b9`) is deployed to the VPS; new Connect answers, 401 without a key, old `/admin/appserver-*` 404, `DbMutate` alive (400 = input validation), still active. Old binary: `open-runo-gateway.before-appserver-20261117`. **A real process-start E2E and deploying open-easy-web are not done.**
+- **Streaming** (Connect/gRPC): pre-deploy verification redone and green (`open-runo-connect-server` 9, `grpc_admin` 17, 0 failures); RPoem `1570371`, `34cb595`. **Not deployed to the VPS.**
+- **aruaru-IME**: VPS `downloads/VERSION` is 0.2.25 and matches the tag (resolved); old `/key`, `/session` return 404 and the new route answers (read-only check by my assignee). The v0.2.25 Windows installer (SHA256 matched) was installed as admin: new route 200, old route 404; the test installation was reverted but **one TSF DLL is left behind**. **Real typing in Notepad is unverified.**
+- **open-gitea**: `/` returns 404 on the pre-deploy binary too (not a regression), `/ui/` is 200, 0 errors/panics in the last 3 days of logs. **Whether to redirect `/` to `/ui/` awaits the owner's decision.**
+- **open-bar**: updated to wasapi 0.27 and pushed (`4f65b95`); run the real-device tests serially (`-- --test-threads=1`).
+- **version-control**: the `make-disk-legacy` exclusion is deployed to the VPS and verified.
+
+**Open / cautions (priority order)**
+1. End-to-end test of open-raid-z-installer (install / display / uninstall of the fixed NSIS and MSI builds) → delete the old TS installer once everything passes.
+2. Real typing in Notepad for aruaru-IME and cleanup of the leftover TSF DLL (needs admin rights and the user's permission).
+3. Deploy streaming to production (follow the procedure); real process-start E2E for RPoem; deploy open-easy-web.
+4. Decide what `/` should do on open-gitea; Android device E2E; measure the shared-infra load test.
+5. Dependency updates were cut off (handled through version-control notifications).
+
+**Pitfalls**: never build on the VPS (WSL build → glibc ≤ 2.39 → scp → back up the old binary → swap → restart only that service). Several sessions append to the same 3 files, so run `git status` and `git pull --rebase` first. Never `git pull` in a rewritten repository. When UAC / real-device permission is not granted, do not work around it; ask the user.
+
+**Resume message (paste as is)**:
+> Read "2026-11-17 到達点のまとめと再開用メッセージ" at the end of `F:\runo\PORTING.md` and the "2026-11-15" sections above it, then continue: first open item 1 (in `F:\open-raid-z-installer`'s `src-tauri`, install the CSS-fixed NSIS/MSI builds, check the display at several resolutions and uninstall; once everything passes, delete the old TypeScript `open_runo_installer` and push), then item 3 (deploy streaming to the VPS using the procedure in RPoem's `docs/connect-hybrid.md`: canary → swap → automatic rollback on failure). Items 2 and 4 need the owner's permission/decision, so report the status and ask first. You may develop, test, debug, commit and push without asking, but on the VPS keep the procedure (WSL build → glibc check → back up the old binary). Chat in Japanese only. Related repositories: open-raid-z-installer / RPoem / open-easy-web / aruaru-IME / open-gitea / open-bar / version-control.
