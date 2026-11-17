@@ -3057,3 +3057,42 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 **Cautions**: never build on the VPS (build in WSL, then scp). No `cargo fmt --all`; never `git pull` in rewritten repositories (use `git fetch` + `reset --mixed`). Never print secrets (tokens, passwords, API keys). Pushing and re-running need no permission (user instruction). Chat in Japanese only.
 **Paste-ready resume message**:
 > Read "2026-11-15 再開用メモ: Ledger→RPoem接続の通し確認と残り" at the end of `F:\runo\PORTING.md`. Ask me to decide open item 2 (what to do with open-cosmo itself), then start with item 3 (rebuild and swap the RPoem gateway): never build on the VPS; WSL build -> backup -> swap -> verify, roll back on failure. No new REST (Connect only). Never print or enter OTP codes or secrets. You may push and re-run without asking. Chat in Japanese only.
+
+
+## 2026-11-15 再開用メモ: easy-web.tokyo の製品紹介ページ(別アカウントでの再開用) / Resume notes: easy-web.tokyo product pages
+
+### 日本語
+**到達点(完了・確認済み)**
+- `https://easy-web.tokyo/<リポジトリ名>/` に、紹介+ダウンロード(GitHubのリリースURL・サイズ・SHA-256)の静的ページを公開済み: `aruaru-llm`・`aruaru-IME`・`open-easy-web`・`RS-EC`・`RS-Blog`・`RS-Ops`・`open-cosmo`・`RS-Red`、および `open-gitea` は **`/open-gitea/intro/`**(`/open-gitea` は稼働中のアプリ〈ポート8090〉が使用中のため)。他に既存: `open-backup`・`open-cuda`・`open-cpu`・`open-media`・`pdf-r2l-rs`・`open-mirror`・`version-control`・`RPoem` ほか。
+- 各ページの実体は **各リポジトリの `webpage/index.html`**(日英併記、スマホ幅で表示確認済み)。`open-backup/webpage/index.html` のCSSを雛形に、`gh api repos/aon-co-jp/<repo>/releases` のアセット名・サイズ・digestから生成した(生成スクリプトは一時領域にあり保存していない。再作成は簡単)。
+- VPS(`ssh conoha`): クローン `/root/easy-web.tokyo/<repo>`、静的配信 `<repo>-web.service`(`python3 -m http.server <ポート> --bind 127.0.0.1`)、ポートは **8131〜8139**(aruaru-llm=8131, aruaru-IME=8132, open-easy-web=8133, RS-EC=8134, RS-Blog=8135, RS-Ops=8136, open-gitea=8137, open-cosmo=8138, RS-Red=8139)。経路は `/root/repository/open-web-server/domains.toml` に host `easy-web.tokyo` で追記(**前面は nginx ではなく open-web-server**。追記後に再起動が必要、変更前に `.bak-*` を作る)。
+- 切り替えの前後で easy-web.tokyo / aruaru.tokyo / audiocafe.tokyo と既存の紹介ページが 200 のままなことを確認済み。
+
+**未了・判断待ち**
+- `easy-web.tokyo/open-raid-z/` は紹介ページではなく管理UI(誰でも開ける、プール作成だけ管理者トークン)。VPSのクローンに未コミット変更4件(紹介ページの削除を含む)があり、**触っていない**。
+- 本人限定のメールOTP化・`/demo` は未着手(今回の紹介ページは公開情報なので不要と判断。管理画面を持つ製品に付けるなら、`open-easy-web` のOTP・`/demo` の型を使う)。
+- トップページ(`easy-web.tokyo/`)への製品カード追加は未了(open-easy-web サーバーの `main.rs` のバナー差し込みを変えてVPSで `cargo build -j 1` が要る)。
+- `runo.tokyo/RS-Ops` は別ホストの既存経路で、easy-web.tokyo の `/RS-Ops` は新規追加した別経路。
+- ダウンロードのバイナリは署名なし・開発用が多い。リリースを更新したらページのリンク・SHA-256を手で更新する(自動更新の仕組みは無い)。
+
+**再開するリポジトリ**: `runo`(この索引)、`open-easy-web`(トップページのカード)、各製品リポジトリの `webpage/index.html`、`open-raid-z`(判断待ち)。
+**再開用メッセージ(そのまま貼り付け)**:
+> `F:\runo\PORTING.md` 末尾の「2026-11-15 再開用メモ: easy-web.tokyo の製品紹介ページ」を読み、未了から再開してください(トップページへの製品カード追加、リリース更新時のページ更新、open-raid-z の扱いの確認)。VPSは `ssh conoha`、前面は open-web-server(`/root/repository/open-web-server/domains.toml`、追記前にバックアップ・再起動後に easy-web.tokyo / aruaru.tokyo / audiocafe.tokyo を200で確認、ダメなら戻す)。VPSでのビルドは `cargo build -j 1`(WSLでビルドしてscpが原則)。open-raid-z のVPSクローンの未コミット変更には触らない。新しいREST APIは作らない(Connectのみ)。トークン・パスワードなどの秘密は画面にもコミットにも出さない。書き換え済みリポジトリで `git pull` しない(`git fetch` と確認のうえ `git reset --mixed`)。チャットは日本語のみ。
+
+### English
+**Done and verified**
+- Static intro + download pages (GitHub release URLs, sizes, SHA-256) are live at `https://easy-web.tokyo/<repo-name>/` for `aruaru-llm`, `aruaru-IME`, `open-easy-web`, `RS-EC`, `RS-Blog`, `RS-Ops`, `open-cosmo`, `RS-Red`, and for `open-gitea` at **`/open-gitea/intro/`** (the path `/open-gitea` belongs to the running app on port 8090). Existing ones: `open-backup`, `open-cuda`, `open-cpu`, `open-media`, `pdf-r2l-rs`, `open-mirror`, `version-control`, `RPoem`, and others.
+- The source of each page is **`webpage/index.html` in each repository** (bilingual, checked at phone width). They were generated from the CSS of `open-backup/webpage/index.html` plus asset names, sizes and digests from `gh api repos/aon-co-jp/<repo>/releases` (the generator script was in the session scratchpad and was not kept; it is easy to recreate).
+- VPS (`ssh conoha`): clones in `/root/easy-web.tokyo/<repo>`, static services `<repo>-web.service` (`python3 -m http.server <port> --bind 127.0.0.1`), ports **8131-8139** (aruaru-llm=8131, aruaru-IME=8132, open-easy-web=8133, RS-EC=8134, RS-Blog=8135, RS-Ops=8136, open-gitea=8137, open-cosmo=8138, RS-Red=8139). Routes are appended to `/root/repository/open-web-server/domains.toml` with host `easy-web.tokyo` (**the front server is open-web-server, not nginx**; a restart is needed, and a `.bak-*` copy is made first).
+- Before and after the switch, easy-web.tokyo / aruaru.tokyo / audiocafe.tokyo and the existing product pages stayed at 200.
+
+**Open / awaiting a decision**
+- `easy-web.tokyo/open-raid-z/` is an admin UI, not an intro page (anyone can open it; only pool creation needs the admin token). Its VPS clone has 4 uncommitted changes (including a deleted intro page) and was **left untouched**.
+- Owner-only e-mail OTP and `/demo` are not started (these pages are public information, so they were judged unnecessary; for a product with an admin UI, copy the OTP + `/demo` pattern of `open-easy-web`).
+- Product cards on the top page (`easy-web.tokyo/`) are not added (requires changing the banner injection in `open-easy-web`'s server `main.rs` and a `cargo build -j 1` on the VPS).
+- `runo.tokyo/RS-Ops` is a pre-existing route on another host; the easy-web.tokyo `/RS-Ops` route is a separate new one.
+- Most downloads are unsigned development builds. When a release changes, update the page's link and SHA-256 by hand (no automation).
+
+**Repositories to resume**: `runo` (this index), `open-easy-web` (top-page cards), the `webpage/index.html` of each product repository, `open-raid-z` (decision pending).
+**Paste-ready resume message**:
+> Read "2026-11-15 再開用メモ: easy-web.tokyo の製品紹介ページ" at the end of `F:\runo\PORTING.md` and resume from the open items (product cards on the top page, updating pages when releases change, confirming what to do about open-raid-z). The VPS is `ssh conoha`; the front server is open-web-server (`/root/repository/open-web-server/domains.toml`: back it up first, and after a restart confirm easy-web.tokyo / aruaru.tokyo / audiocafe.tokyo return 200, otherwise roll back). Builds on the VPS use `cargo build -j 1` (build in WSL and scp by default). Do not touch the uncommitted changes in open-raid-z's VPS clone. No new REST (Connect only). Never print secrets (tokens, passwords) on screen or in commits. Never `git pull` in a rewritten repository (`git fetch`, check, then `git reset --mixed`). Chat in Japanese only.
