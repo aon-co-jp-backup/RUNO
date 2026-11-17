@@ -2821,3 +2821,21 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 
 ## 2026-11-17 追記: 2FastAPI / RMojo / MFastAPI の到達点
 2FastAPI v0.3.3(Flask `session`/`g`変換)、RMojo v0.4.1、MFastAPI v0.2.3(win_arm64済み)。直上「2026-11-15 別アカウントでの再開用メモ」の2FastAPI・RMojo・MFastAPI関連の記述は、この節が新しい。残り: PyPI/Marketplace(所有者の認証)、実機Snapdragon、open-raid-z等のCI。 / Latest: 2FastAPI v0.3.3, RMojo v0.4.1, MFastAPI v0.2.3 (win_arm64 done); this supersedes the older note above. Open: PyPI/Marketplace (owner credentials), real Snapdragon, CI of open-raid-z etc.
+
+## 2026-11-17 Snapdragonの研究: 「PCにつないだスマホ」と「PC用CPUのモバイル版」/ Snapdragon research (phone attached to a PC, and the PC-class CPU)
+
+**日本語**
+- **前提**: Snapdragon搭載のWindows PCは無く、Snapdragonスマホ(QTI SM7435、Android 16、Cortex-A78×4+A55×4、armv8.2、NEON・dotprod・fp16あり、i8mm/SVE無し)だけがある。
+- **観点1: PCにつないだスマホとして**(adb/USB)。Windows ARM64の代用ではなく、**同じARM64命令(aarch64)の実機試験台**として使う。`aarch64-linux-android`向けにビルドした実行ファイルを`adb push`して端末で直接走らせる。確認済み: `open-cpu`の単体試験34件がスマホ上で全件成功(NEON版の`dot`/`axpy`/`scale`/`popcount`ほか)。手順=`cargo test --release --target aarch64-linux-android --no-run`(`CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER`にNDKの`aarch64-linux-android30-clang.cmd`)→`adb push`→`adb shell`。AndroidアプリはUSBデバッグでの通し試験(従来どおり)。
+- **観点2: PC用CPU(Snapdragon X、Oryon)のモバイル版として**。Qualcommは第1世代XをARMv8.7-A準拠、SIMDはNEONのみ(SVE無し)と説明、第3世代でSVE/SVE2が加わるとの報道([Chips and Cheese](https://chipsandcheese.com/p/qualcomms-oryon-core-a-long-time-in-the-making)、[Qualcomm](https://www.qualcomm.com/developer/windows-on-snapdragon))。x86/x64アプリはPrismエミュレーションで動くが、AVX多用・GPU負荷の高い処理は不利で、カーネルドライバは動かない。
+- **スマホで確かめられること**: NEON実装の正しさ、Cortex系コアでの速度の傾向。**確かめられないこと**: Oryonコア固有の速度、Windows固有の挙動(インストーラー、DLL、署名、ドライバ)、Windows ARM64のPrism下のx64動作。これらはCI(`windows-11-arm`ランナー)の合否だけが根拠で、実機の通し試験は未了。
+- **注意**: スマホとPCのCPUは同じARMでも命令セットの対応が違う(スマホはdotprodあり・i8mm無し。PC側の対応は`open-cpu inventory`で実機確認するまで断定しない)。USBテザリングはWindows ARM64で制限の報告があり、Snapdragonスマホ+ARM64 WindowsでPhone Link/adbが動く確証は見つからなかった(未検証)。
+- **CIの追加(2026-11-17)**: `aruaru-IME`(matrixのwindows-arm64)・`pdf-r2l-rs`・`aruaru-llm`に、必須にしないWindows ARM64ジョブを追加。open-media/make-disk/open-bar/open-raid-z/open-easy-web/open-web-serverは前回までに追加済み。
+
+**English**
+- **Premise**: no Snapdragon Windows PC; only a Snapdragon phone (QTI SM7435, Android 16, 4x Cortex-A78 + 4x A55, armv8.2 with NEON/dotprod/fp16, no i8mm/SVE).
+- **View 1 - the phone attached to a PC (adb/USB)**: not a Windows ARM64 substitute but a **real aarch64 test bench**. Build for `aarch64-linux-android`, `adb push`, run on the device. Verified: all 34 `open-cpu` unit tests pass on the phone (NEON dot/axpy/scale/popcount etc.). Recipe: `cargo test --release --target aarch64-linux-android --no-run` with the NDK `aarch64-linux-android30-clang.cmd` as linker, then `adb push` and `adb shell`.
+- **View 2 - the PC-class CPU (Snapdragon X / Oryon) as the "big sibling"**: first-gen X is ARMv8.7-A with NEON only (no SVE); SVE/SVE2 are reported for the third generation. x86/x64 apps run under Prism emulation, with AVX-heavy/GPU-heavy work penalised and no x64 kernel drivers.
+- **What the phone can show**: correctness of NEON code, rough behaviour on Cortex cores. **What it cannot**: Oryon-specific speed, Windows-specific behaviour (installers, DLLs, signing, drivers, Prism). Those rest on the `windows-11-arm` CI result only; no real-hardware run yet.
+- **Caveat**: the phone and the PC share ARM but not the same optional features (phone: dotprod yes, i8mm no); the PC's set stays unconfirmed until `open-cpu inventory` runs on one. No evidence was found that Phone Link/adb/USB tethering work between a Snapdragon phone and a Windows ARM64 PC (unverified).
+- **CI added (2026-11-17)**: non-blocking Windows ARM64 jobs for `aruaru-IME`, `pdf-r2l-rs`, `aruaru-llm`.
