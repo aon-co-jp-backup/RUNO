@@ -3016,3 +3016,44 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 - **Repos to resume**: `RPoem`, `aruaru-db` (WSL `~/aruaru-db-src`), `open-web-server`, `open-raid-z`, `open-easy-web`, `runo`.
 - **Pitfalls**: build in WSL `Ubuntu-24.04` (glibc 2.39), not on the VPS, calling `wsl` from PowerShell. Swap = backup, replace, verify, auto-rollback. Use `systemctl reset-failed` after start-limit failures. Never print secrets. Never `git pull` in rewritten repositories.
 - **Paste-ready resume message**: "Read the end of `F:\runo\PORTING.md` ('2026-11-17 追記: RPoemゲートウェイのDB化…') and the end of `F:\RPoem\PORTING.md` ('2026-11-15 別アカウントでの再開用メモ'). Then: (1) review aruaru-db `fix/insert-quoted-values` and decide on merging to main; (2) check by read-only `ssh conoha` that the gateway, dedicated DB and open-web-server are healthy; (3) verify a real Ledger write end to end. Never build on the VPS; confirm before production changes; record results in Japanese and English in PORTING.md and push. Chat in Japanese only."
+
+
+## 2026-11-15 再開用メモ: Ledger→RPoem接続の通し確認と残り(別アカウントでの再開用) / Resume note: Ledger→RPoem wiring verified, and what is left (for another account)
+
+### 日本語
+**再開するリポジトリ**: `F:\runo`(本リポジトリ、記録のみ)、`RPoem`、`open-web-server`、`open-cosmo`、`RS-EC`、`RS-Blog`、`aruaru-IME`(いずれも新規cloneで可)。
+**済み(2026-11-14〜15)**
+- RPoemゲートウェイはVPSで常駐中(`open-runo-gateway.service`、127.0.0.1:8140、aruaru-db接続)。open-web-serverの`/etc/open-web-server/admin.env`に`OPEN_RUNO_API_KEY`(ゲートウェイの`OPEN_RUNO_SERVICE_API_KEY`と同値)を追加して再起動(旧設定は`admin.env.before-apikey`)。5ドメインHTTPS 200・エラーログ0。
+- `Admin/DbMutate`をLedgerと同じJSON形で実送信し、200+`db_commit_id`、同じ`idempotency_key`の再送で同一受領票(冪等)を確認。正キー=400(入力検証)/誤キー=401も確認。確認用に`_verify`テーブルへ1件書き込んだ(不要なら削除可)。ただしopen-web-server本体のLedgerコードが実際に書く経路の通しは未確認。
+- RPoemのVPSクローンはorigin(`36e9450`)へ追従済み(`Cargo.lock`のビルド生成差分は破棄、再ビルド・再起動なし)。
+- REST全廃: aon.tokyo/bdg判定、RS-Blog/RS-EC(ログイン・作成/取得/一覧/削除の本番確認)、aruaru.tokyo、aruaru-IME v0.2.24、open-cosmo/RPoem/aruaru-dbはConnect化済み(各リポジトリの記録参照)。tokio/h2/rustlsの脆弱性はRS-Blog・RS-EC・karu.tokyoで修正・反映済み。
+**未了・判断待ち**
+1. **RS-EC の注文・決済、QRログイン、`otp_qr`モードの本番確認**: OTPコードの入力が必要。コードは**本人が入力/提供**する(Claudeは認証情報を入力しない)。
+2. **open-cosmo本体の本番起動**: 稼働中のRPoemゲートウェイと役割が重なるため、起動するかRPoemに統一するかの判断待ち(方針は「共有基盤は1つ」)。
+3. **RPoemゲートウェイの再ビルド・差し替え**: VPSの稼働版はappserver系(`Admin/AppServer*`)変更を含まない。WSLでビルド→glibc確認→scp→バックアップ→差し替え→確認。
+4. **open-web-serverの`STATIC_TOKEN_MODE=loopback`切替は見送り中**: 本人がメールOTP+TOTPで2FAログインし、Bearerで`ListTenants`が通ることを確認してから(鍵ストア`key-store.json`が未作成)。
+5. **aruaru-IME**: 本人の再起動確認、Android実機、Windowsインストーラー通し試験。旧経路の削除は2026-12-06。
+6. **version-controlのメール由来**: メジャー更新(rand 0.10・sha2 0.11・reqwest 0.13ほか)、クローンの遅れ(aruaru-IME・e-gov.info・runo.tokyo等)、open-giteaの脆弱性と分岐したクローン(behind 37/ahead 26、統合は本人確認の上で)。
+7. `rest-aruaru-ime`セッションは5時間リミットで失敗(21時JST解除)。他の連携セッションは待機中。
+**注意**: VPSではビルドしない(WSLでビルド→scp)。`cargo fmt --all`禁止、書き換え済みリポジトリで`git pull`しない(`git fetch`+`reset --mixed`)。秘密(トークン・パスワード・APIキー)は画面・コミットに出さない。許可なしでのpush・再実行は可(ユーザー指示)。応答は日本語のみ。
+**そのまま貼る再開用メッセージ**:
+> `F:\runo\PORTING.md`末尾の「2026-11-15 再開用メモ: Ledger→RPoem接続の通し確認と残り」を読み、未了2(open-cosmo本体の扱い)の判断を私に確認した上で、未了3(RPoemゲートウェイの再ビルド・差し替え)から進めて。VPSではビルドせずWSLでビルド→バックアップ→差し替え→確認、失敗時はロールバック。REST新設禁止(Connectのみ)。OTPコードや秘密は出さない・入力しない。push・再実行は許可なしで進めてよい。日本語のみで応答。
+
+### English
+**Repositories to resume**: `F:\runo` (this index repo, records only), `RPoem`, `open-web-server`, `open-cosmo`, `RS-EC`, `RS-Blog`, `aruaru-IME` (fresh clones are fine).
+**Done (2026-11-14 to 15)**
+- The RPoem gateway runs on the VPS (`open-runo-gateway.service`, 127.0.0.1:8140, connected to aruaru-db). `OPEN_RUNO_API_KEY` (same value as the gateway `OPEN_RUNO_SERVICE_API_KEY`) was added to open-web-server `/etc/open-web-server/admin.env` and the server restarted (old file kept as `admin.env.before-apikey`). Five domains return HTTPS 200; zero error logs.
+- `Admin/DbMutate` was called with the same JSON shape as the Ledger: 200 with a `db_commit_id`; resending the same `idempotency_key` returns the same receipt (idempotent). Right key = 400 (validation), wrong key = 401. One verification row was written to the `_verify` table (may be deleted). The path through open-web-server's own Ledger code itself has not been exercised.
+- The VPS clone of RPoem was fast-forwarded to origin (`36e9450`) (the build-generated `Cargo.lock` diff was discarded; no rebuild or restart).
+- REST abolition: aon.tokyo/bdg classified; RS-Blog/RS-EC (login and create/get/list/delete checked in production), aruaru.tokyo, aruaru-IME v0.2.24, open-cosmo/RPoem/aruaru-db are on Connect (see each repo's records). The tokio/h2/rustls vulnerabilities were fixed and deployed for RS-Blog, RS-EC and karu.tokyo.
+**Open / needs a decision**
+1. **RS-EC orders/checkout, QR login and `otp_qr` mode in production**: needs OTP codes, which **the owner must type/provide** (Claude never enters credentials).
+2. **Running open-cosmo itself in production**: its role overlaps the running RPoem gateway; decide whether to run it or unify on RPoem (policy: one shared base).
+3. **Rebuild and swap the RPoem gateway**: the running version lacks the appserver (`Admin/AppServer*`) changes. WSL build -> glibc check -> scp -> backup -> swap -> verify.
+4. **`STATIC_TOKEN_MODE=loopback` for open-web-server stays deferred**: only after the owner logs in with e-mail OTP + TOTP and `ListTenants` works with the Bearer token (`key-store.json` does not exist yet).
+5. **aruaru-IME**: the owner's reboot check, Android device, Windows installer end-to-end test; old routes are removed on 2026-12-06.
+6. **From the version-control e-mail**: major bumps (rand 0.10, sha2 0.11, reqwest 0.13, ...), clone lag (aruaru-IME, e-gov.info, runo.tokyo, ...), open-gitea vulnerabilities and its diverged clone (behind 37 / ahead 26; integrate only after asking the owner).
+7. The `rest-aruaru-ime` session failed on the 5-hour limit (resets 21:00 JST); the other linked sessions are idle.
+**Cautions**: never build on the VPS (build in WSL, then scp). No `cargo fmt --all`; never `git pull` in rewritten repositories (use `git fetch` + `reset --mixed`). Never print secrets (tokens, passwords, API keys). Pushing and re-running need no permission (user instruction). Chat in Japanese only.
+**Paste-ready resume message**:
+> Read "2026-11-15 再開用メモ: Ledger→RPoem接続の通し確認と残り" at the end of `F:\runo\PORTING.md`. Ask me to decide open item 2 (what to do with open-cosmo itself), then start with item 3 (rebuild and swap the RPoem gateway): never build on the VPS; WSL build -> backup -> swap -> verify, roll back on failure. No new REST (Connect only). Never print or enter OTP codes or secrets. You may push and re-run without asking. Chat in Japanese only.

@@ -288,3 +288,5 @@ Commit authors in the public repositories are anonymous (`aon-co-jp`). Other dev
 > 2026-11-17: RPoemゲートウェイ(appserver系Connect化)をVPSへ反映済み。再開用メッセージは[`PORTING.md`](PORTING.md)末尾(日英)。 / RPoem gateway deployed to the VPS; resume message at the end of PORTING.md (JA/EN).
 
 > **再開用 / Resume (2026-11-17, RPoemゲートウェイのDB化)**: 到達点・未了・貼り付け用メッセージ(日英)は [`PORTING.md`](PORTING.md) 末尾「2026-11-17 追記: RPoemゲートウェイのDB化…」。 / Status, open items and the paste-ready message (JA/EN) are at the end of [`PORTING.md`](PORTING.md).
+
+2026-11-15: Ledger→RPoemゲートウェイの接続を本番で通し確認(`Admin/DbMutate`の実書き込み・冪等)。再開するリポジトリ: `runo`・`RPoem`・`open-web-server`・`open-cosmo`・`RS-EC`・`RS-Blog`・`aruaru-IME`。再開用メッセージは[`PORTING.md`](PORTING.md)末尾「2026-11-15 再開用メモ: Ledger→RPoem接続の通し確認と残り」(日英)。 / 2026-11-15: the Ledger→RPoem gateway wiring was verified in production (a real `Admin/DbMutate` write, idempotent). Repositories to resume: `runo`, `RPoem`, `open-web-server`, `open-cosmo`, `RS-EC`, `RS-Blog`, `aruaru-IME`. The resume message is at the end of [`PORTING.md`](PORTING.md) ("2026-11-15 再開用メモ: Ledger→RPoem接続の通し確認と残り", JA/EN).
