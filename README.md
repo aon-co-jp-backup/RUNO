@@ -120,6 +120,8 @@ Commit authors in the public repositories are anonymous (`aon-co-jp`). Other dev
 
 作者 / Author: 石 塚 正 浩（MASAHIRO ISHIZUKA） (https://github.com/aon-co-jp)
 
+> **再開用 / Resume (2026-11-15)**: REST全廃の本番確認・反映の到達点と貼り付け用の再開用メッセージ(日英)は [`PORTING.md`](PORTING.md) 末尾「2026-11-15 別アカウントでの再開用メモ(REST全廃の本番確認・反映…)」。 / Production verification status and the paste-ready resume message (JA/EN) are at the end of [`PORTING.md`](PORTING.md).
+
 ## API 方針: REST 全廃・gRPC / Connect へ (2026-11-04)
 
 ### 日本語
