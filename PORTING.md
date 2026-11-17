@@ -2858,3 +2858,38 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 - **定期試験**: CI を毎日(UTC 03:23)実行し、最新の Python・Flask・Django・FastAPI・Starlette(RMojo は最新の CPython との差分試験)で再試験。失敗したら日付つきの issue を1件起こす。
 - **easy-web.tokyo**: `runo/scripts/refresh_versions.py` を VPS のタイマー(`easy-web-intros-refresh.timer`、1時間ごと)で実行し、MFastAPI・RMojo・2FastAPI・2FastAPI-VSC の最新版と上流(Python・Flask・Django・FastAPI・Starlette・Rust・Mojo)の最新版を各紹介ページと `/demo` に表示(`<製品>/versions.json`)。ページはダウンロード専用のまま。
 - **未了**: 上流の新版が出たときに、利用者の環境(Flask/Django 等)まで自動で上げる機能は無い(本製品が更新するのは本製品自身)。aruaru-llm の同梱は未着手(open-cpu は同梱済み)。iPhone・iPad には対応していない。
+
+
+## 2026-11-15 再開用メモ: RS-Sync依存更新・テスト/検証が上手くいかない理由の調査 / Resume notes: RS-Sync dependency update and why tests/verification go wrong
+
+### 日本語
+
+**完了**(RS-Sync、push済み): 依存を最新の主要版へ更新(`3b144cd`: rand 0.10 / sha2 0.11 / hmac 0.13 / sha1 0.11 / thiserror 2 / reqwest 0.13 / russh 0.65 / russh-sftp 3 / smb2 0.43)、open-giteaテストの期待値をConnectへ追従し記録を追記(`177d68c`)。全テスト通過、`cargo ndk`でarm64-v8a/x86_64のreleaseビルド成功。
+
+**調査(日英のWeb検索+GitHub)で分かった「テスト・検証が上手くいかない理由」**:
+1. プロセス共通の状態(カレントディレクトリ・環境変数)を並列テストで触ると競合する。対策=ロックで直列化、子プロセスの`current_dir`、`--test-threads=1`。reqwestも同じ理由の不安定さを環境変数テストの直列化で直している(seanmonstar/reqwest#2529)。`git`を起動するテストが削除済みカレントを引き継いで`getcwd failed`になる事例もある(theodoreOnzGit/outram-park-backend#1308)。
+2. Windowsではウイルス対策/indexerが一時ファイルのハンドルを掴み、削除やgit操作が時々失敗する(microsoft/windows-drivers-rs#607、Python-Devの議論)。対策=リトライ、テストごとの専用ディレクトリ、`handle.exe`で原因プロセスの確認。
+3. モックはAPI形式の変更で静かに古くなる(今回のopen-giteaのConnect化がそれ)。AIはモックを増やしがちで、コードとテストを同じAIが書くと誤解がテストに固定される。実際に実行していない/実機と違う経路の「通った」報告にも注意(arXiv 2602.00409)。対策=実サーバー呼び出しでの確認、記録と再生、独立した検証。
+
+**未了**: RS-Syncの稀に落ちる結合テスト(`two_way_sync_propagates_dest_only_change_back_to_source`)の原因特定、Android実機の起動確認。詳細と再開用メッセージは`F:\RS-Sync`の`PORTING.md`末尾「再開用メモ(2026-11-15)」。
+
+**再開するリポジトリ**: `F:\RS-Sync`(aon-co-jp/RS-Sync、main)、メモの置き場の`F:\runo`。
+
+**そのまま貼り付ける再開用メッセージ**:
+> `F:\runo`の`PORTING.md`末尾「2026-11-15 再開用メモ: RS-Sync依存更新・…」と、`F:\RS-Sync`の`PORTING.md`末尾「再開用メモ(2026-11-15)」を読み、RS-Syncの不安定な結合テストの原因特定と修正、Android実機の起動確認の順に進めてください。長いテストは`run_in_background`で。完了したら両リポジトリの文書を日英で更新してpushしてください。
+
+### English
+
+**Done** (RS-Sync, pushed): dependencies updated to the latest majors (`3b144cd`: rand 0.10 / sha2 0.11 / hmac 0.13 / sha1 0.11 / thiserror 2 / reqwest 0.13 / russh 0.65 / russh-sftp 3 / smb2 0.43); the open-gitea test expectation was aligned with Connect and the notes were added (`177d68c`). All tests pass and `cargo ndk` release builds succeed for arm64-v8a and x86_64.
+
+**Why tests/verification go wrong (English/Japanese web search + GitHub)**:
+1. Parallel tests that touch process-wide state (cwd, environment variables) race. Fixes: serialise with a lock, pass `current_dir` to child processes, or use `--test-threads=1`. reqwest fixed the same kind of flakiness by serialising env-var tests (seanmonstar/reqwest#2529); a git-spawning test inheriting a deleted cwd fails with `getcwd failed` (theodoreOnzGit/outram-park-backend#1308).
+2. On Windows, antivirus/indexers hold handles on temp files so deletes and git operations fail now and then (microsoft/windows-drivers-rs#607, Python-Dev thread). Fixes: retries, per-test directories, `handle.exe` to find the culprit.
+3. Mocks go stale silently when an API shape changes (exactly the open-gitea Connect case). AI tends to add mocks, and when the same AI writes code and tests a misreading gets locked in; also beware "tests pass" claims that were not run or took a different path (arXiv 2602.00409). Fixes: check against a real server call, record/replay, independent verification.
+
+**Open**: root cause of the occasionally failing RS-Sync integration test (`two_way_sync_propagates_dest_only_change_back_to_source`) and a real-device Android launch check. Details and the resume message are in the "Resume notes (2026-11-15)" section at the end of `PORTING.md` in `F:\RS-Sync`.
+
+**Repositories to resume**: `F:\RS-Sync` (aon-co-jp/RS-Sync, main) and `F:\runo` (where the notes live).
+
+**Paste-ready resume message**:
+> Read the section "2026-11-15 再開用メモ: RS-Sync依存更新・…" at the end of `PORTING.md` in `F:\runo`, and "Resume notes (2026-11-15)" at the end of `PORTING.md` in `F:\RS-Sync`. Then find and fix the flaky RS-Sync integration test and verify the app on a real Android device. Use `run_in_background` for long tests. When done, update the docs of both repositories in Japanese and English and push.

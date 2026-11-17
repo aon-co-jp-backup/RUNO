@@ -267,3 +267,10 @@ Commit authors in the public repositories are anonymous (`aon-co-jp`). Other dev
 2026-11-15: appserver系REST10本(RPoem・open-cosmo)とopen-raid-z管理UIをConnect化(push済み、VPS未反映)。再開するリポジトリ: `RPoem`・`open-cosmo`・`open-raid-z`・`open-easy-web`・`runo`。再開用メッセージは[`PORTING.md`](PORTING.md)末尾「2026-11-15 再開用メモ: appserver系REST・open-raid-z管理UIのConnect化」(日英)。 / 2026-11-15: the 10 appserver REST routes (RPoem, open-cosmo) and the open-raid-z admin UI are on Connect (pushed, not yet deployed to the VPS). Repositories to resume: `RPoem`, `open-cosmo`, `open-raid-z`, `open-easy-web`, `runo`. The resume message is at the end of [`PORTING.md`](PORTING.md) ("2026-11-15 再開用メモ: appserver系REST・open-raid-z管理UIのConnect化", JA/EN).
 
 **REST全廃の仕上げ(ストリーミング・bdg・open-cg-cad・e-gov)の再開用メッセージは[`PORTING.md`](PORTING.md)末尾「2026-11-15 別アカウントでの再開用メモ(REST全廃の仕上げ…)」(日英)。再開するリポジトリ: `RPoem`・`backup-to-discord-by-github`・`open-cg-cad`・`e-gov`(新規clone)・`runo`(本リポジトリ、索引のみ)。** / The resume message for the REST-abolition finish (streaming, bdg, open-cg-cad, e-gov) is at the end of [`PORTING.md`](PORTING.md) ("2026-11-15 別アカウントでの再開用メモ(REST全廃の仕上げ…)", JA/EN). Repositories to resume: `RPoem`, `backup-to-discord-by-github`, `open-cg-cad`, `e-gov` (fresh clone) and `runo` (this index repo).
+
+
+## 引き継ぎ・再開(2026-11-15 RS-Sync依存更新と検証調査) / Hand-off (RS-Sync dependency update and verification research)
+
+**日本語**: RS-Syncの依存更新とテスト失敗原因の調査(日英)を完了。未了(稀に落ちる結合テストの原因特定、Android実機確認)と再開用メッセージは[`PORTING.md`](PORTING.md)末尾と`F:\RS-Sync\PORTING.md`末尾。
+
+**English**: The RS-Sync dependency update and the research on why tests fail (English/Japanese) are done. Open items (root cause of the flaky integration test, Android device check) and the resume messages are at the end of [`PORTING.md`](PORTING.md) and `F:\RS-Sync\PORTING.md`.
