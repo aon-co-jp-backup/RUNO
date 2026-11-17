@@ -2730,14 +2730,14 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 - **open-easy-web**: `/ime/api/key`・`/ime/api/session`の旧経路を削除(`6344880`)、VPS再ビルド・再起動(バックアップ`/root/open-easy-web-server.bak-20261109`)。新経路は`/ime/api/aruaru_ime.v1.Ime/Key|Session`。
 - **aruaru-IME**: v0.2.25(`bdf237d`)で常駐エンジンの旧経路も削除。VPSエンジン(4660)は旧`/key`・`/session`=404、新=400(ハンドラ到達)。旧経路ヒットは全期間7件で11-09 15:58が最後。2026-12-06の削除作業は不要。
 **未了・要確認**
-1. VPSの`/var/lib/aruaru-ime/downloads/VERSION`が**0.2.24のまま**(タグはv0.2.25)。Release/VPSの版揃えを確認。
+1. (解決済み 2026-11-17) VPSの`downloads/VERSION`は0.2.25でタグと一致。
 2. Android実機の通し試験(別セッション`rest-android`担当)、open-easy-webのAndroidアプリは0.1.0のまま。
 3. VPS `/root/aruaru-db`の`Cargo.lock`に未コミット差分(`rust-json`2行、ビルド由来)。コミットせず整理。
 4. 古いTSF DLL(v0.2.23以前)のクライアントは旧経路が404で変換不可になる。影響の兆候は未確認。
 5. open-gitea/open-redmineの紹介ページ置き場所、open-giteaの`/`が404の件(前節参照)。
 **落とし穴**: 認証層が先に動くため、未認証の`/admin/*`は存在しないパスでも401(404は管理トークン付きでのみ見える)。VPSの古いcloneを信用しない(originを確認)。トークンはSSH標準入力で渡し画面に出さない。VPS上の`cargo build --locked`はlock不一致で失敗しうる。
 **再開用メッセージ(そのまま貼り付け)**:
-> `F:\runo`の`PORTING.md`末尾「2026-11-15 別アカウントでの再開用メモ(REST全廃の本番確認・反映)」を読み、再開するリポジトリ`F:\runo`・`F:\aruaru-IME`・`F:\open-easy-web`・`aruaru-db`(新規clone)で未了1(VPSの`downloads/VERSION`が0.2.24のまま→v0.2.25へ揃える)から進めてください。新規RESTは作らずConnectのみ、秘密は出力しない、VPSの古いcloneは信用せずoriginを確認、WSL/VPSの差し替えは必ずバックアップ付きで。
+> `F:\runo`の`PORTING.md`末尾「2026-11-15 別アカウントでの再開用メモ(REST全廃の本番確認・反映)」を読み、再開するリポジトリ`F:\runo`・`F:\aruaru-IME`・`F:\open-easy-web`・`aruaru-db`(新規clone)で未了2(Android実機通し試験)から進めてください(未了1のVPS版揃えは解決済み)。新規RESTは作らずConnectのみ、秘密は出力しない、VPSの古いcloneは信用せずoriginを確認、WSL/VPSの差し替えは必ずバックアップ付きで。
 
 ### English
 **Reached**
@@ -2746,14 +2746,14 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 - **open-easy-web**: legacy `/ime/api/key` and `/ime/api/session` removed (`6344880`), VPS rebuilt and restarted (backup `/root/open-easy-web-server.bak-20261109`). New path: `/ime/api/aruaru_ime.v1.Ime/Key|Session`.
 - **aruaru-IME**: v0.2.25 (`bdf237d`) removed the daemon's legacy routes too. VPS engine (4660): old `/key`, `/session` = 404, new = 400 (reaches the handler). Legacy hits: 7 in total, last on 11-09 15:58. The planned 2026-12-06 removal is unnecessary.
 **Open / to verify**
-1. VPS `/var/lib/aruaru-ime/downloads/VERSION` is **still 0.2.24** (tag is v0.2.25): align Release and VPS.
+1. (Resolved 2026-11-17) VPS `downloads/VERSION` is 0.2.25, matching the tag.
 2. End-to-end Android device test (owned by the `rest-android` session); the open-easy-web Android app is still 0.1.0.
 3. Uncommitted `Cargo.lock` diff in VPS `/root/aruaru-db` (2 `rust-json` lines from the build): do not commit, clean up.
 4. Old TSF DLL clients (v0.2.23 or earlier) now get 404 and cannot convert; no sign of real impact found.
 5. Intro page placement for open-gitea/open-redmine, and open-gitea `/` returning 404 (see the previous section).
 **Pitfalls**: the auth layer runs first, so unauthenticated `/admin/*` returns 401 even for nonexistent paths (404 is only visible with the admin token). Do not trust stale VPS clones (check origin). Pass tokens via SSH stdin, never print them. `cargo build --locked` on the VPS can fail on a lock mismatch.
 **Paste-ready resume message**:
-> Read "2026-11-15 別アカウントでの再開用メモ(REST全廃の本番確認・反映)" at the end of `PORTING.md` in `F:\runo`. Repos to resume: `F:\runo`, `F:\aruaru-IME`, `F:\open-easy-web`, `aruaru-db` (fresh clone). Start with open item 1 (VPS `downloads/VERSION` is still 0.2.24; align to v0.2.25). No new REST (Connect only), never print secrets, do not trust stale VPS clones (check origin), always back up before swapping binaries.
+> Read "2026-11-15 別アカウントでの再開用メモ(REST全廃の本番確認・反映)" at the end of `PORTING.md` in `F:\runo`. Repos to resume: `F:\runo`, `F:\aruaru-IME`, `F:\open-easy-web`, `aruaru-db` (fresh clone). Start with open item 2 (Android E2E; item 1, the VPS version alignment, is resolved). No new REST (Connect only), never print secrets, do not trust stale VPS clones (check origin), always back up before swapping binaries.
 
 ## 2026-11-15 再開用メモ: appserver系REST・open-raid-z管理UIのConnect化(別アカウントでの再開用) / Resume note: appserver REST and open-raid-z UI on Connect
 
