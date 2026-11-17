@@ -282,3 +282,9 @@ Commit authors in the public repositories are anonymous (`aon-co-jp`). Other dev
 **日本語**: RS-Syncの依存更新とテスト失敗原因の調査(日英)を完了。未了(稀に落ちる結合テストの原因特定、Android実機確認)と再開用メッセージは[`PORTING.md`](PORTING.md)末尾と`F:\RS-Sync\PORTING.md`末尾。
 
 **English**: The RS-Sync dependency update and the research on why tests fail (English/Japanese) are done. Open items (root cause of the flaky integration test, Android device check) and the resume messages are at the end of [`PORTING.md`](PORTING.md) and `F:\RS-Sync\PORTING.md`.
+
+**追記 / Addendum (2026-11-17, aruaru-db)**: aruaru-dbのWeb管理画面の白画面4件を修正しブラウザで全画面を確認(`aca3fca`)、`admin.rs`の警告を0に(`9a390b8`)。再開用メッセージは[`PORTING.md`](PORTING.md)末尾(日英)。再開するリポジトリ: `aruaru-db`・`open-cosmo`。/ Fixed four white-screen bugs in the aruaru-db admin web app and verified every page in a browser (`aca3fca`); `admin.rs` now has 0 warnings (`9a390b8`). Resume message at the end of [`PORTING.md`](PORTING.md) (JA/EN). Repositories to resume: `aruaru-db`, `open-cosmo`.
+
+> 2026-11-17: RPoemゲートウェイ(appserver系Connect化)をVPSへ反映済み。再開用メッセージは[`PORTING.md`](PORTING.md)末尾(日英)。 / RPoem gateway deployed to the VPS; resume message at the end of PORTING.md (JA/EN).
+
+> **再開用 / Resume (2026-11-17, RPoemゲートウェイのDB化)**: 到達点・未了・貼り付け用メッセージ(日英)は [`PORTING.md`](PORTING.md) 末尾「2026-11-17 追記: RPoemゲートウェイのDB化…」。 / Status, open items and the paste-ready message (JA/EN) are at the end of [`PORTING.md`](PORTING.md).
