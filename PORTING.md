@@ -3197,3 +3197,7 @@ eleasebundle\msi\`, or run `cargo tauri build` in `src-tauri` if missing) as adm
 ## 2026-11-17 再開用メモ: aruaru-IME の依存更新完了と未確認項目 / Resume memo: aruaru-IME dependency updates done, unverified items
 **日本語**: 再開するリポジトリは `aruaru-IME`・`runo`・`open-web-server`・`open-cuda`。`ureq` 3・`zbus` 6・`windows` 0.62・`jni` 0.22 は更新済みで `cargo test --workspace` 全成功。未確認=ibus-daemon実接続・regsvr32登録と実入力・Android実機・実ネットワーク通し。whisper.cpp は `F:\whisper.cpp` が無く未確認(場所を聞く)。貼り付け用メッセージは `aruaru-IME` の README/CLAUDE/PORTING 末尾(日英)。
 **English**: Repos to resume: `aruaru-IME`, `runo`, `open-web-server`, `open-cuda`. `ureq` 3, `zbus` 6, `windows` 0.62 and `jni` 0.22 are updated and `cargo test --workspace` passes. Unverified: real ibus-daemon, regsvr32 registration and typing, Android device, real-network E2E. whisper.cpp is unchecked (`F:\whisper.cpp` missing; ask where it is). Paste-ready message at the end of aruaru-IME's README/CLAUDE/PORTING (JA/EN).
+
+## 2026-11-17 再開用メモ: pdf-r2l-rs / Resume memo: pdf-r2l-rs
+**日本語**: pdf-r2l-rs は v1.3.1・`installer/` に exe 追加済み(`5427bc7`)。AI 文脈補完は実験的・既定オフ。未了と再開用メッセージは `F:\pdf-r2l-rs\PORTING.md` 末尾(日英)。再開するリポジトリ: `pdf-r2l-rs`・`RPoem`・`aruaru-llm`・`open-cuda`・`runo`。
+**English**: pdf-r2l-rs is at v1.3.1 with the installer exe in `installer/` (`5427bc7`). AI context completion remains experimental and off by default. Open items and the paste-ready resume message are at the end of `F:\pdf-r2l-rs\PORTING.md` (JA/EN). Repos to resume: `pdf-r2l-rs`, `RPoem`, `aruaru-llm`, `open-cuda`, `runo`.
