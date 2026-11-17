@@ -3237,3 +3237,31 @@ uno`. Continue from the admin re-install of aruaru-IME v0.2.23. (1) Run `git -C 
 - **Pitfalls**: the working directories used by the services (`/root/aon.tokyo`, `/root/rs-sync`) and the paths in the notice (`/root/repository/...`) share history, but the services run binaries from the former's `target/`. The uncommitted bdg `Cargo.lock` diff was saved to `/root/bdg-Cargo.lock.local.patch`, but **the build rewrote `Cargo.lock` again, so the VPS bdg clone still shows an uncommitted diff** (commit-or-discard undecided).
 - **Open / unverified**: (1) a real GitHub webhook delivery to bdg (waiting for a real event); (2) what to do with the bdg `Cargo.lock` diff on the VPS; (3) per-repo README/CLAUDE/PORTING notes (this pass only pulled and deployed; RUNO and aon.tokyo only had doc changes, rs-sync and bdg include dependency updates).
 - **Resume message (paste into the other account)**: "Repositories to resume: `F:uno`, and on the VPS (`ssh conoha`) `/root/repository/backup-to-discord-by-github`, `/root/repository/rs-sync`, `/root/repository/aon.tokyo`. No `git pull`: `git fetch` then `merge --ff-only`. Read 'Resume memo: clone-lag notice from version-control' at the end of `F:uno\PORTING.md`, then (1) verify a real GitHub webhook reaching bdg, (2) ask me what to do with the uncommitted bdg `Cargo.lock` diff on the VPS, (3) add the dependency updates to the README/CLAUDE/PORTING of rs-sync and bdg in Japanese and English and push. Never print or commit secrets. Chat in Japanese only."
+
+## 2026-11-17 全セッション統合の再開用メモ / Consolidated resume memo (all sessions)
+
+### 日本語
+**到達点(各担当の報告どおり。私が直接確認したものではない)**: REST全廃の仕上げ(open-cosmo・RPoem・aruaru-db・open-gitea・open-redmine・RS-EC・RS-Blog・aruaru.tokyo・aon.tokyo・bdg)は自前REST 0本。aruaru-llmとaruaru-IMEデーモンは2026-11-16にVPS反映済み(`x-tenant`付与、旧版は`*.before-admission-20261116`等)。open-giteaの`/`は`/ui/`へ307(`ec68cb8`)。依存更新(RustSec・メジャー)はVPS反映済みの範囲が各リポジトリの記録にある。
+**未了・判断待ち(優先順)**:
+1. `x-tenant`が本番で実際に使われているかは未確認(aruaru-llmの呼び出しが来た時にtcpdumpで確認)。realdata-pro・aruaru-searchの呼び出しコードは特定できておらず未着手。
+2. aruaru-IME: 起動項目(HKCU Run)が開発ビルドv0.2.14を指していた件の書き換え結果の確認、メモ帳での実入力、残ったTSF DLL 1件。旧経路削除は2026-12-06まで保留。
+3. open-giteaのVPSクローンは分岐(44遅れ・26進み)。取り込む前に本人へ確認。
+4. RS-EC・RS-Blogの本番確認の残り(OTPは本人が入力、1サービスずつ。`Orders/Checkout`は注文が1件残る)。
+5. open-cosmo本体の本番起動の判断、`openapi.rs`の旧記述整理、`OPEN_RUNO_API_KEY`の確認。
+6. bdgのWebhook実受信確認、VPS bdgの`Cargo.lock`未コミット差分の扱い。
+7. RPoemの`libsqlite3-sys`、aruaru-llmの`zip`/`h2`等、open-easy-web-app・open-web-serverの`russh`/`quinn-udp`など、最新のversion-control通知の脆弱性。
+**落とし穴**: 書き換え済みリポジトリで`git pull`しない(`git fetch`+`merge --ff-only`)。VPSでビルドしない(WSLでビルド→バックアップ→差し替え→確認)。PowerShell 5.1で日本語を書かない。Bashは`\`を潰すのでパスは`\x5c`か4本で。`taskkill /IM aruaru-ime-daemon.exe`は本物のデーモンも落とすので使わない。UAC・管理者操作は私から承認できない。秘密は`F:\`直下のtxt経由で値を出さない。別セッションの未コミット変更は混ぜてcommitしない。
+**再開用メッセージ(そのまま貼り付け)**: 「F:\runo の PORTING.md 末尾『2026-11-17 全セッション統合の再開用メモ』を読み、未了1(x-tenantの本番確認)から進めて。再開リポジトリ: runo・aruaru-llm・aruaru-IME・open-gitea・RS-EC・RS-Blog・RPoem・open-web-server。REST新設禁止(Connectのみ)、git pullせずfetchで確認、VPSでビルドしない、本番変更は事前確認、秘密を出さない。チャットは日本語のみ。」
+
+### English
+**Status (as reported by each session; not all verified directly by me)**: REST abolition is finished with 0 own REST routes in open-cosmo, RPoem, aruaru-db, open-gitea, open-redmine, RS-EC, RS-Blog, aruaru.tokyo, aon.tokyo and bdg. aruaru-llm and the aruaru-IME daemon were deployed to the VPS on 2026-11-16 (with `x-tenant`; old binaries kept as `*.before-admission-20261116` etc.). open-gitea `/` redirects to `/ui/` with 307 (`ec68cb8`). Dependency updates deployed so far are recorded in each repository.
+**Open / awaiting decisions (priority order)**:
+1. Whether `x-tenant` is actually used in production is unverified (check with tcpdump when an aruaru-llm call arrives). The callers in realdata-pro and aruaru-search were not identified; untouched.
+2. aruaru-IME: confirm the result of repointing the HKCU Run entry (it pointed to dev build v0.2.14), real typing in Notepad, one leftover TSF DLL. Legacy-route removal is held until 2026-12-06.
+3. The open-gitea VPS clone has diverged (44 behind, 26 ahead); ask the owner before integrating.
+4. Remaining production checks for RS-EC / RS-Blog (the owner types the OTP; one service at a time; `Orders/Checkout` leaves one order).
+5. Decide whether to run open-cosmo itself in production, tidy `openapi.rs`, confirm `OPEN_RUNO_API_KEY`.
+6. Real webhook into bdg; the uncommitted `Cargo.lock` diff on the VPS bdg clone.
+7. Vulnerabilities in the latest version-control notice: RPoem `libsqlite3-sys`, aruaru-llm `zip`/`h2` etc., open-easy-web-app and open-web-server `russh`/`quinn-udp`.
+**Pitfalls**: never `git pull` in rewritten repositories (`git fetch` + `merge --ff-only`). Do not build on the VPS (build in WSL, back up, swap, verify). Do not write Japanese with PowerShell 5.1. Bash collapses `\`, so use `\x5c` or four backslashes in paths. Never `taskkill /IM aruaru-ime-daemon.exe` (kills the real daemon). Claude cannot approve UAC/admin prompts. Keep secrets in txt files at the root of `F:\`, never print them. Do not commit other sessions' uncommitted changes.
+**Paste-ready resume message**: "Read the end of F:\runo\PORTING.md ('2026-11-17 全セッション統合の再開用メモ') and start from open item 1 (verify x-tenant in production). Repos: runo, aruaru-llm, aruaru-IME, open-gitea, RS-EC, RS-Blog, RPoem, open-web-server. No new REST (Connect only), no git pull (fetch first), no builds on the VPS, confirm before production changes, never print secrets. Chat in Japanese only."

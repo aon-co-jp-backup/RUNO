@@ -302,3 +302,5 @@ Commit authors in the public repositories are anonymous (`aon-co-jp`). Other dev
 **日本語**: version-controlの通知(RUNO・aon.tokyo・backup-to-discord-by-github・rs-syncのクローン遅れ)に対応し、VPSの4クローンを最新化・4サービスを再起動済み(全active)。未了=bdgのGitHub Webhook実受信の確認、VPS bdgの`Cargo.lock`未コミット差分の扱い。再開するリポジトリは`F:uno`と、VPSの`backup-to-discord-by-github`・`rs-sync`・`aon.tokyo`。**貼り付け用メッセージと詳細は[`PORTING.md`](PORTING.md)末尾「version-control通知の対応」(日英)**。`git pull`はせず`git fetch`+`merge --ff-only`。
 
 **English**: The version-control clone-lag notice (RUNO, aon.tokyo, backup-to-discord-by-github, rs-sync) was handled: four VPS clones refreshed and four services restarted (all active). Open: a real GitHub webhook into bdg and the uncommitted `Cargo.lock` diff on the VPS bdg clone. Repos to resume: `F:uno` and, on the VPS, `backup-to-discord-by-github`, `rs-sync`, `aon.tokyo`. **The paste-ready message and details are at the end of [`PORTING.md`](PORTING.md) ("Resume memo: clone-lag notice", JA/EN)**. No `git pull`; use `git fetch` + `merge --ff-only`.
+
+**再開用メッセージ(2026-11-17 統合版)**: [`PORTING.md`](PORTING.md)末尾「2026-11-17 全セッション統合の再開用メモ」(日英)。 *Consolidated resume message: end of PORTING.md (JA/EN).*
