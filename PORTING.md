@@ -2893,3 +2893,10 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 
 **Paste-ready resume message**:
 > Read the section "2026-11-15 再開用メモ: RS-Sync依存更新・…" at the end of `PORTING.md` in `F:\runo`, and "Resume notes (2026-11-15)" at the end of `PORTING.md` in `F:\RS-Sync`. Then find and fix the flaky RS-Sync integration test and verify the app on a real Android device. Use `run_in_background` for long tests. When done, update the docs of both repositories in Japanese and English and push.
+
+## 2Poem 新設・自動更新の深化・open-web-server 本番反映(2026-11-17)
+- **2Poem**(`aon-co-jp/2Poem`、`F:\2Poem`、v0.1.0): Flask/Django/FastAPI(Python 2 は最低限)→ Rust + Poem / RPoem の骨組みへ自動変換(Django→RPoem、他→Poem、`--target`で指定)。**RPoem 変換は Node.js・JS・TS・React・Bootstrap・Cosmo・手書き HTML/CSS を基本的に使わず**、画面は `open-runo-view` の SSR、画面資産は `MIGRATION.md` に記録。`2poem deps` で JS/TS/React(全世代)/Bootstrap/Cosmo/DB/Python の依存を検出・版書き換え、`2poem versions` で上流の最新版。Poem 向け(Flask/FastAPI)と RPoem 向け(Django、画面ハンドラ含む)の生成物は `cargo check` 通過。起動時の自動更新あり。公開ページ: https://easy-web.tokyo/2Poem/(と /demo)。
+- **自動バージョンアップ**: RMojo v0.4.3・MFastAPI v0.2.5・2FastAPI v0.5.1・2Poem v0.1.0。RMojo は Windows 実機で「ダウンロード→SHA-256 検証→Setup 静か実行→アンインストール」を通し確認、2FastAPI の pip 経路は別の仮想環境で 0.5.0→0.5.1 を実リリースで確認。
+- **VPS**: `easy-web-intros-refresh.timer`(1時間ごと、`/root/refresh_versions.py`、正本 `runo/scripts/refresh_versions.py`)が紹介ページ(5製品+/demo)に最新版と上流(Python/Flask/Django/FastAPI/Starlette/Rust/Mojo/Poem/Node/TypeScript/React/Bootstrap/PostgreSQL/MySQL/SQLite)を表示。ロールバック=`/root/easy-web-intros.before-versions-20261117`。
+- **open-web-server 本番反映**: open-cpu 同梱版(WSL ビルド、`admin-2fa,domain-watchdog,fastcgi-client,ddns,sftp`、glibc 2.39)へ入れ替え、`domains.toml` に `/2Poem` を追加。5ドメインの応答は反映前後で同一、`/2Poem/` 200。ロールバック=`/root/open-web-server/target/release/open-web-server.before-opencpu-20261117`・`/root/domains.toml.before-2poem-20261117`。VPS の CPU は AVX-512BW まで検出。
+- **未了**: aruaru-llm の同梱(open-cpu は同梱済み)、利用者の環境の Flask/Django 等を上流の新版へ自動で上げる機能(本製品が更新するのは本製品自身)、2Poem の PyPI 公開(将来対応)、Windows ARM64 実機(将来対応)、2Poem の macOS/Linux 実機試験、iPhone/iPad。
