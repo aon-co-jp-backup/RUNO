@@ -3295,3 +3295,12 @@ version-control通知の`libsqlite3-sys`(RUSTSEC-2026-0459、修正版0.39以上
 
 ### English
 `libsqlite3-sys` (RUSTSEC-2026-0459, fixed in 0.39+) cannot be bumped because sqlx 0.9.0 caps it below 0.38, so the code no longer uses SQLite: RPoem `2631136` (sqlx postgres-only, sqlite backend removed), open-web-server `4268f47` (same, `Region` is now a pure-Rust JSON Lines store), plus open-cpu `cf8cd37` (jni 0.22), aruaru-llm `dc99ea7`, open-redmine `4eb43d1`, open-easy-web `e2cb4ed`. Deployed on 2026-11-18: open-web-server (canary, 5 domains identical, rollback binary `open-web-server.before-sqlite-20261118`) and the RPoem gateway (`open-runo-gateway.before-sqlite-20261118`, no sqlite symbols; DbMutate 401 without/wrong key, 400 with the right key). **Open**: Cargo.lock still lists `libsqlite3-sys` (not built; scanners may flag it until sqlx relaxes), a real DbMutate write check, and pointing Ledger regions at a real aruaru-db (pgwire). The gateway's key variable is `OPEN_RUNO_SERVICE_API_KEY`.
+
+## 2026-11-18 x-tenant付与の反映 / x-tenant added and deployed
+
+### 日本語
+aruaru-searchの`search.rs`(Rerank)・`maintain.rs`と、realdata-proのrrd-server(`deposits`/`ingest`/`research`/`explain`)の計7箇所のaruaru-llm呼び出しに`x-tenant`(`aruaru-search`/`realdata-pro`)を付与(aruaru-search `f3fb141`、realdata.pro `40a75dd`)。WindowsでのcargoチェックとWSLのリリースビルド後、VPSの両クローンを`merge --ff-only`し、バイナリを差し替えて`aruaru-search`・`realdata-pro`を再起動(旧版は`*.before-xtenant-20261118`、両サービスactive)。**実測**: tcpdumpでaruaru-searchの`Rerank`/`ChatProvidersCompletePriority`に`x-tenant: aruaru-search`が付くことを確認。**未確認**: rrd-server(realdata-pro)の`SearchRaw`/`NewsFor`は呼び出し頻度が低く、観測窓(約2分×2)では発生しなかった。次に呼び出しが来たときに`x-tenant: realdata-pro`を確認。aruaru-IME側も未観測のまま。
+
+### English
+Added `x-tenant` (`aruaru-search` / `realdata-pro`) to 7 aruaru-llm call sites: aruaru-search (`search.rs` Rerank, `maintain.rs`; `f3fb141`) and realdata-pro's rrd-server (`deposits`/`ingest`/`research`/`explain`; `40a75dd`). After a Windows cargo check and a WSL release build, both VPS clones were fast-forwarded, the binaries swapped and `aruaru-search` / `realdata-pro` restarted (old binaries `*.before-xtenant-20261118`; both active). **Measured**: tcpdump shows `x-tenant: aruaru-search` on aruaru-search's `Rerank` / `ChatProvidersCompletePriority`. **Not yet verified**: rrd-server's `SearchRaw` / `NewsFor` are infrequent and did not occur in the capture windows (about 2 min x 2); check for `x-tenant: realdata-pro` when one arrives. aruaru-IME's header is still unobserved.
+
