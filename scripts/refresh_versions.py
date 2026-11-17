@@ -17,7 +17,7 @@ import re
 import sys
 import urllib.request
 
-PRODUCTS = ["MFastAPI", "RMojo", "2FastAPI", "2FastAPI-VSC", "2Poem"]
+PRODUCTS = ["MFastAPI", "RMojo", "2FastAPI", "2FastAPI-VSC", "2Poem", "2MFastAPI"]
 ORG = "aon-co-jp"
 MARK_BEGIN = "<!-- latest-versions:begin -->"
 MARK_END = "<!-- latest-versions:end -->"
