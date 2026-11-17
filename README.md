@@ -271,6 +271,12 @@ Commit authors in the public repositories are anonymous (`aon-co-jp`). Other dev
 **REST全廃の仕上げ(ストリーミング・bdg・open-cg-cad・e-gov)の再開用メッセージは[`PORTING.md`](PORTING.md)末尾「2026-11-15 別アカウントでの再開用メモ(REST全廃の仕上げ…)」(日英)。再開するリポジトリ: `RPoem`・`backup-to-discord-by-github`・`open-cg-cad`・`e-gov`(新規clone)・`runo`(本リポジトリ、索引のみ)。** / The resume message for the REST-abolition finish (streaming, bdg, open-cg-cad, e-gov) is at the end of [`PORTING.md`](PORTING.md) ("2026-11-15 別アカウントでの再開用メモ(REST全廃の仕上げ…)", JA/EN). Repositories to resume: `RPoem`, `backup-to-discord-by-github`, `open-cg-cad`, `e-gov` (fresh clone) and `runo` (this index repo).
 
 
+## 依存更新の状況(2026-11-17) / Dependency update status (2026-11-17)
+
+**日本語**: version-controlの通知14件のうち、脆弱性(open-gitea・open-redmine・aruaru-llm)とメジャー更新(RS-Blog・RS-EC・audiocafe-tokyo-rust)は対応済みでVPS反映・再起動まで確認した。保留はaruaru-IMEの`windows-core`(`windows`クレートの新版待ち)。再開するときは[`PORTING.md`](PORTING.md)末尾「2026-11-17 再開用メッセージ(依存更新)」を貼り付ける。本リポジトリは索引であり、コード実装は持たない。
+
+**English**: Of the 14 version-control items, the vulnerabilities (open-gitea, open-redmine, aruaru-llm) and the major updates (RS-Blog, RS-EC, audiocafe-tokyo-rust) are done, deployed to the VPS and restarted. On hold: `windows-core` in aruaru-IME (waiting for a newer `windows` crate). To resume, paste "2026-11-17 再開用メッセージ(依存更新)" from the end of [`PORTING.md`](PORTING.md). This repository is an index and holds no implementation code.
+
 ## 引き継ぎ・再開(2026-11-15 RS-Sync依存更新と検証調査) / Hand-off (RS-Sync dependency update and verification research)
 
 **日本語**: RS-Syncの依存更新とテスト失敗原因の調査(日英)を完了。未了(稀に落ちる結合テストの原因特定、Android実機確認)と再開用メッセージは[`PORTING.md`](PORTING.md)末尾と`F:\RS-Sync\PORTING.md`末尾。
