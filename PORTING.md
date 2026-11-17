@@ -3304,3 +3304,18 @@ aruaru-searchの`search.rs`(Rerank)・`maintain.rs`と、realdata-proのrrd-serv
 ### English
 Added `x-tenant` (`aruaru-search` / `realdata-pro`) to 7 aruaru-llm call sites: aruaru-search (`search.rs` Rerank, `maintain.rs`; `f3fb141`) and realdata-pro's rrd-server (`deposits`/`ingest`/`research`/`explain`; `40a75dd`). After a Windows cargo check and a WSL release build, both VPS clones were fast-forwarded, the binaries swapped and `aruaru-search` / `realdata-pro` restarted (old binaries `*.before-xtenant-20261118`; both active). **Measured**: tcpdump shows `x-tenant: aruaru-search` on aruaru-search's `Rerank` / `ChatProvidersCompletePriority`. **Not yet verified**: rrd-server's `SearchRaw` / `NewsFor` are infrequent and did not occur in the capture windows (about 2 min x 2); check for `x-tenant: realdata-pro` when one arrives. aruaru-IME's header is still unobserved.
 
+
+
+## 2026-11-18 追記: 依存更新の続き(open-cosmo・open-gitea・open-media) / Dependency updates, continued
+
+### 日本語
+- open-cosmo `c340651`: jsonschema 0.60→0.61.2。`open-runo-appserver`のlib試験は更新前から17成功・8失敗(プロセス起動系、Windows)で、今回の変更とは無関係(更新前後で同数を実測)。
+- open-gitea `4ef33bb`: rand 0.10(`thread_rng`→`rng`、`gen`→`random`、`Rng`→`RngExt`)・sha2 0.11(`{:x}`不可のため16進へ手書き変換)・pulldown-cmark 0.13。`cargo test` 38件成功、web側もcheck成功。base64は0.22が最新で対応不要。
+- open-media `373d1fe`: lopdf 0.47・sonic-rs 0.5・thiserror 2。lib試験159件成功。**ureq 2→3は未着手**(呼び出し箇所が多くAPIが大きく変わるため別作業)。
+- **未了**: open-raid-z(bincode/thiserror/windows、16コミット遅れ・作業ツリーに未コミット変更あり=要確認)、whisper.cpp(108遅れ、npm)、2FastAPI、aruaru-llmの最後のREST風ルート1本、VPSのmake-disk/aruaru-llm/open-raid-zクローン(差分確認後にff)、open-redmine・open-easy-web-appのVPS再ビルド、open-cosmo/open-gitea/open-mediaのVPS反映は未実施。
+
+### English
+- open-cosmo `c340651`: jsonschema 0.60 -> 0.61.2. `open-runo-appserver` lib tests were already 17 pass / 8 fail before the change (process-spawning tests on Windows; same count measured before and after).
+- open-gitea `4ef33bb`: rand 0.10, sha2 0.11 (hex formatted by hand), pulldown-cmark 0.13; `cargo test` 38 pass, web crate checks. base64 0.22 is already latest.
+- open-media `373d1fe`: lopdf 0.47, sonic-rs 0.5, thiserror 2; 159 lib tests pass. **ureq 2 -> 3 not done** (many call sites, large API change).
+- **Open**: open-raid-z (16 behind, uncommitted changes: check first), whisper.cpp (108 behind, npm), 2FastAPI, the last REST-like route in aruaru-llm, dirty VPS clones (make-disk/aruaru-llm/open-raid-z), VPS rebuilds of open-redmine/open-easy-web-app, and VPS deployment of today's open-cosmo/open-gitea/open-media updates.
