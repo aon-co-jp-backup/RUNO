@@ -3151,3 +3151,53 @@ uno`・`RS-EC`・`RS-Blog`(後ろ2つは `aon-co-jp` から新規clone)で再開
 - **Paste-ready message**:
 > Resume in `F:
 uno`, `RS-EC` and `RS-Blog` (fresh clones of the latter two from `aon-co-jp`). REST abolition is done and deployed, and the Posts/Products/Cart production checks are done. What is left: log in with the owner's e-mail OTP (to norukia.jp@gmail.com; expires in 5 minutes; one service at a time) and verify on production RS-Blog Categories/Tags/Pages/Comments, RS-EC Accounts/Categories/Favorites/Reviews/Cart/Orders (a checkout leaves one order in production), and the QR login and `otp_qr` of both (always restore `otp` afterwards). VPS: `ssh conoha`, RS-Blog port 8101, RS-EC port 8102. Afterwards update each repo and `API-REST-REMAINING-20261106.md` / `CLAUDE.md` in `runo` and push. Never print secrets. Chat in Japanese only.
+
+## 2026-11-17 別アカウントでの再開用メモ(open-cosmo・RPoem・aruaru-db のREST全廃の仕上げ) / Resume memo (finishing REST abolition in open-cosmo, RPoem, aruaru-db)
+
+### 日本語
+- **到達点**: 3リポジトリとも自前RESTは0本(残りは例外のみ)。
+  - open-cosmo `6c67196`(appserver系10本→`Admin/AppServer*`)・`132e300`(`/internal/db/mutate`→`Admin/DbMutate`)、`cargo test` 全成功(gateway 37・router 179・proto 5)。
+  - RPoem `6ca9b74`・`781c824`(同内容)、router 181・`ledger_fusion`(本物の`Ledger`→新経路)・proto・gateway 成功。`admin.proto`へ`rpc DbMutate(Struct)→Struct`を足し忘れると「unknown method」になる(実際に落ちた)。
+  - open-web-server `Ledger`: 送信先を`Admin/DbMutate`へ、`x-api-key`は環境変数`OPEN_RUNO_API_KEY`(`docs/integration.md`も更新)。**旧経路は認証なしだったが新経路は認証必須**。ledger 20件成功。
+  - aruaru-db `849f082`: サーバーのRESTルート0本。本番(VPS)で旧`/admin/backup`等=トークン付き404、`AdminNode/ClosedTsPublish`=鍵なし401・鍵あり到達(400)を実測。
+- **VPS実測**: RPoem を `/root/RPoem` で `git pull` → `cargo build -j2`(dev)→ 127.0.0.1:18099 に一時起動して、旧`/internal/db/mutate`・`/api/schemas`=404、新`Admin/DbMutate`=鍵なし401/不正本文400/正常200を確認し停止(サービス追加なし)。その後の本番ゲートウェイの配線・差し替えは、`CLAUDE.md` HANDOFF の2026-11-14〜11-17の項を参照(別セッション)。
+- **残る例外(RESTのまま)**: SCIM `/scim/v2/*`(RFC 7644)、`/health`・ACME・`/mcp`・`/graphql`系・`/demo`。`open-runo-router/src/openapi.rs`は`/mcp`が使うため削除不可で、旧REST記述(`/internal/db/mutate`含む)の整理は未了。
+- **未了/未確認**: open-cosmo 本体の本番起動の判断(RPoemゲートウェイと役割が重なる)、`openapi.rs`内の旧記述の整理、open-web-server `Ledger` を動かす全環境に`OPEN_RUNO_API_KEY`が入っているかの確認。
+- **落とし穴**: 認証なしだと存在しない`/admin/*`も401になる(旧経路の削除は認証付き404で判断)。パッチを別cloneに当てるときは`git apply`の除外(`ledger_fusion.rs`・`udp_notice.rs`はopen-cosmoで形が違う)。`cargo`は`%USERPROFILE%\.cargo\bin`をPATHに前置き。PowerShell 5.1で日本語ファイルを書かない。
+
+**再開するリポジトリ**: `F:\runo`(索引)・`F:\RPoem`・`F:\open-cosmo`・`F:\open-web-server`・`aruaru-db`(手元cloneなし。`git clone https://github.com/aon-co-jp/aruaru-db`)。
+**貼り付け用の再開用メッセージ**:
+> `F:\runo\PORTING.md` 末尾「2026-11-17 別アカウントでの再開用メモ(open-cosmo・RPoem・aruaru-db のREST全廃の仕上げ)」を読み、未了(open-cosmo本体の本番起動の判断、`openapi.rs`の旧記述整理、`Ledger`を動かす環境の`OPEN_RUNO_API_KEY`確認)から再開してください。対象は runo・RPoem・open-cosmo・open-web-server・aruaru-db のみ。REST は新設せず Connect/gRPC(例外=ACME・OAuth・第三者Webhook・ヘルスチェック・静的・OTLP・SCIM)。JSON は RS-JSON。履歴を書き換えたリポジトリでは `git pull` せず `git fetch` で確認、未コミットは触らない。VPSは `ssh conoha`(前面は open-web-server、ビルドは `cargo build -j2` か WSL でビルドして scp)。秘密は `F:\` 直下の txt から読み、画面・コミットに出さない。チャットは日本語のみ。
+
+### English
+- **Status**: all three repositories have 0 own REST routes (exceptions only).
+  - open-cosmo `6c67196` (10 appserver routes → `Admin/AppServer*`) and `132e300` (`/internal/db/mutate` → `Admin/DbMutate`); `cargo test` all green (gateway 37, router 179, proto 5).
+  - RPoem `6ca9b74` and `781c824` (same content); router 181, `ledger_fusion` (the real `Ledger` → the new route), proto and gateway pass. Forgetting to add `rpc DbMutate(Struct) returns (Struct)` to `admin.proto` yields "unknown method" (it actually failed that way).
+  - open-web-server `Ledger` now posts to `Admin/DbMutate`, with `x-api-key` from the env var `OPEN_RUNO_API_KEY` (`docs/integration.md` updated). **The old route needed no auth; the new one does.** ledger: 20 tests pass.
+  - aruaru-db `849f082`: 0 REST routes in the server. In production (VPS): old `/admin/backup` etc. = 404 with a token; `AdminNode/ClosedTsPublish` = 401 without a key, reaches the handler (400) with one.
+- **VPS measurement**: pulled RPoem in `/root/RPoem`, `cargo build -j2` (dev), ran it temporarily on 127.0.0.1:18099: old `/internal/db/mutate` and `/api/schemas` = 404; new `Admin/DbMutate` = 401 without a key / 400 for a bad body / 200 for a valid one; then stopped it (no service added). For the later production gateway wiring/swap see the 2026-11-14 to 11-17 items in the `CLAUDE.md` HANDOFF (other sessions).
+- **Remaining exceptions (plain HTTP)**: SCIM `/scim/v2/*` (RFC 7644), `/health`, ACME, `/mcp`, `/graphql` family, `/demo`. `open-runo-router/src/openapi.rs` cannot be deleted (`/mcp` uses it); tidying its old REST descriptions (including `/internal/db/mutate`) is not done.
+- **Open / unverified**: whether to run open-cosmo itself in production (overlaps the RPoem gateway), tidying `openapi.rs`, and confirming `OPEN_RUNO_API_KEY` is set wherever a `Ledger` runs.
+- **Pitfalls**: without auth even non-existent `/admin/*` paths return 401 (judge removal by a 404 with a token); when applying a patch to a sibling clone, exclude `ledger_fusion.rs` / `udp_notice.rs` (different in open-cosmo); put `%USERPROFILE%\.cargo\bin` first on PATH; do not write Japanese files with PowerShell 5.1.
+
+**Repositories to resume**: `F:\runo` (index), `F:\RPoem`, `F:\open-cosmo`, `F:\open-web-server`, `aruaru-db` (no local clone: `git clone https://github.com/aon-co-jp/aruaru-db`).
+**Paste-ready resume message**:
+> Read "2026-11-17 別アカウントでの再開用メモ(open-cosmo・RPoem・aruaru-db のREST全廃の仕上げ)" at the end of `F:\runo\PORTING.md` and resume from the open items (whether to run open-cosmo in production, tidying the old descriptions in `openapi.rs`, confirming `OPEN_RUNO_API_KEY` wherever a `Ledger` runs). Scope: runo, RPoem, open-cosmo, open-web-server, aruaru-db only. Add no new REST; use Connect/gRPC (exceptions: ACME, OAuth, third-party webhooks, health checks, static files, OTLP, SCIM). JSON via RS-JSON. In repositories whose history was rewritten never `git pull` (use `git fetch` and check); leave uncommitted changes alone. The VPS is `ssh conoha` (the front server is open-web-server; build with `cargo build -j2` or build in WSL and scp). Read secrets from txt files at the root of `F:\`, never print them or commit them. Chat in Japanese only.
+
+## 2026-11-17 再開用メモ: version-control通知の依存更新と本番ログイン後の確認(RS-Blog・RS-EC・karu.tokyo) / Resume memo: dependency updates and authenticated production checks
+
+**日本語**
+- 完了(2026-11-08): RS-Blog・RS-EC・karu.tokyo の RustSec 対応(h2 0.4.20、RS-Blog/RS-ECは rustls 0.23.46・rustls-webpki 0.103.16・webpki-roots 1.0.11、3つとも tokio 1.54.1)。`Cargo.lock` のみ、`cargo test` 全件成功、`cargo audit` 警告0、VPSで再ビルド・再起動(`healthz` 200、`https://karu.tokyo/` 200)。
+- 本番の通し確認: RS-Blog(`https://runo.tokyo/blog`)・RS-EC(`https://runo.tokyo/ec`)で、管理者メールOTPでログイン→一覧・作成(下書き)・取得・削除→ログアウト後401。確認用データは削除済み。OTPは本人がPowerShellで入力した(Claudeは入力しない)。
+- 注意: `karu.tokyo` には `F:\` のcloneが無く、更新は一時cloneで行いpush済み(VPSは `/root/repository/karu.tokyo`、`karu-tokyo-server.service`)。VPSのcloneは `git pull` せず `git fetch` + `merge --ff-only`。呼び出しの落とし穴は各リポジトリの PORTING.md 末尾「2026-11-17 再開用メモ」。
+- 作業ミスの記録: RS-Blog・RS-EC の `CLAUDE.md`/`README.md` に未コミットの変更が出ていたのを確認せず `git checkout` で戻した(内容は不明、復元できない)。今後は戻す前に `git diff` で確認する。
+- 未了/未確認: `open-gitea` はcloneとoriginが分岐(behind 37/ahead 26)と報告されたまま未対処(2026-11-17のHANDOFFには別セッションの更新があるが、分岐の解消は未確認)。QRログイン・`otp_qr` の本番確認。major更新(rand/sha2等)後の再確認。
+- **再開用メッセージ(別アカウントへ貼り付け)**: 「再開するリポジトリは `F:\runo`・`F:\RS-Blog`・`F:\RS-EC`・(`karu-tokyo` は新規clone)・`open-gitea`。`git pull` はせず `git fetch` で最新を確認。まず `F:\runo\PORTING.md` 末尾の『2026-11-17 再開用メモ: version-control通知の依存更新…』を読み、(1) open-giteaの分岐状況の確認(触る前にユーザーへ確認)、(2) RS-Blog/RS-ECのmajor更新後の `cargo test`/`cargo audit`/本番通し確認、(3) QRログイン・`otp_qr` の本番確認(OTPは本人が入力)。秘密は表示・コミットしない。チャットは日本語のみ。」
+
+**English**
+- Done (2026-11-08): RustSec fixes for RS-Blog, RS-EC and karu.tokyo (h2 0.4.20; RS-Blog/RS-EC also rustls 0.23.46, rustls-webpki 0.103.16, webpki-roots 1.0.11; tokio 1.54.1 in all three). `Cargo.lock` only, tests pass, `cargo audit` clean, rebuilt and restarted on the VPS (`healthz` 200, `https://karu.tokyo/` 200).
+- Authenticated production check: RS-Blog (`https://runo.tokyo/blog`) and RS-EC (`https://runo.tokyo/ec`): admin e-mail OTP login → list / create (draft) / get / delete → 401 after logout. Test data deleted. The owner typed the OTP in PowerShell (Claude never does).
+- Notes: karu.tokyo has no clone under `F:\`; it was updated in a temporary clone and pushed (VPS: `/root/repository/karu.tokyo`, `karu-tokyo-server.service`). On the VPS use `git fetch` + `merge --ff-only`, never `git pull`. Call-shape pitfalls are in each repository's "Resume memo 2026-11-17" at the end of its PORTING.md.
+- Mistake on record: uncommitted changes in `CLAUDE.md`/`README.md` of RS-Blog and RS-EC were reverted with `git checkout` without looking (contents unknown, not recoverable). Run `git diff` before reverting.
+- Open / unverified: `open-gitea` was reported as diverged (behind 37 / ahead 26) and not handled (another session's 2026-11-17 HANDOFF mentions updates; whether the divergence was resolved is unverified). QR login and `otp_qr` in production. Re-check after the major bumps (rand/sha2 etc.).
+- **Resume message (paste into the other account)**: "Repositories to resume: `F:\runo`, `F:\RS-Blog`, `F:\RS-EC`, (`karu-tokyo`: fresh clone) and `open-gitea`. No `git pull`; `git fetch` first. Read 'Resume memo: dependency updates and authenticated production checks' at the end of `F:\runo\PORTING.md`, then (1) check open-gitea's divergence (ask the user before touching it), (2) `cargo test`/`cargo audit`/production check of RS-Blog and RS-EC after the major bumps, (3) QR login and `otp_qr` in production (the owner types the OTP). Never print or commit secrets. Chat in Japanese only."
