@@ -152,6 +152,7 @@ uno`・VPSの`backup-to-discord-by-github`/`rs-sync`/`aon.tokyo`。貼り付け�
   精度優先に作り直したが**作り直し後の通し測定は未了**。AI文脈補完は**実験的・既定オフ**。詳細・試験手順・次の手は`pdf-r2l-rs/PORTING.md`(日英)。
   **VPS本番の`aruaru-llm`**: `/v1/ocr`・`/v1/ocr/fill`は反映済み。停止時点の追加分(`/scan`・`/propose`・`/glyph-rank`・`/charset`)は2026-10-10にビルド・反映(VPSにQwen未導入のため補完系は503が正常。VPSは4コア・RAM3.6GBなので補完は手元PCのaruaru-llmを使う運用)。
 
+- **2026-11-18 公開ミラー自動バックアップ(別アカウントでの再開用・最新) / Public-mirror backup, latest**: 稼働中(ok143・warn32・blocked2〈RPoemのgitleaks1件・old.aon.tokyo〉・orphan3〈FastAPIM/MojoU/mfastapi〉)。**下の2026-10-08の「未了」は古い**(例外コミットはpush済み)。未了=RPoem検出の調査・孤立3件の扱い確認・warn確認。再開リポジトリ=`aon-co-jp-backup/backup-system`(新規clone)・`F:\runo`・`F:\aruaru-llm`・`aruaru-db-archive`。貼り付け用メッセージは[`PORTING.md`](PORTING.md)末尾(日英)。*Running; the 2026-10-08 open items below are stale. Open: RPoem finding, 3 orphans, 32 warnings. Paste-ready message at the end of PORTING.md.*
 - **2026-10-08 公開ミラー自動バックアップ `aon-co-jp-backup/backup-system` 新設(シャットダウン時点の引き継ぎ)**: `aon-co-jp`の**公開**リポジトリのみを、
   GitHub Actions(3時間おき+手動)で検査・匿名化して`aon-co-jp-backup`へ同名ミラーする。検査=gitleaks全履歴・危険ファイル名・個人情報ルール
   (`scripts/pii_scan.py`)。コミットのメールはミラー側のみ匿名化。20MB超・モデル・`install/*/*.exe`はミラーに含めない。止めたものは`STATUS.md`に記録。
