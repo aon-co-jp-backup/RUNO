@@ -3319,3 +3319,18 @@ Added `x-tenant` (`aruaru-search` / `realdata-pro`) to 7 aruaru-llm call sites: 
 - open-gitea `4ef33bb`: rand 0.10, sha2 0.11 (hex formatted by hand), pulldown-cmark 0.13; `cargo test` 38 pass, web crate checks. base64 0.22 is already latest.
 - open-media `373d1fe`: lopdf 0.47, sonic-rs 0.5, thiserror 2; 159 lib tests pass. **ureq 2 -> 3 not done** (many call sites, large API change).
 - **Open**: open-raid-z (16 behind, uncommitted changes: check first), whisper.cpp (108 behind, npm), 2FastAPI, the last REST-like route in aruaru-llm, dirty VPS clones (make-disk/aruaru-llm/open-raid-z), VPS rebuilds of open-redmine/open-easy-web-app, and VPS deployment of today's open-cosmo/open-gitea/open-media updates.
+
+
+## 2026-11-18 追記: VPSクローンの追従(open-raid-z・make-disk・2FastAPI・whisper.cpp) / VPS clone catch-up
+
+### 日本語
+- open-raid-z(`/root/repository/open-raid-z`・`/root/open-raid-z`)を`7faf0c5`へ追従。未コミット4件は古い状態への巻き戻しで、`/root/oraidz-dirty-repository-20261118.patch`に退避。管理UI(`open-raid-z-web`)は`/root/open-raid-z`の古いバイナリのまま(再ビルド未実施)。
+- make-disk(`/root/repository/make-disk`)を`e82e43d`へ追従(退避=`/root/makedisk-dirty-20261118.patch`、約1MB)。**落とし穴**: 上流は`610c175`で`webpage/`を削除(open-mediaへ移転)しており、公開`easy-web.tokyo/make-disk/`(`make-disk-web.service`が`webpage/`を配信)が追従直後に404になった。`git archive 610c175^ webpage`で未追跡として復元し200に戻した。恒久対応(open-mediaへの案内ページ化・配信元の変更)は未了。
+- 2FastAPI(`c1580dc`)・whisper.cpp(`8302b81`、上流ggml-org)は作業ツリーがきれいだったためff。
+- aruaru-llmのVPSクローンは未追従(`Cargo.lock`と実行時データ`data/news_by_country.json`が変更、秘密のenvが未追跡)。手元にも他作業の未コミット変更(`admission.rs`・`connect.rs`)があるため触っていない。aruaru-llmの最後のREST風`GET /v1/ocr/fonts/:name`はフォントのファイル取得(静的配信相当)で、例外扱いの候補。判定は未確定。
+
+### English
+- open-raid-z (both VPS clones) fast-forwarded to `7faf0c5`; the 4 dirty files were stale reverts, saved as `/root/oraidz-dirty-repository-20261118.patch`. The admin UI still runs the old binary from `/root/open-raid-z` (not rebuilt).
+- make-disk fast-forwarded to `e82e43d` (backup `/root/makedisk-dirty-20261118.patch`). **Pitfall**: upstream removed `webpage/` in `610c175` (moved to open-media), so the public `easy-web.tokyo/make-disk/` (served from `webpage/` by `make-disk-web.service`) returned 404 right after; restored as untracked files via `git archive 610c175^ webpage` (200 again). A lasting fix (turn it into a pointer to open-media / change the served directory) is open.
+- 2FastAPI (`c1580dc`) and whisper.cpp (`8302b81`, upstream ggml-org) were clean and fast-forwarded.
+- The aruaru-llm VPS clone was left alone (changed `Cargo.lock` and runtime data, untracked secret env files; the local clone also has someone else's uncommitted `admission.rs`/`connect.rs`). Its last REST-like route `GET /v1/ocr/fonts/:name` is a font file fetch (static-serving-like), a candidate exception; not decided.
