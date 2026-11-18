@@ -3356,3 +3356,22 @@ Of the 18 notified repositories, only **safe clone fast-forwards** were processe
 - **Not started (dependency majors — need build+test, deferred this pass; priority needs the user's input)**: open-cpu (1), open-cuda (8), open-easy-web-app (12), open-media (5), open-raid-z (13), open-redmine (5), open-web-server/ows-base/ows-stream (12-14 each, nearly the same dependency set), realdata.pro (58), rs-link-fusion (11), rs-sync (10), runo.tokyo (3), whisper.cpp (third-party mirror, 325 commits behind + 3 npm majors; ask the user whether this is even in scope).
 - **Proposed next steps**: one repo at a time — `git fetch` → re-check divergence → update deps → `cargo build`+`cargo test` → restart only services actually running in production → record in README/CLAUDE/PORTING. At most two repositories worked at once (per policy).
 
+
+## 2026-11-18 aruaru-llm 呼び出し側のConnect化・本番反映の再開用メモ / Resume memo: aruaru-llm callers on Connect
+
+### 日本語
+- **対象リポジトリ**: `F:\runo`(本リポジトリ)・`aruaru-llm`(新規clone)・`version-control`・`aruaru-jobs`・`realdata.pro`・`open-backup`・`e-gov`・`360-speaker`・`open-cg-cad`・`audiocafe-tokyo`・`audiocafe-tokyo-rust`・`maid-cafe-english`。
+- **完了(push済み)**: 上記の呼び出し側を `POST /aruaru_llm.v1.Llm/<Method>` へ移行。aruaru-llm `connect-migration` は main へマージ(`2cb6262`)し本番VPSへ反映(初回は起動待ち不足で自動ロールバック→待ちを120秒に延ばして成功)。aruaru-jobs の自前RESTも `aruaru_jobs.v1.Jobs/Search` へ。version-control の `--pr`/`--push` は実GitHubで往復確認、`gh pr create` に `--repo` を追加。
+- **未了・未確認**: (1) aruaru-llm の Generate が遅い件。VPS(4コア)で16トークンが120秒超。手元WSLでは初回が200秒でタイムアウトしたが、その後の2トークンは464msで完了しており、**遅さは初回/ウォームアップや裏の折りたたみ処理との競合が疑わしく、原因は未特定**。行列積は `open-cpu` のSIMD経路を通っており、KVキャッシュもある(コード確認済み)。要約の `llm_timeout_secs=45` が間に合うかは未確認。(2) VPSのversion-control上での本物の `gh pr create`。(3) aruaru-jobs画面のブラウザ確認。(4) 旧 maid-cafe-english アプリの自己更新。(5) 作業用の `F:\_work\llm-callers`・`F:\_work\chk`・`F:\_work\llm-cm` は未削除(llm-cmは origin より3遅れ・`Cargo.lock`未コミット差分あり、pullする前に確認)。
+- **注意**: WSLはprivate GitHubに届かない(Windowsの`gh`を呼ぶラッパーで回避)。兄弟リポジトリ(RS-JSON・RPoem・open-cpu・open-cuda等)が隣に必要。モデルは `F:\aruaru-llm\models`(リポジトリ外)。
+
+### English
+- **Repos**: `F:\runo`, `aruaru-llm` (fresh clone), `version-control`, `aruaru-jobs`, `realdata.pro`, `open-backup`, `e-gov`, `360-speaker`, `open-cg-cad`, `audiocafe-tokyo`, `audiocafe-tokyo-rust`, `maid-cafe-english`.
+- **Done (pushed)**: all callers moved to `POST /aruaru_llm.v1.Llm/<Method>`; aruaru-llm `connect-migration` merged to main (`2cb6262`) and deployed to the VPS (first attempt auto-rolled back because the warmup wait was too short; succeeded with a 120 s wait). aruaru-jobs' own REST moved to `aruaru_jobs.v1.Jobs/Search`. version-control `--pr`/`--push` round-tripped against real GitHub; `gh pr create` now passes `--repo`.
+- **Open / unverified**: (1) Slow Generate: on the 4-core VPS 16 tokens took >120 s. Locally in WSL the first call timed out at 200 s, but a later 2-token call finished in 464 ms, so **the slowness looks like first-call/warmup or contention with the background fold; root cause not identified**. The matmul does use open-cpu SIMD and a KV cache exists (code checked). Whether the 45 s `llm_timeout_secs` summary now fits is unverified. (2) A real `gh pr create` from the VPS-side version-control. (3) Browser check of the aruaru-jobs UI. (4) Self-update of old maid-cafe-english apps. (5) Scratch clones `F:\_work\llm-callers`, `F:\_work\chk`, `F:\_work\llm-cm` not deleted (llm-cm is 3 behind origin with an uncommitted `Cargo.lock`; check before pulling).
+- **Pitfalls**: WSL cannot reach private GitHub (use a wrapper calling Windows `gh`). Sibling repos (RS-JSON, RPoem, open-cpu, open-cuda, …) must sit next to the clone. Models live in `F:\aruaru-llm\models` (outside the repo).
+
+### 再開用メッセージ / Resume message
+> aruaru-llm の呼び出し側Connect化の続きです。`F:\runo` の PORTING.md 末尾「2026-11-18 aruaru-llm 呼び出し側…」を読み、(1) Generate が遅い原因(初回/ウォームアップ・裏の折りたたみとの競合)を VPS で2回目以降の所要時間を測って特定、(2) 要約が `llm_timeout_secs=45` に収まるか確認、(3) 未了の確認項目を順に実施してください。llm-cm は pull 前に差分を確認すること。
+>
+> Continue the aruaru-llm caller migration. Read the end of `F:\runo\PORTING.md` ("2026-11-18 aruaru-llm …"), then (1) find why Generate is slow by timing second and later calls on the VPS (first-call/warmup vs contention with the background fold), (2) check whether the summary fits `llm_timeout_secs=45`, (3) work through the remaining unverified items. Check the diff in llm-cm before pulling.
