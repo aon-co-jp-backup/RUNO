@@ -272,3 +272,20 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 - The state, production changes (the SMTP drop-ins, the check scripts left in the VPS `/tmp`) and pitfalls are in the same-day item at the top of the HANDOFF in [`CLAUDE.md`](CLAUDE.md) and in "2026-11-17 追記" at the end of RS-EC and RS-Blog.
 - **Paste-ready message**:
 > Resume in `F:uno`, `RS-EC` and `RS-Blog` (fresh clones of the latter two from `aon-co-jp`). REST abolition is done and deployed, and the Posts/Products/Cart production checks are done. What is left: log in with the owner's e-mail OTP (to norukia.jp@gmail.com; expires in 5 minutes; one service at a time) and verify on production RS-Blog Categories/Tags/Pages/Comments, RS-EC Accounts/Categories/Favorites/Reviews/Cart/Orders (a checkout leaves one order in production), and the QR login and `otp_qr` of both (always restore `otp` afterwards). VPS: `ssh conoha`, RS-Blog port 8101, RS-EC port 8102. Afterwards update each repo and `API-REST-REMAINING-20261106.md` / `CLAUDE.md` in `runo` and push. Never print secrets. Chat in Japanese only.
+
+## 2026-11-18 仕上げ(本人操作が不要な未確認・未了の確認)の結果表
+
+| # | 項目 | 結果 | 内容 |
+|---|---|---|---|
+| 1 | open-gitea の `/` が404 | **修正済み・本番反映済み** | `ec68cb8`(`GET /`→`ui/` へ相対307)。テスト `root_redirects_to_ui` 成功。VPSをWSLビルドのバイナリへバックアップ付きで入れ替え(旧=`open-gitea.before-rootredirect-20261118`、`/healthz`失敗時は自動で戻す)。実測: `/`=307 `ui/`、`/ui/`=200、公開 `easy-web.tokyo/open-gitea/`=307→`/open-gitea/ui/`、旧`/api/repos`=404、エラーログ0。反映前も404だったので退行ではなく入口の追加。ブラウザでの見た目確認は未実施。 |
+| 2 | version-control 12:20/18:20 のメール本数 | **確認済み** | タイマーは `00,06,12,18時の:20`(Persistent)。11-17 の12:20・18:20 の各実行はログに `e-mail: sent` が1回ずつ=1回の巡回につき1通。LINEは `notify.line_token_file is not set` で失敗(未設定は既知)。11-17 23:54・11-18 04:47 は定時外の実行(手動起動と思われ、起動元は未確認)。メール内容の重複排除の有無は未確認。 |
+| 3a | aruaru-db `fix/insert-quoted-values`(`1590750`) | **取り込み可(未マージ)** | `parser.rs` のみ1コミット、mainへ衝突なしでマージできる。ただしテストは**未実行**: 兄弟の `F:\open-raid-z`(path依存)が `russh-sftp 3` の `serde` 要求で、aruaru-dbのワークスペースがロックを解決できない(`cargo update -p serde` でも `bitflags` で衝突)。修正自体の問題ではなくワークスペース解決の問題。mainへのマージはしていない。 |
+| 3b | aruaru-admin Web管理画面のVPS配備 | **未了** | 本番は `web/` のデモUIのまま。配備はしていない。 |
+| 3c | `tsc` 型エラー | **原因判明・未修正** | `../core` から `react` の型宣言が解決できない(TS7016、pnpm配置)ため `jsx-runtime`・暗黙any が連鎖。`@types/react` の解決(tsconfigの`paths`/`typeRoots`)を直す必要がある。ダッシュボード/ブランチ/クエリのスタブも未着手。 |
+| 4 | CI赤: open-web-server | **修正済み(CI結果待ち)** | 原因は `power_profile_switches_live…` が `AppState::from_env()` でレート制限試験の環境変数(`RATE_LIMIT_RPS=1`)を読んで429(試験間の競合)。`RATE_LIMIT_ENV_LOCK` を取る修正を `1ba09fb` でpush、手元で gateway 229件成功。GitHub Actions の結果は確認時点で実行中。 |
+| 4 | CI赤: open-raid-z・open-easy-web | **確認済み(すでに緑)** | open-raid-z は直近3回CI成功(`7faf0c5`ほか)、open-easy-web のRelease binariesは直近3回成功。当時の赤は解消済みで追加修正なし。ARM64ジョブ単位の再確認はしていない。 |
+| 5 | RPoem `openapi.rs` 旧記述・open-cosmo docs整理 | **未着手** | 時間切れ。 |
+| 6 | 依存更新の残り(aruaru-IME `windows-core` 0.100、VPSのaruaru-llm/open-giteaクローン) | **未着手** | 時間切れ。VPSの未コミット変更を壊す操作はしていない。 |
+
+- **本人待ち(やっていない)**: RS-EC/RS-Blogのログイン後確認、`loopback` 切替、Mac署名、Notepad実入力、残ったTSF DLLの削除。
+- **注意**: `F:\_adb-test` と `F:\_tgt_adbq`(aruaru-dbの検証用の一時clone・ビルド出力)は、削除が安全確認で止まったため残っている(手動削除可)。VPSの `open-gitea.service` のSMTPパスワードは平文の環境変数(`EnvironmentFile=`+権限600への移設を推奨、値は記録しない)。
