@@ -3338,3 +3338,21 @@ Added `x-tenant` (`aruaru-search` / `realdata-pro`) to 7 aruaru-llm call sites: 
 追記(2026-11-18): 約5分の再キャプチャで、rrd-serverの`SearchRaw`14回すべてに`x-tenant: realdata-pro`、aruaru-searchの呼び出しに`x-tenant: aruaru-search`が付くことを確認(両方とも本番で実測済み)。残る未観測はaruaru-IMEのみ。
 *Update (2026-11-18): a ~5 min recapture shows `x-tenant: realdata-pro` on all 14 rrd-server `SearchRaw` calls and `x-tenant: aruaru-search` on aruaru-search calls (both verified in production). Only aruaru-IME remains unobserved.*
 
+## 2026-11-18 version-control通知対応(途中、再開用メモ) / version-control notifications (partial, resume memo)
+
+### 日本語
+通知18リポジトリのうち、**安全なクローン追従(fast-forward)のみ**を今回処理した。
+- **完了**: open-cuda(`e429720→6b18000`)・open-media(`aa77c5f→373d1fe`、ビルドファイルのみ)・runo.tokyo(ドキュメント3件)・**open-gitea**(`8450708→5f099de`、`rand 0.10`/`sha2 0.11`/`pulldown-cmark 0.13`依存更新込み、`cargo build`+`cargo test`全成功〈37+1件〉、VPSで再起動・`HTTP 307`で稼働確認、旧バイナリは`target/release/open-gitea.before-deps-20261118`)。
+- **「分岐」の通知は誤り(陳腐化)だった**: open-gitea・open-redmineは実際には分岐していない(open-giteaは単純に2コミット遅れ、open-redmineは完全同期済み)。通知生成時点から状況が変わっていたため。
+- **既に他セッションが処理済み**: open-github-backup・rs-syncはクローン遅れ無し(確認のみ)。
+- **未着手(依存メジャー更新。ビルド・テストが要るため今回は見送り、優先順位はユーザー確認が必要)**: open-cpu(1件)・open-cuda(8件)・open-easy-web-app(12件)・open-media(5件)・open-raid-z(13件)・open-redmine(5件)・open-web-server/ows-base/ows-stream(各12〜14件、ほぼ同一の依存セット)・realdata.pro(58件)・rs-link-fusion(11件)・rs-sync(10件)・runo.tokyo(3件)・whisper.cpp(第三者ミラー、325コミット遅れ+npm3件、対応要否をユーザーに確認)。
+- **次回の進め方(提案)**: 1リポジトリずつ、`git fetch`→(分岐していないか再確認)→依存更新→`cargo build`+`cargo test`→本番は稼働中サービスのみ再起動→README/CLAUDE/PORTING記録。同時に動かすのは最大2つ(方針どおり)。
+
+### English
+Of the 18 notified repositories, only **safe clone fast-forwards** were processed this pass.
+- **Done**: open-cuda, open-media (build files only), runo.tokyo (docs), and **open-gitea** (deps `rand 0.10`/`sha2 0.11`/`pulldown-cmark 0.13`, `cargo build`+`cargo test` all green (37+1), restarted on the VPS and verified `HTTP 307`; old binary kept as `open-gitea.before-deps-20261118`).
+- **The "diverged" notices were stale**: open-gitea and open-redmine are not actually diverged (open-gitea was simply 2 commits behind; open-redmine is fully in sync) — the situation had moved on since the notification was generated.
+- **Already handled by another session**: open-github-backup and rs-sync had no clone lag (verified only).
+- **Not started (dependency majors — need build+test, deferred this pass; priority needs the user's input)**: open-cpu (1), open-cuda (8), open-easy-web-app (12), open-media (5), open-raid-z (13), open-redmine (5), open-web-server/ows-base/ows-stream (12-14 each, nearly the same dependency set), realdata.pro (58), rs-link-fusion (11), rs-sync (10), runo.tokyo (3), whisper.cpp (third-party mirror, 325 commits behind + 3 npm majors; ask the user whether this is even in scope).
+- **Proposed next steps**: one repo at a time — `git fetch` → re-check divergence → update deps → `cargo build`+`cargo test` → restart only services actually running in production → record in README/CLAUDE/PORTING. At most two repositories worked at once (per policy).
+
