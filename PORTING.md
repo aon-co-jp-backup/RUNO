@@ -3463,3 +3463,8 @@ Of the 18 notified repositories, only **safe clone fast-forwards** were processe
 
 ### 追記(2026-11-18): 業務ロジック自動移植・Snapdragon実機・FreeBSD / Addendum
 **日本語**: 2Poem v0.1.3=単純な本体(定数・パラメータだけを返す)の自動移植(生成物の`cargo check`成功、試験22件)。M06(Snapdragon 7s Gen 2)実機でRMojo v0.4.4の実行・CPU検出・更新(実リリースへ置換)を確認。FreeBSD 14.2のVMでRMojoのビルド・試験成功。**未了**: BSD実機、aruaru-llm同梱(見送り)、計算式・分岐・ORMの移植、PyPI公開(将来対応)。 **English**: 2Poem v0.1.3 ports simple handler bodies automatically (generated project passes `cargo check`, 22 tests). RMojo v0.4.4 verified on the M06 (Snapdragon 7s Gen 2): run, CPU detection and self-update to the real release. RMojo builds and passes tests in a FreeBSD 14.2 VM. Open: real BSD hardware, aruaru-llm bundling (skipped), porting of expressions/branches/ORM, PyPI (deferred).
+
+
+## 2026-11-18 aruaru-db: Python asyncpg 実往復 green(別アカウントでの再開用) / Python asyncpg round trip green
+**日本語**: `aon-co-jp/aruaru-db`(コミット `e9bf50b`+文書)。`close()` のハングが原因だった(接続ハングではない)ため `AruaruDb.close(timeout)` を追加し、`live-check.py` が実サーバで通った。詳細・落とし穴・再開用メッセージは `repository/aruaru-db/CLAUDE.md` 末尾「続き33」(日英)。未了=`aruaru-wire` の型付き結果・GPU §12.4・aruaru-llm スライスC。再開リポジトリ=`aruaru-db`・`F:uno`・`open-cuda`・`aruaru-llm`。
+**English**: `aon-co-jp/aruaru-db` (commit `e9bf50b` + docs). The hang was in `close()`, not `connect()`; `AruaruDb.close(timeout)` was added and `live-check.py` passes against a real server. Details, pitfalls and the resume message: end of `repository/aruaru-db/CLAUDE.md` ("続き33", JA/EN). Open: typed results in `aruaru-wire`, GPU §12.4, aruaru-llm slice C. Repos: `aruaru-db`, `F:uno`, `open-cuda`, `aruaru-llm`.
