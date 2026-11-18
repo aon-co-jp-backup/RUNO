@@ -168,3 +168,6 @@
 ## 新規リポジトリへの追加反映 (2026-11-15)
 
 - 2026-11-05以降に増えた7件(メイン節+補足節を日英独露で追記): open-raid-z-installer(README/CLAUDE/PORTING)、RMojo(同)、2FastAPI-VSC(同)、2FastAPI(同)、MFastAPI(README/CLAUDE)、fuser-android(README)、rrd-rotation-test-catalog(README)。反映 7件 / 飛ばし 0件。
+
+## 再点検での追加反映 (2026-11-18)
+全リポジトリのREADME/CLAUDE/PORTINGを再点検し、節が無かった4件を反映: MFastAPI(3ファイル)・360-speaker(README,CLAUDE)・vps-backup(README)・open-gitea(3ファイル)。nasa.tokyoは意図的に除外のまま。
