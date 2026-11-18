@@ -3334,3 +3334,7 @@ Added `x-tenant` (`aruaru-search` / `realdata-pro`) to 7 aruaru-llm call sites: 
 - make-disk fast-forwarded to `e82e43d` (backup `/root/makedisk-dirty-20261118.patch`). **Pitfall**: upstream removed `webpage/` in `610c175` (moved to open-media), so the public `easy-web.tokyo/make-disk/` (served from `webpage/` by `make-disk-web.service`) returned 404 right after; restored as untracked files via `git archive 610c175^ webpage` (200 again). A lasting fix (turn it into a pointer to open-media / change the served directory) is open.
 - 2FastAPI (`c1580dc`) and whisper.cpp (`8302b81`, upstream ggml-org) were clean and fast-forwarded.
 - The aruaru-llm VPS clone was left alone (changed `Cargo.lock` and runtime data, untracked secret env files; the local clone also has someone else's uncommitted `admission.rs`/`connect.rs`). Its last REST-like route `GET /v1/ocr/fonts/:name` is a font file fetch (static-serving-like), a candidate exception; not decided.
+
+追記(2026-11-18): 約5分の再キャプチャで、rrd-serverの`SearchRaw`14回すべてに`x-tenant: realdata-pro`、aruaru-searchの呼び出しに`x-tenant: aruaru-search`が付くことを確認(両方とも本番で実測済み)。残る未観測はaruaru-IMEのみ。
+*Update (2026-11-18): a ~5 min recapture shows `x-tenant: realdata-pro` on all 14 rrd-server `SearchRaw` calls and `x-tenant: aruaru-search` on aruaru-search calls (both verified in production). Only aruaru-IME remains unobserved.*
+
