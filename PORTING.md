@@ -3468,3 +3468,19 @@ Of the 18 notified repositories, only **safe clone fast-forwards** were processe
 ## 2026-11-18 aruaru-db: Python asyncpg 実往復 green(別アカウントでの再開用) / Python asyncpg round trip green
 **日本語**: `aon-co-jp/aruaru-db`(コミット `e9bf50b`+文書)。`close()` のハングが原因だった(接続ハングではない)ため `AruaruDb.close(timeout)` を追加し、`live-check.py` が実サーバで通った。詳細・落とし穴・再開用メッセージは `repository/aruaru-db/CLAUDE.md` 末尾「続き33」(日英)。未了=`aruaru-wire` の型付き結果・GPU §12.4・aruaru-llm スライスC。再開リポジトリ=`aruaru-db`・`F:uno`・`open-cuda`・`aruaru-llm`。
 **English**: `aon-co-jp/aruaru-db` (commit `e9bf50b` + docs). The hang was in `close()`, not `connect()`; `AruaruDb.close(timeout)` was added and `live-check.py` passes against a real server. Details, pitfalls and the resume message: end of `repository/aruaru-db/CLAUDE.md` ("続き33", JA/EN). Open: typed results in `aruaru-wire`, GPU §12.4, aruaru-llm slice C. Repos: `aruaru-db`, `F:uno`, `open-cuda`, `aruaru-llm`.
+
+## 2026-11-18 aruaru-llm Generate遅延の解消・本番反映 / Generate slowness fixed and deployed
+
+**日本語**
+- **原因(gdbのスタック採取とA/B測定で確認)**: (1)小さな行列積・softmaxをrayonで並列化していたため、スレッドの奪い合いで1トークン約1秒かかっていた、(2)知識/ニュース文脈が付いて長くなったプロンプトのプレフィルが極端に重かった。
+- **修正**: (1)open-cuda `480718f`(小さなGEMM/softmaxは直接計算)を`main`へpush、(2)aruaru-llm `4805563`(プロンプト64トークン上限)は既に`main`。最新`main`+(1)をWSLでビルドし、バックアップ`/root/aruaru-llm/target/release/aruaru-llm.before-gemmfix-20261118`付きでVPSへ差し替え。
+- **実測**: 手元(32コア)で48トークン約10秒(修正前は100秒でも完了せず)。**本番VPS(4コア)**: 2トークン3.7秒・8トークン6.0秒(修正前は150秒超)・48トークン22.8秒、エラーログ0、active。version-controlの要約(`llm_timeout_secs=45`)は48トークン相当で収まる見込みだが、実際の要約呼び出しは未確認。
+- **未了**: version-controlの実要約の確認、VPSのaruaru-llmクローン(`/root/aruaru-llm`)のソースは未更新(バイナリのみ差し替え)、作業用の`F:\_work\llm-fix`・`llm-cm`・測定スクリプト(`gt*.sh`/`b*.sh`)は未削除。
+- **注意**: gdbを使うにはWSLの`ptrace_scope`を一時的に0にする(使用後に1へ戻す)。
+
+**English**
+- **Causes (confirmed by gdb stack sampling and A/B timing)**: (1) small GEMM/softmax were parallelised with rayon, so thread contention cost about 1 s per token; (2) the prefill of long prompts (knowledge/news context) was extremely slow.
+- **Fix**: (1) open-cuda `480718f` (small GEMM/softmax computed directly) pushed to `main`; (2) aruaru-llm `4805563` (64-token prompt cap) was already on `main`. Latest `main` + (1) was built in WSL and swapped onto the VPS with backup `/root/aruaru-llm/target/release/aruaru-llm.before-gemmfix-20261118`.
+- **Measured**: locally (32 cores) 48 tokens in ~10 s (before: not finished in 100 s). **Production VPS (4 cores)**: 2 tokens 3.7 s, 8 tokens 6.0 s (before: >150 s), 48 tokens 22.8 s, zero error logs, active. The version-control summary (`llm_timeout_secs=45`) should fit at 48 tokens, but a real summary call was not verified.
+- **Open**: a real version-control summary call; the VPS clone `/root/aruaru-llm` source is not updated (binary only); scratch `F:\_work\llm-fix`, `llm-cm` and the measuring scripts (`gt*.sh`/`b*.sh`) are not deleted.
+- **Pitfall**: gdb needs WSL `ptrace_scope` set to 0 temporarily (restore to 1 afterwards).
