@@ -414,3 +414,5 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 6. Run the light jobs in the cloud on a schedule (first connect GitHub to Claude).
 
 **How to resume**: in a new conversation, say "Read the end of `F:\runo\PORTING.md`, then keep working through the open items of the four sister projects without asking for confirmation."
+
+- 最終追記 / Last update (2026-11-19): `pl2pl c2rust` は単純な C と C++(cout)に対応。残りは Fortran の Rust 化・RPoem/RPoRea の起動確認・COBOL の別OS拡張(確認せず自動で進める)。再開は `F:\pl2pl\PORTING.md` の末尾から。/ `pl2pl c2rust` now handles simple C and C++ (cout). Still open: Fortran to Rust, starting RPoem/RPoRea, extending COBOL to other OSes (continued automatically, no need to ask). Resume from the end of `F:\pl2pl\PORTING.md`.
