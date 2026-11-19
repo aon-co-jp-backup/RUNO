@@ -4048,3 +4048,5 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 - When a write returns a typed result, **one single request can also bring back the latest values from another server**. We checked this with two real servers. Example: `mutation { Touch(input:{id:"a1"}) { id visits count } }` runs the write (`visits`) **exactly once**, then reads `count` from the other server (calling it twice makes `visits` go 1, then 2).
 - It works through the existing plan: run the mutation once and join only read-only fields from other servers. No new mechanism was needed to meet the goal. We added a `Touch` example to `serve_greeter`.
 - We mark this item (re-reading after a write) as done. Still open: `... on Type` with a different type, richer Reaxt types, wider real-world tests, Mojo/Mac/Android/iPhone, and the scheduled cloud runs (first connect GitHub to Claude).
+
+- 2026-11-19 追記 / Update: `pl2pl cobol --os/--dialect` を追加、RPoem/RPoRea の骨組みを実際に実行して確認。/ Added `pl2pl cobol --os/--dialect`; the RPoem/RPoRea scaffold was run for real. 詳細 / details: `F:\pl2pl\PORTING.md`.
