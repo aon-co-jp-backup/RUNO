@@ -3513,3 +3513,15 @@ Of the 18 notified repositories, only **safe clone fast-forwards** were processe
 ### 再開用メッセージ(2026-11-19) / Resume message
 **日本語**: 続きです。`F:\runo\PORTING.md` 末尾「2026-11-19 残り作業の確認」を読んでください。残りは(1)`aon-co-jp/maid-cafe-tokyo`に「答えられないとき、GitHubのニュース・知識DBとaruaru-searchから類義語でも拾って答える補完」を実装(開発・TESTはローカルPC、VPSは配備と確認だけ)、(2)RS-Syncのスマホ実QR・実メールの`otp_qr`・`login_mode`永続化・`rs-sync.service`のSMTPパスワード移設(QRとメールはユーザー操作が必要)、(3)version-controlの実要約呼び出しの確認。決まり: 新しいRESTは作らない(Connectのみ)、秘密は表示しない、実機で確認してから完了と報告、返答は日本語、pushとタグは確認してから。
 **English**: Continuing. Read "2026-11-19 残り作業の確認" at the end of `F:\runo\PORTING.md`. Open: (1) implement in `aon-co-jp/maid-cafe-tokyo` the fallback that answers from the GitHub-stocked news / knowledge DB and aruaru-search, including similar words, when a question cannot be answered well (develop and test on the local PC; use the VPS only to deploy and verify); (2) RS-Sync: a real phone QR scan, `otp_qr` with real email, persisting `login_mode`, moving the `rs-sync.service` SMTP password (the QR and email steps need the user); (3) confirm a real version-control summary call. Rules: no new REST (Connect only), never print secrets, verify on real systems before saying done, reply in Japanese, confirm before pushing or tagging.
+
+## 2026-11-19 の到達点と再開用メモ / Where we are (2026-11-19) and how to resume
+
+**日本語**
+- できたこと: RPoRea・Reaxt の `/demo`(説明・最新版・Windows版exe)と、15製品の `/demo`(`scripts/gen-demo.py`)。easy-web.tokyo のトップに全公開リポジトリの一覧(重要順/ABC順)。インストール先の既定を `C:\aon-co-jp\open-easy-web\`(選択可)に。aruaru-llm に「この機械に入るモデルの一覧」と、GPU交換時の自動導入(VPS反映済み)。
+- 未了(この順で): (1) GPUを替えた機械での自動導入の確認、(2) インストーラーのビルドと通し試験、(3) open-directxの配布物の確認、(4) Android実機での確認、(5) 製品側のリポジトリへ `/demo` を取り込む(いまはVPSだけ)。
+- 守ること: 新しいRESTは作らない(Connectのみ)。秘密は表示しない。実機で確かめてから「完了」と書く。
+
+**English**
+- Done: `/demo` pages for RPoRea and Reaxt (explanation, latest version, Windows exe) and for 15 more products (`scripts/gen-demo.py`). The easy-web.tokyo top page lists every public repository (by importance or A-Z). The default install folder is `C:\aon-co-jp\open-easy-web\` (changeable). aruaru-llm shows the models that fit the machine and installs one by itself after a GPU change (deployed to the VPS).
+- Open (in this order): (1) check the auto install on a machine with a different GPU, (2) build and test the installer, (3) check whether open-directx has a standalone release, (4) check on a real Android device, (5) bring the `/demo` pages into each product's own repository (today they exist only on the VPS).
+- Rules: no new REST (Connect only), never print secrets, say "done" only after checking on a real system.
