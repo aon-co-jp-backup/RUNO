@@ -2,6 +2,8 @@
 
 - API方針の正本: [API-POLICY.md](API-POLICY.md)(日英独露)
 - 共通指示書: [API-MIGRATION-BRIEF.md](API-MIGRATION-BRIEF.md)
+- 言語変換の共通の形(IR)の方針: [`pl2pl`](https://github.com/aon-co-jp/pl2pl) の `src/ir.rs`(入力側)と `src/ir_emit.rs`(書き出し側)。変換できない所は黙って消さず TODO で残す。出力を変えない変更は、前後の出力の diff が空で確かめる。(2026-11-19)
+- Policy for the shared shape (IR) of language conversion: `src/ir.rs` (input side) and `src/ir_emit.rs` (writer side) in [`pl2pl`](https://github.com/aon-co-jp/pl2pl). Parts that cannot be converted are never dropped silently; they stay as TODO notes. A change that must not alter the output is proven by an empty diff of the output before and after. (2026-11-19)
 
 ## REST 全廃の編集記録・実施状況 (2026-11-06)
 
