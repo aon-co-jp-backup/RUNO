@@ -3561,3 +3561,55 @@ uno`, `open-cuda`, `aruaru-llm`.
 - **Production**: The VPS programs `open-english` and `open-english-demo` were swapped with backups (`/root/open-english-server.before-similar-20261119` and `.before-learn-20261119`). The VPS clone still has uncommitted patches. The SMTP password of `rs-sync.service` moved to `/etc/rs-sync.env` (mode 600); the old unit is at `/root/rs-sync.service.before-envfile-20261119`.
 - **Open (in this order)**: (1) a screen to turn learning on, (2) a real localhost check of saving words, (3) a bigger similar-word table (now 15 groups), (4) moving the change into the `open-english` repository, (5) RS-Sync: a real phone QR test, `otp_qr` with real SMTP, and saving `login_mode`.
 - **Message to paste**: "Read the last section '2026-11-19 世界情勢Q&A' of `PORTING.md` in `F:\runo\repository\_work\mce` (maid-cafe-english) and the end of `F:uno\PORTING.md` before you start. Open items are (1) to (5) above. Rules: no new REST, never print secrets, never save question text, go on automatically without asking (user instruction), and check on a real system before saying it is done."
+
+## 他の言語 / Other languages (2026-11-19)
+
+### 简体中文
+
+- 已完成:RPoRea 和 Reaxt 的 `/demo`(说明、最新版、Windows 版 exe),另有 15 个产品的 `/demo`(`scripts/gen-demo.py`)。easy-web.tokyo 首页列出所有公开仓库(按重要程度或 A-Z)。安装位置默认 `C:\aon-co-jp\open-easy-web\`(可更改)。aruaru-llm 能显示适合本机的模型,并在更换 GPU 后自动安装(已部署到 VPS)。
+- 未完成(按顺序):(1)在更换了 GPU 的机器上确认自动安装;(2)构建并测试安装程序;(3)确认 open-directx 是否有独立发布;(4)Android 真机确认;(5)把 `/demo` 页面放进各产品自己的仓库(目前只在 VPS 上)。
+- 原则:不新建 REST(只用 Connect);不显示机密;在真实环境验证后才写“完成”。
+
+### 繁體中文(台灣)
+
+- 已完成:RPoRea 與 Reaxt 的 `/demo`(說明、最新版、Windows 版 exe),另有 15 個產品的 `/demo`(`scripts/gen-demo.py`)。easy-web.tokyo 首頁列出所有公開儲存庫(依重要程度或 A-Z)。安裝位置預設 `C:\aon-co-jp\open-easy-web\`(可更改)。aruaru-llm 能顯示適合本機的模型,並在更換 GPU 後自動安裝(已部署到 VPS)。
+- 未完成(依序):(1)在更換了 GPU 的機器上確認自動安裝;(2)建置並測試安裝程式;(3)確認 open-directx 是否有獨立發行;(4)Android 真機確認;(5)把 `/demo` 頁面放進各產品自己的儲存庫(目前只在 VPS 上)。
+- 原則:不新建 REST(只用 Connect);不顯示機密;在真實環境驗證後才寫「完成」。
+
+### 한국어
+
+- 완료: RPoRea·Reaxt의 `/demo`(설명, 최신 버전, Windows용 exe)와 15개 제품의 `/demo`(`scripts/gen-demo.py`). easy-web.tokyo 첫 화면에 공개된 모든 저장소 목록(중요도 순 또는 A-Z). 설치 위치 기본값은 `C:\aon-co-jp\open-easy-web\`(변경 가능). aruaru-llm이 기기에 맞는 모델을 보여 주고 GPU 교체 후 자동 설치(VPS 반영 완료).
+- 남은 일(순서대로): (1) GPU를 바꾼 기기에서 자동 설치 확인, (2) 설치 프로그램 빌드와 시험, (3) open-directx 단독 배포물 확인, (4) Android 실기 확인, (5) `/demo` 페이지를 각 제품 저장소에 넣기(지금은 VPS에만 있음).
+- 원칙: 새 REST는 만들지 않는다(Connect만). 비밀은 표시하지 않는다. 실제 환경에서 확인한 뒤에만 "완료"라고 쓴다.
+
+### Deutsch
+
+- Fertig: `/demo` für RPoRea und Reaxt (Erklärung, neueste Version, Windows-exe) und für 15 weitere Produkte (`scripts/gen-demo.py`). Die Startseite von easy-web.tokyo listet alle öffentlichen Repositories (nach Wichtigkeit oder A–Z). Standard-Installationsordner `C:\aon-co-jp\open-easy-web\` (änderbar). aruaru-llm zeigt passende Modelle und installiert nach einem GPU-Wechsel selbst eines (auf dem VPS ausgerollt).
+- Offen (der Reihe nach): (1) Selbstinstallation auf einem Rechner mit anderer GPU prüfen, (2) Installer bauen und testen, (3) prüfen, ob open-directx eine eigenständige Veröffentlichung hat, (4) echtes Android-Gerät prüfen, (5) die `/demo`-Seiten in die Repositories der Produkte übernehmen (bisher nur auf dem VPS).
+- Regeln: kein neues REST (nur Connect); Geheimnisse nie ausgeben; „fertig“ erst nach Prüfung auf einem echten System.
+
+### Français
+
+- Fait : `/demo` pour RPoRea et Reaxt (explication, dernière version, exe Windows) et pour 15 autres produits (`scripts/gen-demo.py`). La page d'accueil d'easy-web.tokyo liste tous les dépôts publics (par importance ou A–Z). Dossier d'installation par défaut `C:\aon-co-jp\open-easy-web\` (modifiable). aruaru-llm montre les modèles adaptés et en installe un seul après un changement de GPU (déployé sur le VPS).
+- Reste à faire (dans l'ordre) : (1) vérifier l'installation automatique sur une machine avec un autre GPU, (2) compiler et tester l'installateur, (3) vérifier si open-directx a une version autonome, (4) vérifier sur un vrai appareil Android, (5) intégrer les pages `/demo` aux dépôts de chaque produit (aujourd'hui seulement sur le VPS).
+- Règles : pas de nouveau REST (Connect uniquement) ; ne jamais afficher de secrets ; n'écrire « terminé » qu'après vérification sur un vrai système.
+
+### Español
+
+- Hecho: `/demo` para RPoRea y Reaxt (explicación, última versión, exe de Windows) y para otros 15 productos (`scripts/gen-demo.py`). La página principal de easy-web.tokyo lista todos los repositorios públicos (por importancia o A–Z). Carpeta de instalación por defecto `C:\aon-co-jp\open-easy-web\` (modificable). aruaru-llm muestra los modelos adecuados e instala uno solo tras cambiar de GPU (desplegado en el VPS).
+- Pendiente (en orden): (1) comprobar la instalación automática en una máquina con otra GPU, (2) compilar y probar el instalador, (3) ver si open-directx tiene versión independiente, (4) comprobar en un Android real, (5) llevar las páginas `/demo` a los repositorios de cada producto (hoy solo están en el VPS).
+- Reglas: no crear REST nuevos (solo Connect); no mostrar secretos; escribir «hecho» solo tras verificar en un sistema real.
+
+### Português (BR)
+
+- Pronto: `/demo` para RPoRea e Reaxt (explicação, versão mais recente, exe do Windows) e para outros 15 produtos (`scripts/gen-demo.py`). A página inicial do easy-web.tokyo lista todos os repositórios públicos (por importância ou A–Z). Pasta de instalação padrão `C:\aon-co-jp\open-easy-web\` (alterável). O aruaru-llm mostra os modelos adequados e instala um sozinho após trocar de GPU (implantado no VPS).
+- Pendente (em ordem): (1) conferir a instalação automática numa máquina com outra GPU, (2) compilar e testar o instalador, (3) ver se o open-directx tem versão independente, (4) conferir num Android real, (5) levar as páginas `/demo` para os repositórios de cada produto (hoje só estão no VPS).
+- Regras: sem novo REST (só Connect); nunca mostrar segredos; só escrever "pronto" depois de verificar num sistema real.
+
+### Русский
+
+- Готово: `/demo` для RPoRea и Reaxt (описание, последняя версия, exe для Windows) и ещё для 15 продуктов (`scripts/gen-demo.py`). На главной easy-web.tokyo перечислены все открытые репозитории (по важности или A–Z). Папка установки по умолчанию `C:\aon-co-jp\open-easy-web\` (можно изменить). aruaru-llm показывает подходящие модели и сам ставит одну после смены GPU (выложено на VPS).
+- Не сделано (по порядку): (1) проверить автоустановку на машине с другим GPU, (2) собрать и проверить установщик, (3) выяснить, есть ли у open-directx отдельный релиз, (4) проверить на реальном Android-устройстве, (5) перенести страницы `/demo` в репозитории самих продуктов (сейчас они только на VPS).
+- Правила: новый REST не создаём (только Connect); секреты не показываем; «готово» пишем только после проверки в реальной системе.
+
+(简体中文: AI 翻译,尚未经母语者确认。; 繁體中文(台灣): AI 翻譯,尚未經母語者確認。; 한국어: AI 번역이며 원어민 확인 전입니다.; Deutsch: KI-Übersetzung, noch nicht von Muttersprachlern geprüft.; Français: Traduction par IA, pas encore relue par des locuteurs natifs.; Español: Traducción por IA, aún sin revisión de hablantes nativos.; Português (BR): Tradução por IA, ainda sem revisão de falantes nativos.; Русский: Перевод выполнен ИИ, носителями языка пока не проверен.)
