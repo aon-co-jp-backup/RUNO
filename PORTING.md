@@ -3544,3 +3544,20 @@ uno`, `open-cuda`, `aruaru-llm`.
 - **What is done**: In our copy of `whisper.cpp` (`aon-co-jp/whisper.cpp`), we deleted the Node.js add-on `examples/addon.node` and the tests that only ran it. The full list is in [`NODEJS-REMAINING-20261119.md`](NODEJS-REMAINING-20261119.md).
 - **What is not done yet**: (1) things we can replace now (the `open-upstream-watch` test, `Reaxt/clients/js`, the `2Poem` example); (2) finding places that use two JSON tools; (3) things that really need Node.js (VS Code extensions, Tauri screen builds) - we wait for the owner to decide; (4) `examples/server` in `whisper.cpp` (REST + nlohmann).
 - **VPS**: the VPS copy of `whisper.cpp` is still 2 commits behind (not updated).
+
+
+## 2026-11-19 世界情勢Q&Aの類義語検索・学習機能・本番反映 / News Q&A similar words, learning, deployment
+
+### 日本語
+- **できるようになったこと**: 保存記事に合うものが無いとき、類義語で探し直し、見つかったら回答の先頭でそう伝えます。数字を含む質問では広げません。足す語は最大8語です。
+- **学習機能(既定OFF)**: インストールした本人のPC(localhost)で、本人が `learn=1` を付けたときだけ、回答できなかった質問の**言葉と回数**を保存します。質問文は保存しません。公開サーバーでは働きません。辞書には自動で入れず、人が確認して足します。
+- **本番**: VPSの `open-english` と `open-english-demo` を、バックアップ付きで差し替え済み(`/root/open-english-server.before-similar-20261119` と `.before-learn-20261119`)。VPSのクローンには未コミットのパッチが残っています。`rs-sync.service` のSMTPパスワードは `/etc/rs-sync.env`(権限600)へ移しました(元のユニットは `/root/rs-sync.service.before-envfile-20261119`)。
+- **未了(この順で)**: (1)学習をONにする画面、(2)localhostでの記録の通し確認、(3)類義語表(今は15組)の拡張、(4)`open-english` リポジトリへの取り込み、(5)RS-Syncの実スマホQR・実SMTPでの`otp_qr`・`login_mode`の永続化。
+- **貼り付け用メッセージ**: 「`F:unoepository\_work\mce`(maid-cafe-english)の `PORTING.md` 末尾『2026-11-19 世界情勢Q&A』と、`F:uno\PORTING.md` 末尾を読んでから再開します。未了は上の(1)〜(5)です。決まり: 新しいRESTは作らない、秘密は表示しない、質問文は保存しない、確認を求めず自動で進める(ユーザー指示)、実機で確認してから完了と報告する。」
+
+### English
+- **What is new**: When no saved article matches a question, the app searches again with similar words and says so at the top of the answer. It does not widen questions that contain numbers. It adds at most 8 words.
+- **Learning (off by default)**: Only on the installer's own PC (localhost), and only when the owner adds `learn=1`, the app saves the **words and counts** from questions it could not answer. It never saves the question text. It does not run on public servers. Words are never added to the dictionary automatically; a person checks them first.
+- **Production**: The VPS programs `open-english` and `open-english-demo` were swapped with backups (`/root/open-english-server.before-similar-20261119` and `.before-learn-20261119`). The VPS clone still has uncommitted patches. The SMTP password of `rs-sync.service` moved to `/etc/rs-sync.env` (mode 600); the old unit is at `/root/rs-sync.service.before-envfile-20261119`.
+- **Open (in this order)**: (1) a screen to turn learning on, (2) a real localhost check of saving words, (3) a bigger similar-word table (now 15 groups), (4) moving the change into the `open-english` repository, (5) RS-Sync: a real phone QR test, `otp_qr` with real SMTP, and saving `login_mode`.
+- **Message to paste**: "Read the last section '2026-11-19 世界情勢Q&A' of `PORTING.md` in `F:unoepository\_work\mce` (maid-cafe-english) and the end of `F:uno\PORTING.md` before you start. Open items are (1) to (5) above. Rules: no new REST, never print secrets, never save question text, go on automatically without asking (user instruction), and check on a real system before saying it is done."
