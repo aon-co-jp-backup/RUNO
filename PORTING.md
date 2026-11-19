@@ -4133,3 +4133,5 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 - Tips: write the callback as `def name(user: Int, body: Int, blen: UInt, dst: Int, cap: UInt) abi("C") -> Int` (`out` is a reserved word in Mojo, so use `dst`). Receive pointers as `Int` and read or write them with `UnsafePointer[UInt8, MutAnyOrigin](unsafe_from_address=...)`. When registering, pass the function itself as the argument.
 - Run it in WSL: `RPOREA_LIB=/root/rporea-target/release/librporea_ffi.so mojo test_callback.mojo`.
 - **Still open**: the Mac and iPhone checks, richer Reaxt types, wider real-world tests with open-cosmo, and the scheduled cloud runs (first connect GitHub to Claude).
+
+- 2026-11-20 追記 / Update: `pl2pl f2rust`(単純な Fortran → Rust)を追加。残り: RPoem サーバー実登録・メール到達確認・Kokkos GPU・gfortran 実機確認。/ Added `pl2pl f2rust` (simple Fortran to Rust). Still open: real RPoem server registration, mail-arrival check, Kokkos on a GPU, a real gfortran comparison.
