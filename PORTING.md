@@ -3227,7 +3227,9 @@ uno`. Continue from the admin re-install of aruaru-IME v0.2.23. (1) Run `git -C 
 - **確認**: `aon.tokyo` は `/cancer`・`/links` 等が200(ルートは完全一致のため末尾スラッシュ付きは404=従来仕様)、`/video/fukuyama/<ファイル>` は200(ディレクトリ自体はindex無しで404=従来仕様)。
 - **注意(落とし穴)**: サービスが使う作業ディレクトリ(`/root/aon.tokyo`・`/root/rs-sync`)と通知のパス(`/root/repository/...`)は同じ履歴を指すが、ビルド成果物は前者の `target/` が使われる。bdgの未コミット `Cargo.lock` 差分は退避パッチ `/root/bdg-Cargo.lock.local.patch` に保存済みだが、**ビルドで `Cargo.lock` が再び書き換わり、VPSのbdgクローンに未コミット差分が残っている**(コミットするかは未判断)。
 - **未了・未確認**: (1) bdgへのGitHubからの実Webhook受信の確認(実イベント待ち)。(2) VPSのbdg `Cargo.lock` 差分の扱い(コミット/破棄)。(3) 各リポジトリ自身のREADME/CLAUDE/PORTINGへの追記(今回は取り込みと反映のみ。変更が文書だけのRUNO・aon.tokyoは不要、rs-sync・bdgは依存更新が含まれるため必要なら追記)。
-- **再開用メッセージ(別アカウントに貼り付け)**: 「再開するリポジトリ: `F:uno`、VPS(`ssh conoha`)の `/root/repository/backup-to-discord-by-github`・`/root/repository/rs-sync`・`/root/repository/aon.tokyo`。`git pull` はせず `git fetch` のあと `merge --ff-only`。まず `F:uno\PORTING.md` 末尾『version-control通知の対応』を読み、(1) bdgのGitHub Webhook実受信を確認、(2) VPSのbdg `Cargo.lock` 未コミット差分の扱いを私に確認、(3) rs-sync・bdgのREADME/CLAUDE/PORTINGへ依存更新を日英で追記してpush。秘密は表示・コミットしない。チャットは日本語のみ。」
+- **再開用メッセージ(別アカウントに貼り付け)**: 「再開するリポジトリ: `F:
+uno`、VPS(`ssh conoha`)の `/root/repository/backup-to-discord-by-github`・`/root/repository/rs-sync`・`/root/repository/aon.tokyo`。`git pull` はせず `git fetch` のあと `merge --ff-only`。まず `F:
+uno\PORTING.md` 末尾『version-control通知の対応』を読み、(1) bdgのGitHub Webhook実受信を確認、(2) VPSのbdg `Cargo.lock` 未コミット差分の扱いを私に確認、(3) rs-sync・bdgのREADME/CLAUDE/PORTINGへ依存更新を日英で追記してpush。秘密は表示・コミットしない。チャットは日本語のみ。」
 
 **English**
 - **What was done (VPS `ssh conoha`, performed 2026-11-07)**: the clones under `/root/repository/` — RUNO (42 behind), aon.tokyo (5), backup-to-discord-by-github (5), rs-sync (1) — were brought up to date with `git fetch` + `merge --ff-only` (no `git pull`, no history rewrite). Untracked files in aon.tokyo (Blogger_Backup etc.) were left alone.
@@ -3236,7 +3238,9 @@ uno`. Continue from the admin re-install of aruaru-IME v0.2.23. (1) Run `git -C 
 - **Checks**: on `aon.tokyo`, `/cancer`, `/links` etc. return 200 (routes are exact-match, so a trailing slash 404s as before); `/video/fukuyama/<file>` returns 200 (the directory itself 404s: no index, as before).
 - **Pitfalls**: the working directories used by the services (`/root/aon.tokyo`, `/root/rs-sync`) and the paths in the notice (`/root/repository/...`) share history, but the services run binaries from the former's `target/`. The uncommitted bdg `Cargo.lock` diff was saved to `/root/bdg-Cargo.lock.local.patch`, but **the build rewrote `Cargo.lock` again, so the VPS bdg clone still shows an uncommitted diff** (commit-or-discard undecided).
 - **Open / unverified**: (1) a real GitHub webhook delivery to bdg (waiting for a real event); (2) what to do with the bdg `Cargo.lock` diff on the VPS; (3) per-repo README/CLAUDE/PORTING notes (this pass only pulled and deployed; RUNO and aon.tokyo only had doc changes, rs-sync and bdg include dependency updates).
-- **Resume message (paste into the other account)**: "Repositories to resume: `F:uno`, and on the VPS (`ssh conoha`) `/root/repository/backup-to-discord-by-github`, `/root/repository/rs-sync`, `/root/repository/aon.tokyo`. No `git pull`: `git fetch` then `merge --ff-only`. Read 'Resume memo: clone-lag notice from version-control' at the end of `F:uno\PORTING.md`, then (1) verify a real GitHub webhook reaching bdg, (2) ask me what to do with the uncommitted bdg `Cargo.lock` diff on the VPS, (3) add the dependency updates to the README/CLAUDE/PORTING of rs-sync and bdg in Japanese and English and push. Never print or commit secrets. Chat in Japanese only."
+- **Resume message (paste into the other account)**: "Repositories to resume: `F:
+uno`, and on the VPS (`ssh conoha`) `/root/repository/backup-to-discord-by-github`, `/root/repository/rs-sync`, `/root/repository/aon.tokyo`. No `git pull`: `git fetch` then `merge --ff-only`. Read 'Resume memo: clone-lag notice from version-control' at the end of `F:
+uno\PORTING.md`, then (1) verify a real GitHub webhook reaching bdg, (2) ask me what to do with the uncommitted bdg `Cargo.lock` diff on the VPS, (3) add the dependency updates to the README/CLAUDE/PORTING of rs-sync and bdg in Japanese and English and push. Never print or commit secrets. Chat in Japanese only."
 
 ## 2026-11-17 全セッション統合の再開用メモ / Consolidated resume memo (all sessions)
 
@@ -3466,8 +3470,10 @@ Of the 18 notified repositories, only **safe clone fast-forwards** were processe
 
 
 ## 2026-11-18 aruaru-db: Python asyncpg 実往復 green(別アカウントでの再開用) / Python asyncpg round trip green
-**日本語**: `aon-co-jp/aruaru-db`(コミット `e9bf50b`+文書)。`close()` のハングが原因だった(接続ハングではない)ため `AruaruDb.close(timeout)` を追加し、`live-check.py` が実サーバで通った。詳細・落とし穴・再開用メッセージは `repository/aruaru-db/CLAUDE.md` 末尾「続き33」(日英)。未了=`aruaru-wire` の型付き結果・GPU §12.4・aruaru-llm スライスC。再開リポジトリ=`aruaru-db`・`F:uno`・`open-cuda`・`aruaru-llm`。
-**English**: `aon-co-jp/aruaru-db` (commit `e9bf50b` + docs). The hang was in `close()`, not `connect()`; `AruaruDb.close(timeout)` was added and `live-check.py` passes against a real server. Details, pitfalls and the resume message: end of `repository/aruaru-db/CLAUDE.md` ("続き33", JA/EN). Open: typed results in `aruaru-wire`, GPU §12.4, aruaru-llm slice C. Repos: `aruaru-db`, `F:uno`, `open-cuda`, `aruaru-llm`.
+**日本語**: `aon-co-jp/aruaru-db`(コミット `e9bf50b`+文書)。`close()` のハングが原因だった(接続ハングではない)ため `AruaruDb.close(timeout)` を追加し、`live-check.py` が実サーバで通った。詳細・落とし穴・再開用メッセージは `repository/aruaru-db/CLAUDE.md` 末尾「続き33」(日英)。未了=`aruaru-wire` の型付き結果・GPU §12.4・aruaru-llm スライスC。再開リポジトリ=`aruaru-db`・`F:
+uno`・`open-cuda`・`aruaru-llm`。
+**English**: `aon-co-jp/aruaru-db` (commit `e9bf50b` + docs). The hang was in `close()`, not `connect()`; `AruaruDb.close(timeout)` was added and `live-check.py` passes against a real server. Details, pitfalls and the resume message: end of `repository/aruaru-db/CLAUDE.md` ("続き33", JA/EN). Open: typed results in `aruaru-wire`, GPU §12.4, aruaru-llm slice C. Repos: `aruaru-db`, `F:
+uno`, `open-cuda`, `aruaru-llm`.
 
 ## 2026-11-18 aruaru-llm Generate遅延の解消・本番反映 / Generate slowness fixed and deployed
 
@@ -3525,3 +3531,16 @@ Of the 18 notified repositories, only **safe clone fast-forwards** were processe
 - Done: `/demo` pages for RPoRea and Reaxt (explanation, latest version, Windows exe) and for 15 more products (`scripts/gen-demo.py`). The easy-web.tokyo top page lists every public repository (by importance or A-Z). The default install folder is `C:\aon-co-jp\open-easy-web\` (changeable). aruaru-llm shows the models that fit the machine and installs one by itself after a GPU change (deployed to the VPS).
 - Open (in this order): (1) check the auto install on a machine with a different GPU, (2) build and test the installer, (3) check whether open-directx has a standalone release, (4) check on a real Android device, (5) bring the `/demo` pages into each product's own repository (today they exist only on the VPS).
 - Rules: no new REST (Connect only), never print secrets, say "done" only after checking on a real system.
+
+## 2026-11-19 方針: Node.js・REST API を使わない / JSONはRS-JSONだけ(日本語)
+- **やること**: Node.js と REST API をやめます。JSONは `RS-JSON` だけで読み書きし、ほかのJSON部品(`serde_json`・`nlohmann` など)と**二重に使いません**。
+- **済んだこと**: `whisper.cpp` の fork(`aon-co-jp/whisper.cpp`)から Node.js アドオン `examples/addon.node` と専用CIを消しました。洗い出しの結果は [`NODEJS-REMAINING-20261119.md`](NODEJS-REMAINING-20261119.md)。
+- **まだのこと**: (1)置き換えられるもの(`open-upstream-watch` の試験、`Reaxt/clients/js`、`2Poem` の例)、(2)JSONの二重使用の洗い出し、(3)Node.jsが必須のもの(VS Code拡張、Tauriの画面ビルド)は、やめてよいか本人の判断待ち、(4)`whisper.cpp` の `examples/server`(REST+nlohmann)。
+- **VPS**: `whisper.cpp` のVPSのクローンは2コミット遅れのまま(未更新)。
+
+
+### English (simple words, easy to read)
+- **What we do**: We stop using Node.js and REST APIs. We read and write JSON with `RS-JSON` only. We do **not** use two JSON tools at the same time (for example `serde_json` or `nlohmann` together with RS-JSON).
+- **What is done**: In our copy of `whisper.cpp` (`aon-co-jp/whisper.cpp`), we deleted the Node.js add-on `examples/addon.node` and the tests that only ran it. The full list is in [`NODEJS-REMAINING-20261119.md`](NODEJS-REMAINING-20261119.md).
+- **What is not done yet**: (1) things we can replace now (the `open-upstream-watch` test, `Reaxt/clients/js`, the `2Poem` example); (2) finding places that use two JSON tools; (3) things that really need Node.js (VS Code extensions, Tauri screen builds) - we wait for the owner to decide; (4) `examples/server` in `whisper.cpp` (REST + nlohmann).
+- **VPS**: the VPS copy of `whisper.cpp` is still 2 commits behind (not updated).
