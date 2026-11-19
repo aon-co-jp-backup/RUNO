@@ -3484,3 +3484,32 @@ Of the 18 notified repositories, only **safe clone fast-forwards** were processe
 - **Measured**: locally (32 cores) 48 tokens in ~10 s (before: not finished in 100 s). **Production VPS (4 cores)**: 2 tokens 3.7 s, 8 tokens 6.0 s (before: >150 s), 48 tokens 22.8 s, zero error logs, active. The version-control summary (`llm_timeout_secs=45`) should fit at 48 tokens, but a real summary call was not verified.
 - **Open**: a real version-control summary call; the VPS clone `/root/aruaru-llm` source is not updated (binary only); scratch `F:\_work\llm-fix`, `llm-cm` and the measuring scripts (`gt*.sh`/`b*.sh`) are not deleted.
 - **Pitfall**: gdb needs WSL `ptrace_scope` set to 0 temporarily (restore to 1 afterwards).
+
+
+## 2026-11-19 残り作業の確認と、これから(やさしい説明つき) / Checking what is left, and what comes next (plain-language)
+
+**日本語**
+- **ひとことで**: 前回の引っ越し作業で「残っている」と書いた4つのうち、**2つは片づいていて、2つは人の手や大きな作業が必要**です。
+- **片づいたもの(今日 VPS で確かめた)**:
+  1. **aruaru-llm(文章を作るAI)が遅かった問題**: 直したあとの版が動いていて、`aruaru-llm`・`rs-sync`・`rs-sync-demo`・`open-easy-web` の4つはすべて動作中(active)、サーバーの忙しさ(負荷)は低く、直近1時間のエラーログは0件でした。ヘルスチェックも200(正常)です。
+  2. **VPS に積み上がっていた計算**: 差し替えで解消済みで、再起動は不要でした。
+- **まだ残っているもの**:
+  1. **maid-cafe-tokyo の「答えられないときの補完」**(質問にうまく答えられないとき、GitHub に貯めたニュース・知識と aruaru-search から、似た言葉でも拾って答える機能)。新機能の実装なので、別の作業として丁寧に進める必要があり、**今回は着手していません**。
+  2. **RS-Sync のログイン確認2つ**: スマホのカメラで QR を撮る試験と、本物のメール送信で `otp_qr`(メールのコード+QR の2段階)を通す試験。**どちらもあなた自身の操作が必要**です(カメラで撮る/届いたメールのコードを入力する)。あわせて `login_mode` の保存(いまは再起動すると `otp` に戻る)と、`rs-sync.service` のメール用パスワードを安全な場所(`EnvironmentFile=`・権限600)へ移す作業も残っています。
+  3. **version-control の実際の要約呼び出し**: 45秒の制限に収まるかを本物の呼び出しで確かめる作業(遅い問題は直ったので、収まる見込み)。
+- **用語メモ(子どもにも)**: 「VPS」=インターネット上にいつも動いている自分用のコンピューター。「負荷」=コンピューターがどれくらい忙しいか。「OTP」=1回だけ使える数字のコード。「QR」=カメラで読める四角い絵。「2段階認証」=鍵を2つ使って本人確認すること。
+
+**English**
+- **In one sentence**: of the four items I listed as "still open" after the account move, **two are done and two need a person's hands or a bigger piece of work**.
+- **Done (checked on the VPS today)**:
+  1. **The slow text-generating AI (aruaru-llm)**: the fixed version is running. `aruaru-llm`, `rs-sync`, `rs-sync-demo` and `open-easy-web` are all active, the server load is low, there were zero error logs in the last hour, and the health check returns 200 (OK).
+  2. **The piled-up computation on the VPS**: it went away with the swap; no restart was needed.
+- **Still open**:
+  1. **maid-cafe-tokyo's "answer fallback"** (when a question cannot be answered well, look for similar words in the news and knowledge stored on GitHub and in aruaru-search, then answer). This is a new feature that deserves its own careful piece of work, so **I did not start it this time**.
+  2. **Two RS-Sync login checks**: scanning the QR with a phone camera, and running `otp_qr` (email code + QR, two steps) with real email. **Both need you** (scan with the camera / type the code from the email). Also open: saving `login_mode` (it resets to `otp` on restart) and moving the email password in `rs-sync.service` to a safer place (`EnvironmentFile=`, mode 600).
+  3. **A real version-control summary call**: to confirm it fits the 45-second limit (it should, now that the slowness is fixed).
+- **Glossary (for kids, too)**: "VPS" = a computer on the internet that is always on and is yours to use. "Load" = how busy the computer is. "OTP" = a number code you can use only once. "QR" = a square picture a camera can read. "Two-step login" = proving it is you with two keys.
+
+### 再開用メッセージ(2026-11-19) / Resume message
+**日本語**: 続きです。`F:\runo\PORTING.md` 末尾「2026-11-19 残り作業の確認」を読んでください。残りは(1)`aon-co-jp/maid-cafe-tokyo`に「答えられないとき、GitHubのニュース・知識DBとaruaru-searchから類義語でも拾って答える補完」を実装(開発・TESTはローカルPC、VPSは配備と確認だけ)、(2)RS-Syncのスマホ実QR・実メールの`otp_qr`・`login_mode`永続化・`rs-sync.service`のSMTPパスワード移設(QRとメールはユーザー操作が必要)、(3)version-controlの実要約呼び出しの確認。決まり: 新しいRESTは作らない(Connectのみ)、秘密は表示しない、実機で確認してから完了と報告、返答は日本語、pushとタグは確認してから。
+**English**: Continuing. Read "2026-11-19 残り作業の確認" at the end of `F:\runo\PORTING.md`. Open: (1) implement in `aon-co-jp/maid-cafe-tokyo` the fallback that answers from the GitHub-stocked news / knowledge DB and aruaru-search, including similar words, when a question cannot be answered well (develop and test on the local PC; use the VPS only to deploy and verify); (2) RS-Sync: a real phone QR scan, `otp_qr` with real email, persisting `login_mode`, moving the `rs-sync.service` SMTP password (the QR and email steps need the user); (3) confirm a real version-control summary call. Rules: no new REST (Connect only), never print secrets, verify on real systems before saying done, reply in Japanese, confirm before pushing or tagging.
