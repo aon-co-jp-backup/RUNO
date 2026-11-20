@@ -1071,3 +1071,7 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 ## 2026-11-20 低VRAM・VRAM無しでの安定高速化のノウハウ / Low-VRAM know-how
 日本語: VRAMが無い/小さいPC・VPSでAIを安定して速く動かす技術(分割重み・mmap・FP8・混合精度・小行列の直列化・プロンプト上限・同時実行上限、効かなかった手法も)は [aruaru-llm/docs/LOW-VRAM-KNOWHOW.md](https://github.com/aon-co-jp/aruaru-llm/blob/main/docs/LOW-VRAM-KNOWHOW.md) に集約。AIやLLMを扱う関連リポジトリはこれを参照し、同じ失敗を繰り返さない。
 English: Techniques for running AI stably and fast on machines with no or little VRAM (sharded weights, mmap, FP8, mixed precision, serial small GEMMs, prompt caps, concurrency caps, plus what did not work) are collected in the file above. Related repos that use AI/LLMs should follow it.
+
+## 2026-11-20 方針: 姉妹リポジトリとして同時開発 / Sister repositories, developed together
+**日本語**: pl2pl の変換機能は、`Reaxt`・`RPoRea`・`RPoem`・`RMojo`・`open-cosmo` などを、**変換の前でも後でも使える**ようにします(変換元として読む、変換先の骨組みとして出す、出力を動かす土台にする)。これらは `pl2pl` の**姉妹リポジトリ**として、今後は**いつも同時に一緒に開発**します。1つを変えたら、ほかの姉妹の動作確認と README / CLAUDE / PORTING / POLICY の更新を同じ日に行い、未了は確認せず自動で進めます(元の COBOL_to / Java_to の削除だけは最後に確認)。
+**English**: pl2pl's conversion features must work with `Reaxt`, `RPoRea`, `RPoem`, `RMojo` and `open-cosmo` both **before and after conversion** (read as a source, emitted as a target scaffold, used as the runtime for the output). They are **sister repositories** of `pl2pl` and are **always developed together**: when one changes, check the others and update README / CLAUDE / PORTING / POLICY the same day. Unfinished items continue automatically; only deleting the original COBOL_to / Java_to is confirmed last.
