@@ -3553,14 +3553,16 @@ uno`, `open-cuda`, `aruaru-llm`.
 - **学習機能(既定OFF)**: インストールした本人のPC(localhost)で、本人が `learn=1` を付けたときだけ、回答できなかった質問の**言葉と回数**を保存します。質問文は保存しません。公開サーバーでは働きません。辞書には自動で入れず、人が確認して足します。
 - **本番**: VPSの `open-english` と `open-english-demo` を、バックアップ付きで差し替え済み(`/root/open-english-server.before-similar-20261119` と `.before-learn-20261119`)。VPSのクローンには未コミットのパッチが残っています。`rs-sync.service` のSMTPパスワードは `/etc/rs-sync.env`(権限600)へ移しました(元のユニットは `/root/rs-sync.service.before-envfile-20261119`)。
 - **未了(この順で)**: (1)学習をONにする画面、(2)localhostでの記録の通し確認、(3)類義語表(今は15組)の拡張、(4)`open-english` リポジトリへの取り込み、(5)RS-Syncの実スマホQR・実SMTPでの`otp_qr`・`login_mode`の永続化。
-- **貼り付け用メッセージ**: 「`F:\runo\repository\_work\mce`(maid-cafe-english)の `PORTING.md` 末尾『2026-11-19 世界情勢Q&A』と、`F:uno\PORTING.md` 末尾を読んでから再開します。未了は上の(1)〜(5)です。決まり: 新しいRESTは作らない、秘密は表示しない、質問文は保存しない、確認を求めず自動で進める(ユーザー指示)、実機で確認してから完了と報告する。」
+- **貼り付け用メッセージ**: 「`F:\runo\repository\_work\mce`(maid-cafe-english)の `PORTING.md` 末尾『2026-11-19 世界情勢Q&A』と、`F:
+uno\PORTING.md` 末尾を読んでから再開します。未了は上の(1)〜(5)です。決まり: 新しいRESTは作らない、秘密は表示しない、質問文は保存しない、確認を求めず自動で進める(ユーザー指示)、実機で確認してから完了と報告する。」
 
 ### English
 - **What is new**: When no saved article matches a question, the app searches again with similar words and says so at the top of the answer. It does not widen questions that contain numbers. It adds at most 8 words.
 - **Learning (off by default)**: Only on the installer's own PC (localhost), and only when the owner adds `learn=1`, the app saves the **words and counts** from questions it could not answer. It never saves the question text. It does not run on public servers. Words are never added to the dictionary automatically; a person checks them first.
 - **Production**: The VPS programs `open-english` and `open-english-demo` were swapped with backups (`/root/open-english-server.before-similar-20261119` and `.before-learn-20261119`). The VPS clone still has uncommitted patches. The SMTP password of `rs-sync.service` moved to `/etc/rs-sync.env` (mode 600); the old unit is at `/root/rs-sync.service.before-envfile-20261119`.
 - **Open (in this order)**: (1) a screen to turn learning on, (2) a real localhost check of saving words, (3) a bigger similar-word table (now 15 groups), (4) moving the change into the `open-english` repository, (5) RS-Sync: a real phone QR test, `otp_qr` with real SMTP, and saving `login_mode`.
-- **Message to paste**: "Read the last section '2026-11-19 世界情勢Q&A' of `PORTING.md` in `F:\runo\repository\_work\mce` (maid-cafe-english) and the end of `F:uno\PORTING.md` before you start. Open items are (1) to (5) above. Rules: no new REST, never print secrets, never save question text, go on automatically without asking (user instruction), and check on a real system before saying it is done."
+- **Message to paste**: "Read the last section '2026-11-19 世界情勢Q&A' of `PORTING.md` in `F:\runo\repository\_work\mce` (maid-cafe-english) and the end of `F:
+uno\PORTING.md` before you start. Open items are (1) to (5) above. Rules: no new REST, never print secrets, never save question text, go on automatically without asking (user instruction), and check on a real system before saying it is done."
 
 ## 他の言語 / Other languages (2026-11-19)
 
@@ -4204,3 +4206,8 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 - With the env var `QWEN_KEEP_F32="1,24,26"`, the sensitive layers (1, 24 and 26, fragile in the layer-skip test) keep full precision while the rest use FP8 (`open-cuda` `d05d897`). On 1.5B perplexity returns from 7.267 to 7.096 (original 7.08), writing takes 27.8 s (normal way 25 s), and memory stays near a quarter.
 - FP8 now takes about 1.1x the time of the normal way, so extra SIMD work would gain little (single-token decoding is bound by memory speed); we skipped it for now.
 - Automatic per-layer choice (annealing/SB) showed no edge over greedy on a 28-layer problem; we will retry on larger models.
+
+## 2026-11-20 追記: version-control通知10件の対応 / The 10 version-control items
+- **日本語**: lettre 0.11.24(RUSTSEC-2026-0560〜0565)をRS-Sync `5ee1fe2`・open-web-server `e41e0fd`・open-easy-web `ea7e2d7`へ、qrcode 0.15を同じ3つへ、sqlx 0.9.1でlibsqlite3-sys 0.40(RUSTSEC-2026-0459)をRPoem `f4c8e4f`・open-cosmo `e371fbd`・open-web-serverへ、sonic-rs 0.5をopen-bar `9bf9985`へ入れた。試験はすべて成功(RS-Sync 108・open-web-server 295・open-easy-web 137・RPoem 589・open-cosmo 495・open-bar 9)。RPoemの`security-audit.yml`は手順名の`: `が原因でYAMLとして読めず毎回失敗していたので引用符で囲み(`6e501cb`)、監査が成功するのを確認した。whisper.cppはフォークを上流と同期し(`10b8dd7`)、VPSのクローンの`origin`をフォークへ切り替えた(上流は`upstream`。addon.nodeは無い)。VPSのクローンはRPoem・RUNO・open-cosmo・open-cuda・open-web-server・rs-sync・whisper.cppを早送り。**触っていない**: aruaru-llm・open-bar・open-easy-web-app(未コミットの変更あり)。本番の再ビルド・差し替えは未実施。
+- **English**: lettre 0.11.24 went into RS-Sync, open-web-server and open-easy-web, qrcode 0.15 into the same three, sqlx 0.9.1 with libsqlite3-sys 0.40 into RPoem, open-cosmo and open-web-server, and sonic-rs 0.5 into open-bar. All tests pass. RPoem's `security-audit.yml` never ran because an unquoted `: ` in a step name broke the YAML; it is quoted now (`6e501cb`) and the audit passes. The whisper.cpp fork was synced with upstream and the VPS clone now tracks the fork (upstream is `upstream`; no addon.node). VPS clones were fast-forwarded except aruaru-llm, open-bar and open-easy-web-app (uncommitted changes). Production binaries were not rebuilt.
+
