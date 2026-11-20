@@ -4178,3 +4178,17 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 ## 2026-11-20 追記: 古くなっていた未了2件を閉じた / Two stale open items closed
 - **日本語**: (1) aruaru-db の修正ブランチ `fix/insert-quoted-values` は、すでに `main` に入っていました(GitHubの比較で main より0コミット先・6コミット後ろ)。HANDOFFの「main未マージ」は古い記載です。(2) open-cosmo の `openapi.rs` の旧記述(「管理操作は POST /graphql」・画面タイトル「REST API」・中身の無い見出し)を直しました(open-cosmo `e637be2`、試験6件成功、動作の変更なし)。VPSの RUNO クローンは `ed248c5` へ早送りで追従済みです。
 - **English**: (1) The aruaru-db fix branch `fix/insert-quoted-values` is already in `main` (GitHub compare: 0 ahead, 6 behind), so the HANDOFF line "not merged" is stale. (2) Old wording in open-cosmo's `openapi.rs` ("admin via POST /graphql", the "REST API" page title, empty section comments) was fixed (open-cosmo `e637be2`, 6 tests pass, no behaviour change). The VPS RUNO clone was fast-forwarded to `ed248c5`.
+
+## 2026-11-20 追記: v0.2.6公開・FP8が速くなった / v0.2.6 released, FP8 is faster
+
+### 日本語(やさしい説明)
+- `aruaru-llm` v0.2.6を公開しました(Linux版・Windows版の配布物つき)。分けて配られる大きなAIも、自動でぜんぶ取ってきて読めます。`pl2pl llm setup`は最初から3Bを候補にしているので、この版が最新になれば3Bが選ばれます。
+- FP8(重みを小さい数で持つ方法)がさらに速くなりました。1.5Bで文章づくりが69秒→32.6秒(ふつうの方法は25秒)。品質の目安は変わらず(7.27)、メモリは約4分の1のままです。
+- インストーラーを自動で作る仕組みが以前から失敗していた原因は、Vulkanの道具(glslc)が入っていないことでした。直しました(`5e06048`)。結果は次の実行で確認します。
+- これから: 層ごとにビット数を変える方法、FP8のさらなる高速化。確認せず進めます。
+
+### English
+- `aruaru-llm` v0.2.6 is released (with Linux and Windows assets). Models shipped in several files are downloaded and loaded automatically. `pl2pl llm setup` already lists 3B first, so once this version is the latest, 3B is chosen.
+- FP8 weights got faster: on 1.5B, writing went from 69 s to 32.6 s (the normal way takes 25 s). Quality is unchanged (7.27) and memory stays at about a quarter.
+- The installer-update workflow had been failing because the Vulkan tool (glslc) was missing. Fixed in `5e06048`; the next run will confirm it.
+- Next: per-layer bit allocation and more FP8 speed. We go on without asking.
