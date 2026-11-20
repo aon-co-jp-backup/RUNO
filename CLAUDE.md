@@ -1067,3 +1067,7 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 - So **running on a Mac (a real call through Python) and building for iPhone are now confirmed in CI**. Android also passed the real-phone test. We have not checked by eye on a real iPhone or a real Mac, because we have no such devices.
 - Why CI tripped, and the fix: RPoRea uses sibling repositories through relative paths, so CI also checks out `Reaxt`, `RPoem`, `RS-JSON`, `open-web-server`, `RS-SmartTCP`, `open-raid-z`, `open-cpu`, `open-cuda` and `open-directx` into the same parent folder (`working-directory: RPoRea`). If RPoRea starts using another sibling repository, add it to `ci.yml`.
 - **Still open**: scheduled cloud runs (first connect GitHub to Claude), and real-device checks on iPhone and Mac.
+
+## 2026-11-20 低VRAM・VRAM無しでの安定高速化のノウハウ / Low-VRAM know-how
+日本語: VRAMが無い/小さいPC・VPSでAIを安定して速く動かす技術(分割重み・mmap・FP8・混合精度・小行列の直列化・プロンプト上限・同時実行上限、効かなかった手法も)は [aruaru-llm/docs/LOW-VRAM-KNOWHOW.md](https://github.com/aon-co-jp/aruaru-llm/blob/main/docs/LOW-VRAM-KNOWHOW.md) に集約。AIやLLMを扱う関連リポジトリはこれを参照し、同じ失敗を繰り返さない。
+English: Techniques for running AI stably and fast on machines with no or little VRAM (sharded weights, mmap, FP8, mixed precision, serial small GEMMs, prompt caps, concurrency caps, plus what did not work) are collected in the file above. Related repos that use AI/LLMs should follow it.
