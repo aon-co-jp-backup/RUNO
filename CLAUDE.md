@@ -1075,3 +1075,17 @@ English: Techniques for running AI stably and fast on machines with no or little
 ## 2026-11-20 方針: 姉妹リポジトリとして同時開発 / Sister repositories, developed together
 **日本語**: pl2pl の変換機能は、`Reaxt`・`RPoRea`・`RPoem`・`RMojo`・`open-cosmo` などを、**変換の前でも後でも使える**ようにします(変換元として読む、変換先の骨組みとして出す、出力を動かす土台にする)。これらは `pl2pl` の**姉妹リポジトリ**として、今後は**いつも同時に一緒に開発**します。1つを変えたら、ほかの姉妹の動作確認と README / CLAUDE / PORTING / POLICY の更新を同じ日に行い、未了は確認せず自動で進めます(元の COBOL_to / Java_to の削除だけは最後に確認)。
 **English**: pl2pl's conversion features must work with `Reaxt`, `RPoRea`, `RPoem`, `RMojo` and `open-cosmo` both **before and after conversion** (read as a source, emitted as a target scaffold, used as the runtime for the output). They are **sister repositories** of `pl2pl` and are **always developed together**: when one changes, check the others and update README / CLAUDE / PORTING / POLICY the same day. Unfinished items continue automatically; only deleting the original COBOL_to / Java_to is confirmed last.
+
+## VPS向けLinuxバイナリの作り方(glibcの版ずれ対策、2026-11-20)
+- 既定のWSL(`Ubuntu`)は Ubuntu 26.04 で glibc 2.43。VPS(AlmaLinux 10.2)は glibc 2.39。既定のWSLで作ると、VPSで「GLIBC_2.4x not found」で起動しないことがある。
+- **VPSへ送るLinuxバイナリは、WSLの`Ubuntu-24.04`(glibc 2.39、Rust導入済み)で作る**。手順は [`vps-build.sh`](vps-build.sh):
+  `wsl -d Ubuntu-24.04 -- bash /mnt/f/runo/vps-build.sh /mnt/f/<repo> <cargo buildの引数>`
+  (出力先は`/root/vps-target/<repo>/release/`、Windowsからは`\wsl.localhost\Ubuntu-24.04\root\vps-target\...`)
+- 作ったあと [`check-glibc.sh`](check-glibc.sh) が自動で検査し、2.39を超える版が必要なら NG で失敗する。他の方法で作ったバイナリも、送る前にこれを通す。VPSのOSを上げたら`VPS_GLIBC`で上限を変える。
+- 確認済み: open-web-server(本番機能セット)をこの方法で作り、検査OK・VPSで`ldd`の不足0。逆に既定WSLの`/usr/bin/ls`は2.43が必要として正しくNGになる。
+
+## Building Linux binaries for the VPS (glibc mismatch, 2026-11-20)
+- The default WSL (`Ubuntu`) is Ubuntu 26.04 with glibc 2.43; the VPS (AlmaLinux 10.2) has glibc 2.39. Binaries built in the default WSL may fail on the VPS with "GLIBC_2.4x not found".
+- **Build binaries for the VPS in the WSL distro `Ubuntu-24.04` (glibc 2.39, Rust installed)** with [`vps-build.sh`](vps-build.sh): `wsl -d Ubuntu-24.04 -- bash /mnt/f/runo/vps-build.sh /mnt/f/<repo> <cargo build args>`.
+- [`check-glibc.sh`](check-glibc.sh) runs afterwards and fails (NG) if any binary needs a glibc newer than 2.39. Run it on binaries built any other way too. Raise the limit with `VPS_GLIBC` after upgrading the VPS OS.
+- Verified: open-web-server (production features) built this way passes the check and has no missing libraries on the VPS; the default WSL's `/usr/bin/ls` is correctly rejected (needs 2.43).

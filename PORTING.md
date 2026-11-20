@@ -4212,3 +4212,17 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 - **English**: lettre 0.11.24 went into RS-Sync, open-web-server and open-easy-web, qrcode 0.15 into the same three, sqlx 0.9.1 with libsqlite3-sys 0.40 into RPoem, open-cosmo and open-web-server, and sonic-rs 0.5 into open-bar. All tests pass. RPoem's `security-audit.yml` never ran because an unquoted `: ` in a step name broke the YAML; it is quoted now (`6e501cb`) and the audit passes. The whisper.cpp fork was synced with upstream and the VPS clone now tracks the fork (upstream is `upstream`; no addon.node). VPS clones were fast-forwarded except aruaru-llm, open-bar and open-easy-web-app (uncommitted changes). Production binaries were not rebuilt.
 - **本番反映 / Production**: 本番反映(2026-11-20 13:4x JST): WSLでビルド(open-web-serverは本番機能セット`admin-2fa,domain-watchdog,fastcgi-client,ddns,sftp`、必要glibcは2.39まで)し、open-easy-web→open-web-serverの順に差し替えた。14ドメイン+主要パスの応答は差し替え前と同一、エラーログ0、両方ともlettre 0.11.24を確認。旧バイナリは`*.before-lettre-20261120`(ロールバック用)。注意: WSLのglibcが2.43になったので、今後も`objdump -T`で必要glibcが2.39以下か確かめてから配る。
   Deployed (2026-11-20 ~13:4x JST): built in WSL (open-web-server with the production features `admin-2fa,domain-watchdog,fastcgi-client,ddns,sftp`; required glibc at most 2.39) and swapped open-easy-web, then open-web-server. Responses of 14 domains and key paths are identical to before, error log 0, both binaries contain lettre 0.11.24. Rollback binaries: `*.before-lettre-20261120`. Note: WSL now has glibc 2.43, so check with `objdump -T` that the binary needs at most 2.39 before shipping.
+
+## VPS向けLinuxバイナリの作り方(glibcの版ずれ対策、2026-11-20)
+- 既定のWSL(`Ubuntu`)は Ubuntu 26.04 で glibc 2.43。VPS(AlmaLinux 10.2)は glibc 2.39。既定のWSLで作ると、VPSで「GLIBC_2.4x not found」で起動しないことがある。
+- **VPSへ送るLinuxバイナリは、WSLの`Ubuntu-24.04`(glibc 2.39、Rust導入済み)で作る**。手順は [`vps-build.sh`](vps-build.sh):
+  `wsl -d Ubuntu-24.04 -- bash /mnt/f/runo/vps-build.sh /mnt/f/<repo> <cargo buildの引数>`
+  (出力先は`/root/vps-target/<repo>/release/`、Windowsからは`\wsl.localhost\Ubuntu-24.04\root\vps-target\...`)
+- 作ったあと [`check-glibc.sh`](check-glibc.sh) が自動で検査し、2.39を超える版が必要なら NG で失敗する。他の方法で作ったバイナリも、送る前にこれを通す。VPSのOSを上げたら`VPS_GLIBC`で上限を変える。
+- 確認済み: open-web-server(本番機能セット)をこの方法で作り、検査OK・VPSで`ldd`の不足0。逆に既定WSLの`/usr/bin/ls`は2.43が必要として正しくNGになる。
+
+## Building Linux binaries for the VPS (glibc mismatch, 2026-11-20)
+- The default WSL (`Ubuntu`) is Ubuntu 26.04 with glibc 2.43; the VPS (AlmaLinux 10.2) has glibc 2.39. Binaries built in the default WSL may fail on the VPS with "GLIBC_2.4x not found".
+- **Build binaries for the VPS in the WSL distro `Ubuntu-24.04` (glibc 2.39, Rust installed)** with [`vps-build.sh`](vps-build.sh): `wsl -d Ubuntu-24.04 -- bash /mnt/f/runo/vps-build.sh /mnt/f/<repo> <cargo build args>`.
+- [`check-glibc.sh`](check-glibc.sh) runs afterwards and fails (NG) if any binary needs a glibc newer than 2.39. Run it on binaries built any other way too. Raise the limit with `VPS_GLIBC` after upgrading the VPS OS.
+- Verified: open-web-server (production features) built this way passes the check and has no missing libraries on the VPS; the default WSL's `/usr/bin/ls` is correctly rejected (needs 2.43).
